@@ -1,7 +1,9 @@
 package gruppn.kasslr;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 public class Feed extends AppCompatActivity {
 
@@ -9,5 +11,10 @@ public class Feed extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feed);
+    }
+
+    public void changeToGame(View view){
+        Intent myIntent = new Intent(this,Game.class);
+        startActivity(myIntent);
     }
 }
