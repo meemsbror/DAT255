@@ -21,4 +21,13 @@
         app:aspectRatio="4:3"
         app:facing="back"
         app:flash="auto"/>
+
+    <Button
+        android:text="snapp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/snap" />
+
 </RelativeLayout>

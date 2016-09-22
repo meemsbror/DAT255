@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -65,20 +66,16 @@ public class CameraActivity extends AppCompatActivity implements
 
     private Handler mBackgroundHandler;
 
-    /*
+
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.take_picture:
-                    if (mCameraView != null) {
-                        mCameraView.takePicture();
-                    }
-                    break;
+            if (mCameraView != null) {
+                mCameraView.takePicture();
             }
         }
     };
-*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,11 +84,11 @@ public class CameraActivity extends AppCompatActivity implements
         if (mCameraView != null) {
             mCameraView.addCallback(mCallback);
         }
-        /*
-        FloatingActionButton takePicture = (FloatingActionButton) findViewById(R.id.take_picture);
+        Button takePicture = (Button) findViewById(R.id.snap);
         if (takePicture != null) {
             takePicture.setOnClickListener(mOnClickListener);
         }
+        /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -212,15 +209,17 @@ public class CameraActivity extends AppCompatActivity implements
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
-            Toast.makeText(cameraView.getContext(), "picture tak", Toast.LENGTH_SHORT)
+            Toast.makeText(cameraView.getContext(), R.string.picture_taken, Toast.LENGTH_SHORT)
                     .show();
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
                     // This demo app saves the taken picture to a constant file.
                     // $ adb pull /sdcard/Android/data/com.google.android.cameraview.demo/files/Pictures/picture.jpg
-                    File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                             "picture.jpg");
+                    System.out.println(file.toString());
+                    System.out.println(file.toURI());
                     OutputStream os = null;
                     try {
                         os = new FileOutputStream(file);
