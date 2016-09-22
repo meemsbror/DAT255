@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">KasslR</string>
+    <string name="add_word">Lägg till ord</string>
 </resources>
