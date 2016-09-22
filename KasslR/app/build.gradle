@@ -31,3 +31,11 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.2.1'
 }
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+dependencies{
+    compile 'com.github.google:cameraview:906c4dad3b@aar'
+}
