@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import java.io.File;
 
 public class AddWordActivity extends AppCompatActivity {
+    public static final String EXTRA_IMAGE = "image";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,8 +22,7 @@ public class AddWordActivity extends AppCompatActivity {
             // Perhaps use intent result?
         });
 
-        // TODO does CameraActivity return a Bitmap image or a Uri to an image?
-        Uri image = (Uri) getIntent().getExtras().get("image");
+        Uri image = (Uri) getIntent().getExtras().get(EXTRA_IMAGE);
         if (image != null) {
             ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
             imgWord.setImageURI(image);
