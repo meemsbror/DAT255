@@ -5,7 +5,9 @@ import com.google.android.cameraview.CameraView;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -227,6 +229,7 @@ public class CameraActivity extends AppCompatActivity implements
                         os.close();
                     } catch (IOException e) {
                         Log.w(TAG, "Cannot write to " + file, e);
+                        return;
                     } finally {
                         if (os != null) {
                             try {
@@ -236,6 +239,10 @@ public class CameraActivity extends AppCompatActivity implements
                             }
                         }
                     }
+
+                    Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
+                    intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                    startActivity(intent);
                 }
             });
         }
