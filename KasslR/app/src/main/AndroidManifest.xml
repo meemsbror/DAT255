@@ -3,8 +3,10 @@
     package="gruppn.kasslr">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +27,9 @@
             android:label="@string/title_activity_navigateable"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name="gruppn.kasslr.CameraActivity"></activity>
+        <activity android:name=".CameraActivity" />
+        <activity android:name=".AddWordActivity" />
+        <activity android:name=".ProfilePageActivity"></activity>
     </application>
 
 </manifest>

@@ -19,6 +19,10 @@ public class Feed extends AppCompatActivity {
         requestCameraPermission();
     }
 
+    public void showProfile(View view) {
+        Intent intent = new Intent(this, ProfilePageActivity.class);
+        startActivity(intent);
+    }
     public void startCamera(View view) {
         // Do something in response to button
 
@@ -29,6 +33,7 @@ public class Feed extends AppCompatActivity {
     }
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+    private final int MY_PERMISSIONS_REQUEST_STORAGE = 2;
 
     private void requestCameraPermission(){
         // Here, thisActivity is the current activity
@@ -55,6 +60,20 @@ public class Feed extends AppCompatActivity {
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
                 // result of the request.
+            }
+        }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            } else {
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_STORAGE);
             }
         }
     }
