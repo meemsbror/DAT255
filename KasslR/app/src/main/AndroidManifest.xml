@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CameraActivity" />
-        <activity android:name=".AddWordActivity"></activity>
+        <activity android:name=".AddWordActivity" />
+        <activity android:name=".ProfilePageActivity"></activity>
     </application>
 
 </manifest>

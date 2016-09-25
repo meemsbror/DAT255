@@ -17,6 +17,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Look at me!!"
+        android:onClick="showProfile"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Do it!"
         android:onClick="startCamera"
         android:layout_alignParentBottom="true"

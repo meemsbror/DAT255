@@ -18,6 +18,10 @@ public class Feed extends AppCompatActivity {
         requestCameraPermission();
     }
 
+    public void showProfile(View view) {
+        Intent intent = new Intent(this, ProfilePageActivity.class);
+        startActivity(intent);
+    }
     public void startCamera(View view) {
         // Do something in response to button
 
