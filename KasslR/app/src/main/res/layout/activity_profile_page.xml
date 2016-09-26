@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Din mamma är en pappa"
-        android:id="@+id/textView"
+        android:id="@+id/usernameText"
         android:layout_alignTop="@+id/scrollView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp" />

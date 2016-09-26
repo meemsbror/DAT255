@@ -1,8 +1,10 @@
 package gruppn.kasslr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
@@ -17,10 +19,15 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 public class Feed extends AppCompatActivity {
 
+    String userId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        initUserData();
+
         setContentView(R.layout.activity_feed);
         requestCameraPermission();
 
@@ -45,8 +52,38 @@ public class Feed extends AppCompatActivity {
         });
     }
 
+    private void initUserData() {
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String tempUserId = sharedPref.getString(getString(R.string.key_user_id), "none");
+
+        if(tempUserId.equals("none")){
+            tempUserId = requestNewUser();
+        }
+
+        userId = tempUserId;
+
+
+
+    }
+
+    private String requestNewUser() {
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        String newUserId = "dassid";
+
+        editor.putString(getString(R.string.key_user_id), newUserId);
+        editor.commit();
+
+        return newUserId;
+    }
+
     public void showProfile() {
         Intent intent = new Intent(this, ProfilePageActivity.class);
+        intent.putExtra("userId", userId);
         startActivity(intent);
     }
 
