@@ -21,7 +21,11 @@ out/
 .gradle/
 build/
 .idea/
+<<<<<<< HEAD
 gradle.xml
+=======
+KasslR/.idea/
+>>>>>>> feedFeature
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -42,6 +46,7 @@ captures/
 *.iml
 .idea/workspace.xml
 .idea/libraries
+KasslR/projectFilesBackup
 
 # Keystore files
 *.jks
