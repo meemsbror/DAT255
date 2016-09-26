@@ -41,6 +41,7 @@ captures/
 *.iml
 .idea/workspace.xml
 .idea/libraries
+KasslR/projectFilesBackup
 
 # Keystore files
 *.jks
