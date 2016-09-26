@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 public class Feed extends AppCompatActivity {
 
@@ -19,14 +23,34 @@ public class Feed extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_feed);
         requestCameraPermission();
+
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_feed) {
+                    // Show the feed
+                } else if (tabId == R.id.tab_search) {
+                    //Show the search page
+                } else if (tabId == R.id.tab_camera) {
+                    startCamera();
+                } else if (tabId == R.id.tab_favorite) {
+                    //Show the saved vocabularies
+                } else if (tabId == R.id.tab_profile) {
+                    showProfile();
+                } else {
+                    //When can this happen?
+                }
+            }
+        });
     }
 
-    public void showProfile(View view) {
+    public void showProfile() {
         Intent intent = new Intent(this, ProfilePageActivity.class);
         startActivity(intent);
     }
 
-    public void startCamera(View view) {
+    public void startCamera() {
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
