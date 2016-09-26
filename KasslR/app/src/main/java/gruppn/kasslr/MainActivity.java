@@ -80,7 +80,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showProfile() {
-        showFragment(new ProfilePageFragment());
+        Fragment fragment = new ProfilePageFragment();
+        Bundle extras = new Bundle();
+        extras.putString(ProfilePageFragment.EXTRA_USER_ID, userId);
+        fragment.setArguments(extras);
+        showFragment(fragment);
     }
 
     public void showCamera() {
