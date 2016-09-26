@@ -107,4 +107,6 @@ public class Feed extends AppCompatActivity {
         Intent myIntent = new Intent(this,Game.class);
         startActivity(myIntent);
     }
+
+
 }
