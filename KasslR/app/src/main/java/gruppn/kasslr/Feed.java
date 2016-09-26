@@ -23,43 +23,37 @@ public class Feed extends AppCompatActivity {
         Intent intent = new Intent(this, ProfilePageActivity.class);
         startActivity(intent);
     }
+
     public void startCamera(View view) {
-        // Do something in response to button
-
-
-        System.out.println("do it!!!!");
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
+    }
+
+    public void changeToGame(View view){
+        Intent myIntent = new Intent(this,Game.class);
+        startActivity(myIntent);
     }
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private final int MY_PERMISSIONS_REQUEST_STORAGE = 2;
 
     private void requestCameraPermission(){
-        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CAMERA)) {
 
+                // TODO
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
 
             } else {
 
-                // No explanation needed, we can request the permission.
-
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_CAMERA);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         }
         if (ContextCompat.checkSelfPermission(this,
@@ -68,6 +62,11 @@ public class Feed extends AppCompatActivity {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                // TODO
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
 
             } else {
 
@@ -87,8 +86,21 @@ public class Feed extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    // permission was granted, yay!
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay!
 
                 } else {
 
@@ -101,11 +113,6 @@ public class Feed extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-    public void changeToGame(View view){
-        Intent myIntent = new Intent(this,Game.class);
-        startActivity(myIntent);
     }
 
 
