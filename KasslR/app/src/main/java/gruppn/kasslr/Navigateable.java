@@ -29,7 +29,7 @@ public class Navigateable extends AppCompatActivity {
 
     protected void changeActivity(String activity){
 
-        Intent myIntent = new Intent(this, Feed.class);
+        Intent myIntent = new Intent(this, MainActivity.class);
 
         switch(activity){
             case "feed" :
