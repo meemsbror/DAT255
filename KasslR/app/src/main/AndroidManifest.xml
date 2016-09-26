@@ -26,7 +26,6 @@
             android:name=".Navigateable"
             android:label="@string/title_activity_navigateable"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="gruppn.kasslr.CameraActivity"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".AddWordActivity" />
         <activity android:name=".ProfilePageActivity"></activity>
