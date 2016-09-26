@@ -39,4 +39,5 @@ repositories {
 }
 dependencies{
     compile 'com.github.google:cameraview:906c4dad3b@aar'
+    compile 'com.roughike:bottom-bar:2.0.2'
 }
