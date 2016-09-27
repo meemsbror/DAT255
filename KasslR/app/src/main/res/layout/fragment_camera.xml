@@ -9,7 +9,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context=".CameraFragment">
+    tools:context=".CameraActivity">
 
     <com.google.android.cameraview.CameraView
         android:id="@+id/camera"

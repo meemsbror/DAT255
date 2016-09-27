@@ -16,14 +16,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -33,12 +30,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 
-public class CameraFragment extends Fragment implements
+public class CameraActivity extends AppCompatActivity implements
         ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "MainActivity";
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
+    private static final int REQUEST_IMAGE_DESCRIPTION = 2;
 
     private static final String FRAGMENT_DIALOG = "dialog";
 
@@ -68,18 +66,14 @@ public class CameraFragment extends Fragment implements
     private Handler mBackgroundHandler;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera, container, false);
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_camera);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mCameraView = (CameraView) getActivity().findViewById(R.id.camera);
+        mCameraView = (CameraView) findViewById(R.id.camera);
         mCameraView.addCallback(mCallback);
 
-        Button takePicture = (Button) getActivity().findViewById(R.id.snap);
+        Button takePicture = (Button) findViewById(R.id.snap);
         takePicture.setOnClickListener(view -> mCameraView.takePicture());
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,20 +88,20 @@ public class CameraFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             // TODO this is broken... pls halp
-            // mCameraView.start();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+            mCameraView.start();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ConfirmationDialogFragment
                     .newInstance(R.string.camera_permission_confirmation,
                             new String[]{Manifest.permission.CAMERA},
                             REQUEST_CAMERA_PERMISSION,
                             R.string.camera_permission_not_granted)
-                    .show(getActivity().getSupportFragmentManager(), FRAGMENT_DIALOG);
+                    .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
         } else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA},
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_PERMISSION);
         }
     }
@@ -140,7 +134,7 @@ public class CameraFragment extends Fragment implements
                     throw new RuntimeException("Error on requesting camera permission.");
                 }
                 if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getContext(), "Please give camera permission",
+                    Toast.makeText(this, "Please give camera permission",
                             Toast.LENGTH_SHORT).show();
                 }
                 // No need to start camera here; it is handled by onResume
@@ -223,12 +217,23 @@ public class CameraFragment extends Fragment implements
                     }
                 }
 
-                Intent intent = new Intent(getContext(), AddWordFragment.class);
-                intent.putExtra(AddWordFragment.EXTRA_IMAGE, Uri.fromFile(file));
-                startActivity(intent);
+                Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
+                intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                startActivityForResult(intent, REQUEST_IMAGE_DESCRIPTION);
             });
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_DESCRIPTION) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Extra image: " + data.getExtras().getString(AddWordActivity.EXTRA_IMAGE), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Added " + data.getExtras().getString(AddWordActivity.EXTRA_IMAGE_DESCRIPTION)
+                        + " to vocabulary", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public static class ConfirmationDialogFragment extends DialogFragment {
 

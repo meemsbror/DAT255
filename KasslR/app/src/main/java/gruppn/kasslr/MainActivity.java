@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCamera() {
-        showFragment(new CameraFragment());
+        startActivity(new Intent(this, CameraActivity.class));
     }
 
     public void showFragment(Fragment fragment) {
