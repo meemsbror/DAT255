@@ -13,18 +13,25 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
+
+import gruppn.kasslr.model.Shelf;
+import gruppn.kasslr.model.Vocabulary;
 
 public class MainActivity extends AppCompatActivity {
 
     String userId;
+    Shelf shelf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        shelf = new Shelf();
         initUserData();
         setContentView(R.layout.activity_main);
         requestCameraPermission();
@@ -79,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
 
         return newUserId;
+    }
+
+    public void openAddVocabulary(View view) {
+        showFragment(new AddVocabularyFragment());
     }
 
     public void showFeed() {
@@ -192,4 +203,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void createVocabulary(View view) {
+        System.out.println("creating vocabulary");
+        EditText vocName = (EditText)findViewById(R.id.newVocName);
+        Vocabulary voc = new Vocabulary(userId, vocName.getText().toString().trim());
+        shelf.addVocabulary(voc);
+
+        System.out.println(shelf.toString());
+        Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
+        showFeed();
+    }
 }

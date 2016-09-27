@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:id="@+id/addVocabularyButton"
+        android:baselineAlignBottom="true"
+        android:onClick="openAddVocabulary" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GameQ"
+        android:id="@+id/button"
+        android:onClick="changeToGame" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -16,13 +35,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="GameQ"
-                android:id="@+id/button"
-                android:onClick="changeToGame" />
 
             <FrameLayout
                 android:layout_width="match_parent"
