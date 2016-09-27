@@ -32,7 +32,7 @@ public class AddWordActivity extends AppCompatActivity {
     private void returnWord() {
         TextView txtWord = (TextView) findViewById(R.id.txtWord);
         Intent data = new Intent();
-        data.putExtra(EXTRA_IMAGE_DESCRIPTION, txtWord.getText());
+        data.putExtra(EXTRA_IMAGE_DESCRIPTION, txtWord.getText().toString());
         setResult(txtWord.getText().length() > 0 ? RESULT_OK : RESULT_CANCELED, data);
         finish();
     }

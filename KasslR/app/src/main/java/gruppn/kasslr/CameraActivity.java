@@ -228,7 +228,6 @@ public class CameraActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_DESCRIPTION) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Extra image: " + data.getExtras().getString(AddWordActivity.EXTRA_IMAGE), Toast.LENGTH_SHORT).show();
                 Toast.makeText(this, "Added " + data.getExtras().getString(AddWordActivity.EXTRA_IMAGE_DESCRIPTION)
                         + " to vocabulary", Toast.LENGTH_SHORT).show();
             }
