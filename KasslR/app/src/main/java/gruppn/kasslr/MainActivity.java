@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 
@@ -48,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 //When can this happen?
             }
         });
+        for (int i = 0; i < bottomBar.getTabCount(); i++) {
+            bottomBar.getTabAtPosition(i).setGravity(Gravity.CENTER_VERTICAL);
+        }
     }
 
     private void initUserData() {
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showCreateVocabulary(){
-        startActivity(new Intent(this, CreateVocabularyActivity.class));
+        //startActivity(new Intent(this, CreateVocabularyActivity.class));
     }
 
     public void showFragment(Fragment fragment) {

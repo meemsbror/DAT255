@@ -21,4 +21,9 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- Hide titles from BottomBar -->
+    <style name="BB_BottomBarItem_TitleStyle" parent="BB_BottomBarItem_TitleStyle">
+        <item name="android:visibility">gone</item>
+    </style>
+
 </resources>
