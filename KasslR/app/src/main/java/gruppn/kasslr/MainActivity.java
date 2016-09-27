@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 showCamera();
             } else if (tabId == R.id.tab_favorite) {
                 //Show the saved vocabularies
+                //Todo right now it shows create vocabulary
+                showCreateVocabulary();
             } else if (tabId == R.id.tab_profile) {
                 showProfile();
             } else {
@@ -89,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void showCamera() {
         startActivity(new Intent(this, CameraActivity.class));
+    }
+
+    public void showCreateVocabulary(){
+        startActivity(new Intent(this, CreateVocabularyActivity.class));
     }
 
     public void showFragment(Fragment fragment) {
