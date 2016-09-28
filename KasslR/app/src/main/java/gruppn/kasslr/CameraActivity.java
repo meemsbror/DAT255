@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
 
 
 public class CameraActivity extends AppCompatActivity implements
@@ -193,12 +194,8 @@ public class CameraActivity extends AppCompatActivity implements
             Toast.makeText(cameraView.getContext(), R.string.picture_taken, Toast.LENGTH_SHORT)
                     .show();
             getBackgroundHandler().post(() -> {
-                // This demo app saves the taken picture to a constant file.
-                // $ adb pull /sdcard/Android/data/com.google.android.cameraview.demo/files/Pictures/picture.jpg
-                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                        "picture.jpg");
-                System.out.println(file.toString());
-                System.out.println(file.toURI());
+                File file = getNewPictureFile();
+
                 OutputStream os = null;
                 try {
                     os = new FileOutputStream(file);
@@ -232,6 +229,16 @@ public class CameraActivity extends AppCompatActivity implements
                         + " to vocabulary", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private File getNewPictureFile() {
+        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+
+        File file = new File(folder, UUID.randomUUID().toString() + ".jpg");
+        return file;
     }
 
     public static class ConfirmationDialogFragment extends DialogFragment {
