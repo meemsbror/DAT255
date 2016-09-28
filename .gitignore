@@ -23,6 +23,8 @@ build/
 .idea/
 KasslR/.idea/
 gradle.xml
+gradle.xml
+KasslR/.idea/
 
 # Local configuration file (sdk path, etc)
 local.properties

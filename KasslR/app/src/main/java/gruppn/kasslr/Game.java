@@ -16,13 +16,13 @@ public class Game extends AppCompatActivity{
     }
 
     public void answer1Click(View view){
-        Intent myIntent = new Intent(this, Feed.class);
+        Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
     }
 
     private void changeActivity(String activity){
 
-     Intent myIntent = new Intent(this, Feed.class);
+     Intent myIntent = new Intent(this, MainActivity.class);
 
         switch(activity){
             case "feed" :

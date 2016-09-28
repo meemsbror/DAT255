@@ -40,7 +40,8 @@ repositories {
         url "https://jitpack.io"
     }
 }
-dependencies{
+dependencies {
     compile 'com.github.google:cameraview:906c4dad3b@aar'
     compile 'com.roughike:bottom-bar:2.0.2'
+    compile 'com.android.support:support-v4:24.+'
 }

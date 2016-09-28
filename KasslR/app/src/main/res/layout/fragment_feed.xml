@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:id="@+id/addVocabularyButton"
+        android:baselineAlignBottom="true"
+        android:onClick="openAddVocabulary" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GameQ"
+        android:id="@+id/button"
+        android:onClick="changeToGame" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="Random shit"
+                    android:id="@+id/textView1"
+                    android:layout_gravity="left|top" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton"
+                    android:layout_gravity="left|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton2"
+                    android:layout_gravity="center_horizontal|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton3"
+                    android:layout_gravity="right|bottom"
+                    android:onClick="changeToGame" />
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView1"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/hund"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView2"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@mipmap/stol"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView3"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@mipmap/dog"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="Random shit"
+                    android:id="@+id/textView2"
+                    android:layout_gravity="left|top" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButto4"
+                    android:layout_gravity="left|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton5"
+                    android:layout_gravity="center_horizontal|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton6"
+                    android:layout_gravity="right|bottom"
+                    android:onClick="changeToGame" />
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView4"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/hund"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView5"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@mipmap/stol"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView6"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@mipmap/dog"/>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:text="Random shit"
+                    android:id="@+id/textView3"
+                    android:layout_gravity="left|top" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButto7"
+                    android:layout_gravity="left|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton8"
+                    android:layout_gravity="center_horizontal|bottom" />
+
+                <ImageButton
+                    android:layout_width="88dp"
+                    android:layout_height="44dp"
+                    android:id="@+id/imageButton9"
+                    android:layout_gravity="right|bottom"
+                    android:onClick="changeToGame" />
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView7"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/hund"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView8"
+                    android:layout_gravity="left|center_vertical"
+                    android:src="@mipmap/stol"/>
+
+                <ImageView
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:id="@+id/imageView9"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@mipmap/dog"/>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
