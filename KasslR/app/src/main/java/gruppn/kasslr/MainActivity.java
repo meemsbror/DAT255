@@ -23,16 +23,14 @@ import gruppn.kasslr.model.Vocabulary;
 
 public class MainActivity extends AppCompatActivity {
 
-    String userId;
-    Shelf shelf;
+    private Kasslr app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        shelf = new Shelf();
-        initUserData();
+        app = (Kasslr) getApplication();
         setContentView(R.layout.activity_main);
         requestCameraPermission();
 
@@ -59,33 +57,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initUserData() {
-
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        String tempUserId = sharedPref.getString(getString(R.string.key_user_id), "none");
-
-        if(tempUserId.equals("none")){
-            tempUserId = requestNewUser();
-        }
-
-        userId = tempUserId;
-
-    }
-
-    private String requestNewUser() {
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        String newUserId = "dassid";
-
-        editor.putString(getString(R.string.key_user_id), newUserId);
-        editor.commit();
-
-        return newUserId;
-    }
-
     public void openAddVocabulary(View view) {
         showFragment(new AddVocabularyFragment());
     }
@@ -97,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public void showProfile() {
         Fragment fragment = new ProfilePageFragment();
         Bundle extras = new Bundle();
-        extras.putString(ProfilePageFragment.EXTRA_USER_ID, userId);
+        extras.putString(ProfilePageFragment.EXTRA_USER_ID, app.getUserId());
         fragment.setArguments(extras);
         showFragment(fragment);
     }
@@ -204,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
         EditText vocName = (EditText)findViewById(R.id.newVocName);
-        Vocabulary voc = new Vocabulary(userId, vocName.getText().toString().trim());
-        shelf.addVocabulary(voc);
+        Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
+        app.getShelf().addVocabulary(voc);
 
-        System.out.println(shelf.toString());
+        System.out.println(app.getShelf().toString());
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
         showFeed();
     }
