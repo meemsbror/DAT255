@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
                 showCamera();
             } else if (tabId == R.id.tab_favorite) {
                 //Show the saved vocabularies
-                //Todo right now it shows create vocabulary
-                showCreateVocabulary();
             } else if (tabId == R.id.tab_profile) {
                 showProfile();
             } else {
