@@ -63,7 +63,7 @@
                         android:id="@+id/imageButton3"
                         android:layout_gravity="right|bottom"
                         android:onClick="changeToGame"
-                        android:src="@mipmap/greenArrow"
+                        android:src="@mipmap/greenarrow"
                         android:scaleType="fitStart" />
 
                     <ImageView
@@ -126,7 +126,7 @@
                         android:id="@+id/imageButton8"
                         android:layout_gravity="right|bottom"
                         android:onClick="changeToGame"
-                        android:src="@mipmap/greenArrow"
+                        android:src="@mipmap/greenarrow"
                         android:scaleType="fitStart" />
 
                     <ImageView
