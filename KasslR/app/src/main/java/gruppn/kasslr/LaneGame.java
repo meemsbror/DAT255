@@ -16,6 +16,8 @@ import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 
@@ -42,14 +44,22 @@ public class LaneGame extends Activity {
 
     @Override
     public void onDestroy() {
-        view.stop();
+        view.pause();
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        view.stop();
+        view.pause();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Tell the gameView resume method to execute
+        view.resume();
     }
 
 
@@ -61,7 +71,7 @@ public class LaneGame extends Activity {
                                float velocityX, float velocityY) {
             Log.d(DEBUG_TAG, "vel x: " + velocityX);
             Log.d(DEBUG_TAG, "vel y: " + velocityY);
-            view.sendUserInput(velocityX, velocityY);
+            view.updateInput(velocityX, velocityY);
             return true;
         }
     }
@@ -74,82 +84,43 @@ public class LaneGame extends Activity {
 
 }
 
-class GameView extends View {
+class GameView extends SurfaceView implements Runnable {
 
-    private GameLoop mainLoop;
-    Bitmap gameBitmap;
-    Canvas gameCanvas;
-
-    public GameView(Context context) {
-        super(context);
-        this.setDrawingCacheEnabled(true);
-
-        gameCanvas = new Canvas();
-
-        mainLoop = new GameLoop(getResources(), gameCanvas);
-        mainLoop.start();
-    }
-
-    @SuppressLint("DrawAllocation") @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int w = MeasureSpec.getSize(widthMeasureSpec);
-        int h = MeasureSpec.getSize(heightMeasureSpec);
-
-        gameBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-
-        gameCanvas.setBitmap(gameBitmap);
-
-        setMeasuredDimension(w, h);
-    }
-
-    @Override
-    public void onDraw(Canvas canvas) {
-        canvas.drawBitmap(gameBitmap, 0, 0, new Paint());
-        invalidate();
-    }
-
-
-    public void stop() {
-        mainLoop.tellToStop();
-    }
-
-    public void sendUserInput(float velocityX, float velocityY){
-        mainLoop.updateInput(velocityX, velocityY);
-    }
-
-}
-
-class GameLoop extends Thread {
-
-    volatile boolean timeToStop = false;
+    private int gameWidth;
+    private int gameHeight;
+    Thread gameThread = null;
+    SurfaceHolder ourHolder;
+    volatile boolean playing;
+    //Bitmap gameBitmap;
+    Canvas canvas;
+    Paint paint;
+    final String DEBUG_TAG = "GAMELOGIC";
     private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
 
-    private DeGame logicGame;
-    private Resources gameResources;
-    private Canvas gameCanvas;
+    private int y = 50;
+    private int x = 50;
+    private float deltaY = 1;
+    private float deltaX = 0;
 
-    public GameLoop(Resources res, Canvas canvas) {
-        logicGame = new DeGame(res, canvas);
-    }
-
-    public void tellToStop(){
-        timeToStop = true;
-    }
-
-    public void updateInput(float velocityX, float velocityY){
-        logicGame.updateInput(velocityX, velocityY);
+    public GameView(Context context) {
+        super(context);
+        ourHolder = getHolder();
+        paint = new Paint();
+        playing = true;
     }
 
     @Override
     public void run()
     {
-        while (!timeToStop) {
+        while (playing) {
             float startTime = System.currentTimeMillis();
 
-            logicGame.tick();
-            logicGame.draw();
+            tick();
+
+            if(ourHolder.getSurface().isValid()) {
+                draw();
+            }
 
             float endTime = System.currentTimeMillis();
             long deltaTime = (long) (frameTime - (endTime - startTime));
@@ -162,31 +133,20 @@ class GameLoop extends Thread {
         }
     }
 
-}
-
-class DeGame {
-    private Resources resources;
-    private Canvas canvas;
-
-    private int y = 50;
-    private int x = 50;
-    private int deltaY = 1;
-    private float deltaX = 0;
-    private Paint paint;
-    final String DEBUG_TAG = "GAMELOGIC";
-
-    public DeGame(Resources res, Canvas cas) {
-        resources = res;
-        canvas = cas;
-
-        paint = new Paint();
-        paint.setTextSize(50);
+    private void updateGameDimensions(){
+        gameWidth = canvas.getWidth();
+        gameHeight = canvas.getHeight();
     }
 
     public void draw() {
+        canvas = ourHolder.lockCanvas();
+        if(gameWidth == 0 || gameHeight == 0)
+            updateGameDimensions();
+
         canvas.drawColor(Color.parseColor("#2f81f0"));
         paint.setColor(Color.WHITE);
         canvas.drawRect(new Rect(x, y, x+100, y+100), paint);
+        ourHolder.unlockCanvasAndPost(canvas);
     }
 
     public void updateInput(float velocityX, float velocityY){
@@ -202,19 +162,36 @@ class DeGame {
             // vertical movement
         }else{
             Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
+            deltaY += velocityY/2000;
         }
     }
 
     public void tick() {
-        y += deltaY;
-        x += deltaX;
-        if(y > canvas.getHeight())
-            deltaY = -1;
-        if(y < 0)
-            deltaY = 1;
-        if(x > canvas.getWidth() || x < 0)
+
+        if(y+100 > gameHeight || y < 0)
+            deltaY = -deltaY;
+        if(x+100 > gameWidth || x < 0)
             deltaX = -deltaX;
 
-        // Log.d("DEBUG", "Y: " + y);
+        y += deltaY;
+        x += deltaX;
+
     }
+
+    public void pause() {
+        playing = false;
+        try {
+            gameThread.join();
+        } catch (InterruptedException e) {
+            Log.e("Error:", "joining thread");
+        }
+
+    }
+
+    public void resume() {
+        playing = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
 }
