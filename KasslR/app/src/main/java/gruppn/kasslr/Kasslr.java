@@ -3,6 +3,9 @@ package gruppn.kasslr;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
+
+import java.io.File;
 
 import gruppn.kasslr.model.Shelf;
 
@@ -49,5 +52,9 @@ public class Kasslr extends Application {
 
     public String getUserId() {
         return userId;
+    }
+
+    public File getPictureDirectory() {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
     }
 }

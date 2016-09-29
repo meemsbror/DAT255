@@ -25,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     private Kasslr app;
 
+    private BottomBar bottomBar;
+    private int selectedTab = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +37,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         requestCameraPermission();
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabId -> {
+            if (tabId != R.id.tab_camera) {
+                selectedTab = tabId;
+            }
+
             if (tabId == R.id.tab_feed) {
                 // Show the feed
                 showFeed();
@@ -45,7 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 // Show the camera
                 showCamera();
             } else if (tabId == R.id.tab_favorite) {
-                //Show the saved vocabularies
+                // TODO Show the saved vocabularies
+                // This is temporary until we decide how to reach the gallery
+                showFragment(new GalleryFragment());
             } else if (tabId == R.id.tab_profile) {
                 showProfile();
             } else {
@@ -54,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
         });
         for (int i = 0; i < bottomBar.getTabCount(); i++) {
             bottomBar.getTabAtPosition(i).setGravity(Gravity.CENTER_VERTICAL);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Return to previous tab when closing the camera
+        if (bottomBar.getCurrentTabId() == R.id.tab_camera) {
+            bottomBar.selectTabWithId(selectedTab);
         }
     }
 

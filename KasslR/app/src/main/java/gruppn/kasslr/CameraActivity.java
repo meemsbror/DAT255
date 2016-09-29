@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -61,6 +60,7 @@ public class CameraActivity extends AppCompatActivity implements
 
     private int mCurrentFlash;
 */
+    private Kasslr app;
 
     private CameraView mCameraView;
 
@@ -71,6 +71,7 @@ public class CameraActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_camera);
 
+        app = (Kasslr) getApplication();
         mCameraView = (CameraView) findViewById(R.id.camera);
         mCameraView.addCallback(mCallback);
 
@@ -232,13 +233,12 @@ public class CameraActivity extends AppCompatActivity implements
     }
 
     private File getNewPictureFile() {
-        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
-        if (!folder.exists()) {
-            folder.mkdir();
+        File dir = app.getPictureDirectory();
+        if (!dir.exists()) {
+            dir.mkdir();
         }
 
-        File file = new File(folder, UUID.randomUUID().toString() + ".jpg");
-        return file;
+        return new File(dir, UUID.randomUUID().toString() + ".jpg");
     }
 
     public static class ConfirmationDialogFragment extends DialogFragment {
