@@ -34,6 +34,11 @@ public class GalleryFragment extends Fragment {
         app = (Kasslr) getActivity().getApplication();
 
         gridGallery = (GridView) getActivity().findViewById(R.id.grid_gallery_photos);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         // Populate gallery
         loadPictures();
@@ -42,7 +47,7 @@ public class GalleryFragment extends Fragment {
     private void loadPictures() {
         File dir = app.getPictureDirectory();
         File[] files;
-        if (dir == null || (files = dir.listFiles(FILTER)).length == 0) {
+        if ((files = dir.listFiles(FILTER)) == null || files.length == 0) {
             // There are no images
             return;
         }
