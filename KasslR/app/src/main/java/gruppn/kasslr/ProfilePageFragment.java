@@ -6,7 +6,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * The activity for viewing the profile.
@@ -24,8 +29,26 @@ public class ProfilePageFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         if (getArguments() != null) {
-            TextView usernameText = (TextView) getActivity().findViewById(R.id.usernameText);
-            usernameText.setText(getArguments().getString(EXTRA_USER_ID));
+            //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
+            //usernameText.setText(getArguments().getString(EXTRA_USER_ID));
         }
+
+        //Change profile background
+        ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
+        Picasso.with(getContext())
+                .load(R.drawable.tempbackground)
+                .fit()
+                .into(imageView);
+
+        //Change profile pic
+        /*
+        CircleImageView imageView = (CircleImageView) getView().findViewById(R.id.profile_image);
+        Picasso.with(getContext())
+                .load(R.drawable.hehecat)
+                .fit()
+                .into(imageView);
+        */
+
+
     }
 }
