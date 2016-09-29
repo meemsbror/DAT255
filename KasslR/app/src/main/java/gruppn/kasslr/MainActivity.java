@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 showFeed();
             } else if (tabId == R.id.tab_search) {
                 //Show the search page
+                showSearch();
             } else if (tabId == R.id.tab_camera) {
                 // Show the camera
                 showCamera();
@@ -82,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void showFeed() {
         showFragment(new FeedFragment());
+    }
+
+    public void showSearch() {
+        // TODO create a search fragment, for now we just clear the frame
+        ((FrameLayout) findViewById(R.id.main_frame)).removeAllViews();
     }
 
     public void showProfile() {

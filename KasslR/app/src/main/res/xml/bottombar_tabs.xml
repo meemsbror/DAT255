@@ -6,17 +6,17 @@
             icon="@drawable/ic_action_home"
             title="Feed" />
         <tab
-            id="@+id/tab_search"
-            icon="@drawable/ic_action_search"
-            title="Search" />
+            id="@+id/tab_favorite"
+            icon="@drawable/ic_action_favorite"
+            title="Favorite" />
         <tab
             id="@+id/tab_camera"
             icon="@drawable/ic_action_camera"
             title="Camera" />
         <tab
-            id="@+id/tab_favorite"
-            icon="@drawable/ic_action_favorite"
-            title="Favorite" />
+            id="@+id/tab_search"
+            icon="@drawable/ic_action_search"
+            title="Search" />
         <tab
             id="@+id/tab_profile"
             icon="@drawable/ic_action_profile"
