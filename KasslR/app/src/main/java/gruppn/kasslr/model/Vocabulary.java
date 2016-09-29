@@ -1,5 +1,8 @@
 package gruppn.kasslr.model;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.List;
 
 /**
@@ -40,6 +43,16 @@ public class Vocabulary {
         this.items = items;
     }
 
+    public JSONArray toJSONArray() throws JSONException {
+        JSONArray vocabulary = new JSONArray();
+        for(Object item : items){
+            if(item instanceof VocabularyItem){
+                vocabulary.put(((VocabularyItem)item).toJSON());
+            }
+        }
+        return vocabulary;
+    }
+
     @Override
     public String toString() {
         return "Vocabulary{" +
@@ -48,4 +61,5 @@ public class Vocabulary {
                 ", items=" + items +
                 '}';
     }
+
 }

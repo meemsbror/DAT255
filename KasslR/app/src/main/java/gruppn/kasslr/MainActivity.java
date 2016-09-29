@@ -77,9 +77,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, CameraActivity.class));
     }
 
-    public void showCreateVocabulary(){
-        //startActivity(new Intent(this, CreateVocabularyActivity.class));
-    }
 
     public void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();

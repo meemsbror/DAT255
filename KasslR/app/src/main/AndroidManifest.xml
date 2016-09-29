@@ -29,7 +29,6 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".CameraActivity" />
         <activity android:name=".AddWordActivity" />
-        <activity android:name=".CreateVocabularyActivity" />
     </application>
 
 </manifest>
