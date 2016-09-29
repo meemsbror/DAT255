@@ -1,9 +1,7 @@
 package gruppn.kasslr;
 
-import android.content.Context;
 import android.content.Intent;
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -19,7 +17,7 @@ import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 
-import gruppn.kasslr.model.Shelf;
+import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
 
 public class MainActivity extends AppCompatActivity {

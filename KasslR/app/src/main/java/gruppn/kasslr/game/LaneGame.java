@@ -1,25 +1,24 @@
-package gruppn.kasslr;
+package gruppn.kasslr.game;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by Adam on 2016-09-29.
@@ -97,11 +96,14 @@ class GameView extends SurfaceView implements Runnable {
     final String DEBUG_TAG = "GAMELOGIC";
     private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
+    private double fps = 0;
 
     private int y = 50;
     private int x = 50;
     private float deltaY = 1;
     private float deltaX = 0;
+
+    private Set<Particle> particles = new HashSet<Particle>();
 
     public GameView(Context context) {
         super(context);
@@ -114,7 +116,7 @@ class GameView extends SurfaceView implements Runnable {
     public void run()
     {
         while (playing) {
-            float startTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
 
             tick();
 
@@ -122,8 +124,9 @@ class GameView extends SurfaceView implements Runnable {
                 draw();
             }
 
-            float endTime = System.currentTimeMillis();
+            long endTime = System.currentTimeMillis();
             long deltaTime = (long) (frameTime - (endTime - startTime));
+            fps = 1000.0 / (endTime - startTime)*1.0;
             try {
                 if(deltaTime < 0)
                     deltaTime = 0;
@@ -146,7 +149,20 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawColor(Color.parseColor("#2f81f0"));
         paint.setColor(Color.WHITE);
         canvas.drawRect(new Rect(x, y, x+100, y+100), paint);
+
+        drawParticles();
+
+        paint.setTextSize(45);
+        canvas.drawText("FPS: " + fps, 20, 40, paint);
         ourHolder.unlockCanvasAndPost(canvas);
+    }
+
+    public void drawParticles(){
+        for(Particle particle : particles){
+            float progress = ((particle.getLifeSpan()-particle.getAge())*1.0F / particle.getLifeSpan()*1.0F);
+            paint.setColor(Color.argb((int)(progress*255.0), 255, 255, 255));
+            canvas.drawCircle(particle.getX(), particle.getY(), progress*40.0F, paint);
+        }
     }
 
     public void updateInput(float velocityX, float velocityY){
@@ -175,6 +191,39 @@ class GameView extends SurfaceView implements Runnable {
 
         y += deltaY;
         x += deltaX;
+
+        spawnParticles();
+        updateParticles();
+
+    }
+
+    private void spawnParticles(){
+
+        if(gameWidth < 1)
+            return;
+
+        int target = 340 - particles.size();
+        Random rand = new Random();
+        for (int i=0; i<target; i++){
+            float x = gameWidth/2;
+            float y = gameHeight/2;
+            float deltaX = rand.nextFloat()*7.0F-3.5F;
+            float deltaY = rand.nextFloat()*7.0F-3.5F;
+            int lifespan = rand.nextInt(2400);
+            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan);
+            particles.add(particle);
+        }
+    }
+
+    private void updateParticles(){
+        Iterator<Particle> iterator = particles.iterator();
+        while (iterator.hasNext()) {
+            Particle particle = iterator.next();
+            particle.tick();
+
+            if(particle.isDead())
+                iterator.remove();
+        }
 
     }
 
