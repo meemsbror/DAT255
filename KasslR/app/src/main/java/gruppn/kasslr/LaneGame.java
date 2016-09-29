@@ -11,14 +11,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 /**
  * Created by Adam on 2016-09-29.
@@ -26,57 +25,53 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public class LaneGame extends Activity {
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
+    final String DEBUG_TAG = "GaME";
+
+    private GestureDetectorCompat mDetector;
+    private GameView view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(new GameView(this));
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("LaneGame Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
+        view = new GameView(this);
+        setContentView(view);
+        mDetector = new GestureDetectorCompat(this, new GameGestureListener());
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    public void onDestroy() {
+        view.stop();
+        super.onDestroy();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
+    public void onPause() {
+        view.stop();
+        super.onDestroy();
     }
+
+
+    class GameGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final String DEBUG_TAG = "Gestures";
+
+        @Override
+        public boolean onFling(MotionEvent event1, MotionEvent event2,
+                               float velocityX, float velocityY) {
+            Log.d(DEBUG_TAG, "vel x: " + velocityX);
+            Log.d(DEBUG_TAG, "vel y: " + velocityY);
+            view.sendUserInput(velocityX, velocityY);
+            return true;
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
 }
 
 class GameView extends View {
@@ -114,10 +109,20 @@ class GameView extends View {
         invalidate();
     }
 
+
+    public void stop() {
+        mainLoop.tellToStop();
+    }
+
+    public void sendUserInput(float velocityX, float velocityY){
+        mainLoop.updateInput(velocityX, velocityY);
+    }
+
 }
 
 class GameLoop extends Thread {
 
+    volatile boolean timeToStop = false;
     private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
 
@@ -129,18 +134,28 @@ class GameLoop extends Thread {
         logicGame = new DeGame(res, canvas);
     }
 
+    public void tellToStop(){
+        timeToStop = true;
+    }
+
+    public void updateInput(float velocityX, float velocityY){
+        logicGame.updateInput(velocityX, velocityY);
+    }
+
     @Override
     public void run()
     {
-        while (true) {
+        while (!timeToStop) {
             float startTime = System.currentTimeMillis();
 
-            logicGame.Update();
-            logicGame.Draw();
+            logicGame.tick();
+            logicGame.draw();
 
             float endTime = System.currentTimeMillis();
             long deltaTime = (long) (frameTime - (endTime - startTime));
             try {
+                if(deltaTime < 0)
+                    deltaTime = 0;
                 Thread.sleep(deltaTime);
             } catch (InterruptedException e) {
             }
@@ -153,8 +168,12 @@ class DeGame {
     private Resources resources;
     private Canvas canvas;
 
-    private int x = 0;
+    private int y = 50;
+    private int x = 50;
+    private int deltaY = 1;
+    private float deltaX = 0;
     private Paint paint;
+    final String DEBUG_TAG = "GAMELOGIC";
 
     public DeGame(Resources res, Canvas cas) {
         resources = res;
@@ -164,13 +183,38 @@ class DeGame {
         paint.setTextSize(50);
     }
 
-    public void Draw() {
-        canvas.drawColor(Color.WHITE);
-        canvas.drawRect(new Rect(x, 0, x + 50, 50), paint);
+    public void draw() {
+        canvas.drawColor(Color.parseColor("#2f81f0"));
+        paint.setColor(Color.WHITE);
+        canvas.drawRect(new Rect(x, y, x+100, y+100), paint);
     }
 
-    public void Update() {
-        x += 1;
-        Log.d("DEBUG", "X: " + x);
+    public void updateInput(float velocityX, float velocityY){
+
+        float absX = Math.abs(velocityX);
+        float absY = Math.abs(velocityY);
+
+        //sidewards movement
+        if(absX > absY){
+            Log.d(DEBUG_TAG, "flick sidewards w/ velocity " + velocityX);
+            deltaX += velocityX/2000;
+
+            // vertical movement
+        }else{
+            Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
+        }
+    }
+
+    public void tick() {
+        y += deltaY;
+        x += deltaX;
+        if(y > canvas.getHeight())
+            deltaY = -1;
+        if(y < 0)
+            deltaY = 1;
+        if(x > canvas.getWidth() || x < 0)
+            deltaX = -deltaX;
+
+        // Log.d("DEBUG", "Y: " + y);
     }
 }

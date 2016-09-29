@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeToGame(View view){
-        Intent myIntent = new Intent(this,Game.class);
+        Intent myIntent = new Intent(this,LaneGame.class);
         startActivity(myIntent);
     }
 
