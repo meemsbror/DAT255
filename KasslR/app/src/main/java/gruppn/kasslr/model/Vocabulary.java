@@ -12,7 +12,7 @@ import java.util.List;
 public class Vocabulary {
     private String owner;
     private String title;
-    private List items;
+    private List<VocabularyItem> items;
 
     public Vocabulary(String owner, String title){
         this.owner = owner;
@@ -35,20 +35,18 @@ public class Vocabulary {
         this.title = title;
     }
 
-    public List getItems() {
+    public List<VocabularyItem> getItems() {
         return items;
     }
 
-    public void setItems(List items) {
+    public void setItems(List<VocabularyItem> items) {
         this.items = items;
     }
 
     public JSONArray toJSONArray() throws JSONException {
         JSONArray vocabulary = new JSONArray();
-        for(Object item : items){
-            if(item instanceof VocabularyItem){
-                vocabulary.put(((VocabularyItem)item).toJSON());
-            }
+        for(VocabularyItem item : items){
+            vocabulary.put(item.toJSON());
         }
         return vocabulary;
     }

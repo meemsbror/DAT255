@@ -1,8 +1,16 @@
 package gruppn.kasslr.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import gruppn.kasslr.model.Vocabulary;
+import gruppn.kasslr.model.VocabularyItem;
 
 /*
     How to read/write data to/from database;
@@ -20,12 +28,25 @@ public class KasslrDatabase extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        // Create tables
+    public void onCreate(SQLiteDatabase db) {
+        // Create vocabulary_items table
+        db.execSQL("CREATE TABLE vocabulary_items ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "name TEXT,"
+                + "image TEXT,"
+                + "vocabulary_id INTEGER"
+                + ")");
+
+        // Create vocabularies table
+        db.execSQL("CREATE TABLE vocabularies ("
+                + "vocabulary_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "name TEXT,"
+                + "owner TEXT"
+                + ")");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Upgrade or create additional tables if necessary
         /*
         switch (oldVersion) {
@@ -39,5 +60,68 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 break;
         }
         */
+    }
+
+    public List<Vocabulary> getVocabularies() throws SQLiteException {
+        List<Vocabulary> vocabularies = new ArrayList<>();
+
+        SQLiteDatabase db = null;
+        Cursor cVocabularies = null;
+        try {
+            db = getReadableDatabase();
+
+            cVocabularies = db.rawQuery("SELECT * FROM vocabularies", null);
+            while (cVocabularies.moveToNext()) {
+                Vocabulary vocabulary = new Vocabulary(cVocabularies.getString(1), cVocabularies.getString(2));
+
+                List<VocabularyItem> items = new ArrayList<>();
+                Cursor cItems = null;
+                try {
+                    cItems = db.rawQuery("SELECT name, image FROM vocabulary_items WHERE vocabulary_id = " + cVocabularies.getInt(0), null);
+                    while (cItems.moveToNext()) {
+                        items.add(new VocabularyItem(cItems.getString(0), cItems.getString(1)));
+                    }
+                } finally {
+                    if (cItems != null) {
+                        cItems.close();
+                    }
+                }
+            }
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+            if (cVocabularies != null) {
+                cVocabularies.close();
+            }
+        }
+
+        return vocabularies;
+    }
+
+    public void saveVocabulary(Vocabulary vocabulary) throws SQLiteException {
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getWritableDatabase();
+            db.execSQL("INSERT INTO vocabularies (name, owner) VALUES (?, ?)",
+                    new Object[] {vocabulary.getTitle(), vocabulary.getOwner()});
+
+            cursor = db.rawQuery("SELECT last_insert_rowid()", null);
+            cursor.moveToNext();
+            long id = cursor.getLong(0);
+
+            for (VocabularyItem item : vocabulary.getItems()) {
+                db.execSQL("INSERT INTO vocabulary_items (name, image, vocabulary_id) VALUES (?, ?, ?)",
+                        new Object[] {item.getName(), item.getImageUrl(), id});
+            }
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 }
