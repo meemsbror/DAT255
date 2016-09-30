@@ -5,6 +5,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,25 +39,31 @@ public class MainActivity extends AppCompatActivity {
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabId -> {
+            int previous = selectedTab;
             if (tabId != R.id.tab_camera) {
                 selectedTab = tabId;
             }
 
+            boolean slideToRight = previous > tabId;
             if (tabId == R.id.tab_feed) {
                 // Show the feed
-                showFeed();
+                if (previous == -1) {
+                    showFeed();
+                } else {
+                    slideToFragment(new FeedFragment(), slideToRight);
+                }
             } else if (tabId == R.id.tab_search) {
                 //Show the search page
-                showSearch();
+                slideToFragment(new SearchFragment(), slideToRight);
             } else if (tabId == R.id.tab_camera) {
                 // Show the camera
                 showCamera();
             } else if (tabId == R.id.tab_favorite) {
                 // TODO Show the saved vocabularies
                 // This is temporary until we decide how to reach the gallery
-                showFragment(new GalleryFragment());
+                slideToFragment(new GalleryFragment(), slideToRight);
             } else if (tabId == R.id.tab_profile) {
-                showProfile();
+                slideToFragment(new ProfilePageFragment(), slideToRight);
             } else {
                 //When can this happen?
             }
@@ -85,16 +92,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSearch() {
-        // TODO create a search fragment, for now we just clear the frame
-        ((FrameLayout) findViewById(R.id.main_frame)).removeAllViews();
+        showFragment(new SearchFragment());
     }
 
     public void showProfile() {
-        Fragment fragment = new ProfilePageFragment();
-        Bundle extras = new Bundle();
-        extras.putString(ProfilePageFragment.EXTRA_USER_ID, app.getUserId());
-        fragment.setArguments(extras);
-        showFragment(fragment);
+        showFragment(new ProfilePageFragment());
     }
 
     public void showCamera() {
@@ -104,6 +106,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void showFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
+    }
+
+    public void slideToFragment(Fragment fragment, boolean slideRight) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (slideRight) {
+            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else {
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        }
+        transaction.replace(R.id.main_frame, fragment);
+        transaction.commit();
     }
 
     public void changeToGame(View view){

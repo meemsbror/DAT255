@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * The activity for viewing the profile.
  */
 public class ProfilePageFragment extends Fragment {
-    public static final String EXTRA_USER_ID = "userId";
+    private Kasslr app;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -28,10 +28,10 @@ public class ProfilePageFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (getArguments() != null) {
-            //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
-            //usernameText.setText(getArguments().getString(EXTRA_USER_ID));
-        }
+        app = (Kasslr) getActivity().getApplication();
+
+        //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
+        //usernameText.setText(app.getUserId());
 
         //Change profile background
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
