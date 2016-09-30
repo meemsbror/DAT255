@@ -98,8 +98,8 @@ class GameView extends SurfaceView implements Runnable {
     private float frameTime = 1000 / frameRate;
     private double fps = 0;
 
-    private int playerY = 150;
-    private int playerX = 150;
+    private float playerY = 150;
+    private float playerX = 150;
     private float playerDeltaY = 3;
     private float playerDeltaX = 2;
     private PlayerState playerState = PlayerState.IDLE;
@@ -152,7 +152,7 @@ class GameView extends SurfaceView implements Runnable {
         drawParticles();
 
         paint.setColor(Color.DKGRAY);
-        canvas.drawRect(new Rect(playerX, playerY, playerX+100, playerY+100), paint);
+        canvas.drawRect(new Rect((int)playerX, (int)playerY, (int)playerX+100, (int)playerY+100), paint);
 
         paint.setColor(Color.WHITE);
         paint.setTextSize(50);
@@ -164,7 +164,7 @@ class GameView extends SurfaceView implements Runnable {
         for(Particle particle : particles){
             float progress = ((particle.getLifeSpan()-particle.getAge())*1.0F / particle.getLifeSpan()*1.0F);
             paint.setColor(Color.argb((int)(progress*255.0), 255, 255, 255));
-            canvas.drawCircle(particle.getX(), particle.getY(), progress*40.0F, paint);
+            canvas.drawCircle(particle.getX(), particle.getY(), progress*20.0F, paint);
         }
     }
 
@@ -173,15 +173,17 @@ class GameView extends SurfaceView implements Runnable {
         float absX = Math.abs(velocityX);
         float absY = Math.abs(velocityY);
 
+        playerDeltaX += velocityX/2000;
+        playerDeltaY += velocityY/2000;
         //sidewards movement
         if(absX > absY){
             Log.d(DEBUG_TAG, "flick sidewards w/ velocity " + velocityX);
-            playerDeltaX += velocityX/2000;
+           // playerDeltaX += velocityX/2000;
 
             // vertical movement
         }else{
             Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
-            playerDeltaY += velocityY/2000;
+          //  playerDeltaY += velocityY/2000;
         }
     }
 
@@ -195,6 +197,9 @@ class GameView extends SurfaceView implements Runnable {
         playerY += playerDeltaY;
         playerX += playerDeltaX;
 
+        playerDeltaX *= 0.995;
+        playerDeltaY *= 0.995;
+
         spawnParticles();
         updateParticles();
 
@@ -205,14 +210,14 @@ class GameView extends SurfaceView implements Runnable {
         if(gameWidth < 1)
             return;
 
-        int target = 240 - particles.size();
+        int target = 300 - particles.size();
         Random rand = new Random();
         for (int i=0; i<target; i++){
             float x = playerX+50;
-            float y = playerY+50;
-            float deltaX = -playerDeltaX * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 1.0F);
-            float deltaY = -playerDeltaY * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 1.0F);
-            int lifespan = rand.nextInt(1000);
+            float y = playerY+70;
+            float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
+            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
+            int lifespan = rand.nextInt(300);
             Particle particle = new Particle(x, y, deltaX, deltaY, lifespan);
             particles.add(particle);
         }

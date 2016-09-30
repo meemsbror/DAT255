@@ -74,6 +74,8 @@ public class Particle {
         age++;
         x += deltaX;
         y += deltaY;
+
+        y += 8;
     }
 
     public boolean isDead(){
