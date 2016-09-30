@@ -98,10 +98,11 @@ class GameView extends SurfaceView implements Runnable {
     private float frameTime = 1000 / frameRate;
     private double fps = 0;
 
-    private int boxY = 150;
-    private int boxX = 150;
-    private float boxDeltaY = 3;
-    private float boxDeltaX = 2;
+    private int playerY = 150;
+    private int playerX = 150;
+    private float playerDeltaY = 3;
+    private float playerDeltaX = 2;
+    private PlayerState playerState = PlayerState.IDLE;
 
     private Set<Particle> particles = new HashSet<Particle>();
 
@@ -151,7 +152,7 @@ class GameView extends SurfaceView implements Runnable {
         drawParticles();
 
         paint.setColor(Color.DKGRAY);
-        canvas.drawRect(new Rect(boxX, boxY, boxX+100, boxY+100), paint);
+        canvas.drawRect(new Rect(playerX, playerY, playerX+100, playerY+100), paint);
 
         paint.setColor(Color.WHITE);
         paint.setTextSize(50);
@@ -175,24 +176,24 @@ class GameView extends SurfaceView implements Runnable {
         //sidewards movement
         if(absX > absY){
             Log.d(DEBUG_TAG, "flick sidewards w/ velocity " + velocityX);
-            boxDeltaX += velocityX/2000;
+            playerDeltaX += velocityX/2000;
 
             // vertical movement
         }else{
             Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
-            boxDeltaY += velocityY/2000;
+            playerDeltaY += velocityY/2000;
         }
     }
 
     public void tick() {
 
-        if(boxY+100 > gameHeight || boxY < 0)
-            boxDeltaY = -boxDeltaY;
-        if(boxX+100 > gameWidth || boxX < 0)
-            boxDeltaX = -boxDeltaX;
+        if(playerY+100 > gameHeight || playerY < 0)
+            playerDeltaY = -playerDeltaY;
+        if(playerX+100 > gameWidth || playerX < 0)
+            playerDeltaX = -playerDeltaX;
 
-        boxY += boxDeltaY;
-        boxX += boxDeltaX;
+        playerY += playerDeltaY;
+        playerX += playerDeltaX;
 
         spawnParticles();
         updateParticles();
@@ -207,10 +208,10 @@ class GameView extends SurfaceView implements Runnable {
         int target = 240 - particles.size();
         Random rand = new Random();
         for (int i=0; i<target; i++){
-            float x = boxX+50;
-            float y = boxY+50;
-            float deltaX = -boxDeltaX * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 2.0F);
-            float deltaY = -boxDeltaY * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 2.0F);
+            float x = playerX+50;
+            float y = playerY+50;
+            float deltaX = -playerDeltaX * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 1.0F);
+            float deltaY = -playerDeltaY * (rand.nextFloat()*0.4F) + (rand.nextFloat() - 1.0F);
             int lifespan = rand.nextInt(1000);
             Particle particle = new Particle(x, y, deltaX, deltaY, lifespan);
             particles.add(particle);
@@ -245,4 +246,8 @@ class GameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
+}
+
+enum PlayerState{
+    IDLE, MOVING, ATTACKING;
 }
