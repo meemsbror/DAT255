@@ -2,9 +2,12 @@ package gruppn.kasslr.game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -106,11 +109,15 @@ class GameView extends SurfaceView implements Runnable {
 
     private Set<Particle> particles = new HashSet<Particle>();
 
+    private Bitmap background;
+    private float backgroundPosition = 0;
+
     public GameView(Context context) {
         super(context);
         ourHolder = getHolder();
         paint = new Paint();
         playing = true;
+
     }
 
     @Override
@@ -140,6 +147,26 @@ class GameView extends SurfaceView implements Runnable {
     private void updateGameDimensions(){
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
+
+        OpenSimplexNoise noise = new OpenSimplexNoise();
+        background = Bitmap.createBitmap(gameWidth, gameHeight*2, Bitmap.Config.ARGB_8888);
+        background.setHasAlpha(false);
+        for (int y = 0; y < gameHeight*2; y++)
+        {
+            for (int x = 0; x < gameWidth; x++)
+            {
+                double value = noise.eval(x / 180.0, y / 180.0);
+                int rgb = 0x2f81f0;
+                if(value < 0.2)
+                    rgb = 0x2279F0;
+                if(value < -0.4)
+                    rgb = 0x0C69E8;
+                //int rgb = 0x010101 * (int)((value + 1.0) * 127.5);
+                background.setPixel(x, y, rgb);
+            }
+        }
+
+        backgroundPosition = -gameHeight;
     }
 
     public void draw() {
@@ -149,6 +176,9 @@ class GameView extends SurfaceView implements Runnable {
 
         canvas.drawColor(Color.parseColor("#2f81f0"));
 
+        if(background != null) {
+            canvas.drawBitmap(background, 0, backgroundPosition, null);
+        }
         drawParticles();
 
         paint.setColor(Color.DKGRAY);
@@ -203,6 +233,7 @@ class GameView extends SurfaceView implements Runnable {
         spawnParticles();
         updateParticles();
 
+        backgroundPosition += 1;
     }
 
     private void spawnParticles(){
