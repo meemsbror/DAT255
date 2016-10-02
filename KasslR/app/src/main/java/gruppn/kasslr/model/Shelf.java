@@ -8,15 +8,15 @@ import java.util.List;
  */
 
 public class Shelf {
-    private List items;
-    private List vocabularies;
+    private List<VocabularyItem> items;
+    private List<Vocabulary> vocabularies;
 
     public Shelf(){
-        items = new ArrayList();
-        vocabularies = new ArrayList();
+        items = new ArrayList<>();
+        vocabularies = new ArrayList<>();
     }
 
-    public List getItems() {
+    public List<VocabularyItem> getItems() {
         return items;
     }
 
@@ -24,7 +24,7 @@ public class Shelf {
         items.add(item);
     }
 
-    public List getVocabularies() {
+    public List<Vocabulary> getVocabularies() {
         return vocabularies;
     }
 
