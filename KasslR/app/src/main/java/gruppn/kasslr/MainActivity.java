@@ -4,16 +4,19 @@ import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
@@ -123,6 +126,24 @@ public class MainActivity extends AppCompatActivity {
         Intent myIntent = new Intent(this,LaneGame.class);
         startActivity(myIntent);
     }
+
+    public void vocabularyTransition(View view){
+
+        Intent intent = new Intent(MainActivity.this, VocabularyTransitionActivity.class);
+
+        String transitionName = getString(R.string.transition_vocabulary);
+
+        CardView cardView = (CardView) findViewById(R.id.card_view);
+
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        cardView,   // The view which starts the transition
+                        transitionName    // The transitionName of the view we’re transitioning to
+                );
+        ActivityCompat.startActivity(this, intent, options.toBundle());
+
+    }
+
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private final int MY_PERMISSIONS_REQUEST_STORAGE = 2;
