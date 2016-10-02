@@ -22,10 +22,12 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         if (getArguments() != null) {
+            System.out.println(Player.getScore());
             TextView usernameText = (TextView) getActivity().findViewById(R.id.usernameText);
             usernameText.setText(getArguments().getString(EXTRA_USER_ID));
+            TextView points = (TextView) getActivity().findViewById(R.id.points);
+            points.setText("" + Player.getScore());
         }
     }
 }

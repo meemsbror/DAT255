@@ -44,4 +44,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp" />
 
+    <TextView
+        android:text="points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_alignRight="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_marginTop="37dp"
+        android:id="@+id/points" />
+
 </RelativeLayout>

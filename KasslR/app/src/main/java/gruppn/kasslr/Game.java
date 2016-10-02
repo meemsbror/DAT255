@@ -16,6 +16,7 @@ public class Game extends AppCompatActivity{
     }
 
     public void answer1Click(View view){
+        Player.incScore(Player.CompletedAction.COMPLETE_VOCABULARY);
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
     }
