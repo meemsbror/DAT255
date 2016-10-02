@@ -1,18 +1,30 @@
 package gruppn.kasslr;
 
+import android.animation.ObjectAnimator;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * The activity for viewing the profile.
  */
 public class ProfilePageFragment extends Fragment {
-    public static final String EXTRA_USER_ID = "userId";
+    private Kasslr app;
+
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.LayoutManager recyclerLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -22,12 +34,42 @@ public class ProfilePageFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getArguments() != null) {
-            System.out.println(Player.getScore());
-            TextView usernameText = (TextView) getActivity().findViewById(R.id.usernameText);
-            usernameText.setText(getArguments().getString(EXTRA_USER_ID));
-            TextView points = (TextView) getActivity().findViewById(R.id.points);
-            points.setText("" + Player.getScore());
-        }
+        //add point
+        app = (Kasslr) getActivity().getApplication();
+
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
+
+        recyclerView.setHasFixedSize(true);
+
+        GridLayoutManager recyclerLayoutManager = new GridLayoutManager(getActivity(), 3);
+
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+
+        VocabularyAdapter va = new VocabularyAdapter(app.getShelf().getVocabularies());
+        recyclerView.setAdapter(va);
+
+        //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
+        //usernameText.setText(app.getUserId());
+
+        //Change profile background
+        ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
+        Picasso.with(getContext())
+                .load(R.drawable.tempbackground)
+                .fit()
+                .into(imageView);
+
+        //Change profile pic
+        /*
+        CircleImageView imageView = (CircleImageView) getView().findViewById(R.id.profile_image);
+        Picasso.with(getContext())
+                .load(R.drawable.hehecat)
+                .fit()
+                .into(imageView);
+        */
+
+        //Score
+        TextView points = (TextView)getView().findViewById(R.id.points);
+        points.setText("" + Player.getScore());
     }
+
 }

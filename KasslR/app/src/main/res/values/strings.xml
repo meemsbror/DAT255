@@ -11,6 +11,8 @@
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
     <string name="what_is_this">Vad är detta för något?</string>
+    <string name="profile_name">Namn</string>
+    <string name="transition_vocabulary">Vocabulary Transition</string>
 
     <string name="key_user_id">kasslr.userid</string>
 </resources>

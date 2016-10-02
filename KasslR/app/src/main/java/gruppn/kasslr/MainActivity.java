@@ -1,29 +1,35 @@
 package gruppn.kasslr;
 
-import android.content.Context;
 import android.content.Intent;
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 
-import gruppn.kasslr.model.Shelf;
+import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
 
 public class MainActivity extends AppCompatActivity {
 
     private Kasslr app;
+
+    private BottomBar bottomBar;
+    private int selectedTab = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,26 +40,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         requestCameraPermission();
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.setOnTabSelectListener(tabId -> {
+            int previous = selectedTab;
+            if (tabId != R.id.tab_camera) {
+                selectedTab = tabId;
+            }
+
+            boolean slideToRight = previous > tabId;
             if (tabId == R.id.tab_feed) {
                 // Show the feed
-                showFeed();
+                if (previous == -1) {
+                    showFeed();
+                } else {
+                    slideToFragment(new FeedFragment(), slideToRight);
+                }
             } else if (tabId == R.id.tab_search) {
                 //Show the search page
+                slideToFragment(new SearchFragment(), slideToRight);
             } else if (tabId == R.id.tab_camera) {
                 // Show the camera
                 showCamera();
             } else if (tabId == R.id.tab_favorite) {
-                //Show the saved vocabularies
+                // TODO Show the saved vocabularies
+                // This is temporary until we decide how to reach the gallery
+                slideToFragment(new GalleryFragment(), slideToRight);
             } else if (tabId == R.id.tab_profile) {
-                showProfile();
+                slideToFragment(new ProfilePageFragment(), slideToRight);
             } else {
                 //When can this happen?
             }
         });
         for (int i = 0; i < bottomBar.getTabCount(); i++) {
             bottomBar.getTabAtPosition(i).setGravity(Gravity.CENTER_VERTICAL);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Return to previous tab when closing the camera
+        if (bottomBar.getCurrentTabId() == R.id.tab_camera) {
+            bottomBar.selectTabWithId(selectedTab);
         }
     }
 
@@ -65,12 +94,12 @@ public class MainActivity extends AppCompatActivity {
         showFragment(new FeedFragment());
     }
 
+    public void showSearch() {
+        showFragment(new SearchFragment());
+    }
+
     public void showProfile() {
-        Fragment fragment = new ProfilePageFragment();
-        Bundle extras = new Bundle();
-        extras.putString(ProfilePageFragment.EXTRA_USER_ID, app.getUserId());
-        fragment.setArguments(extras);
-        showFragment(fragment);
+        showFragment(new ProfilePageFragment());
     }
 
     public void showCamera() {
@@ -82,10 +111,39 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
+    public void slideToFragment(Fragment fragment, boolean slideRight) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (slideRight) {
+            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
+        } else {
+            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        }
+        transaction.replace(R.id.main_frame, fragment);
+        transaction.commit();
+    }
+
     public void changeToGame(View view){
-        Intent myIntent = new Intent(this,Game.class);
+        Intent myIntent = new Intent(this,LaneGame.class);
         startActivity(myIntent);
     }
+
+    public void vocabularyTransition(View view){
+
+        Intent intent = new Intent(MainActivity.this, VocabularyTransitionActivity.class);
+
+        String transitionName = getString(R.string.transition_vocabulary);
+
+        CardView cardView = (CardView) findViewById(R.id.card_view);
+
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                        cardView,   // The view which starts the transition
+                        transitionName    // The transitionName of the view we’re transitioning to
+                );
+        ActivityCompat.startActivity(this, intent, options.toBundle());
+
+    }
+
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private final int MY_PERMISSIONS_REQUEST_STORAGE = 2;
