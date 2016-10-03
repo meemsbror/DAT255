@@ -43,7 +43,7 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
         Vocabulary v = vocabularyList.get(position);
         holder.owner.setText(v.getOwner());
         holder.title.setText(v.getTitle());
-    
+
     }
 
     @Override
@@ -85,7 +85,6 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Clicked Country Position = ", Toast.LENGTH_SHORT).show();
             vocabularyTransition(v);
         }
 
