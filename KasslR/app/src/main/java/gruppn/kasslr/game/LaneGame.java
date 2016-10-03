@@ -121,10 +121,7 @@ class GameView extends SurfaceView implements Runnable {
     private Set<Target> liveTargets = new HashSet<Target>();
     private int score = 0;
 
-    private int polySize = 0;
-    private Set<Path> backgroundPolys = new HashSet<Path>();
-    private Set<Path> backgroundPolys2 = new HashSet<Path>();
-    private Bitmap background;
+    private Background background;
     private float backgroundPosition = 0;
 
     private int tickCount = 0;
@@ -164,108 +161,10 @@ class GameView extends SurfaceView implements Runnable {
     private void updateGameDimensions(){
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
-
-        polySize = gameWidth / MAP_CHUNK_WIDTH;
-
-        OpenSimplexNoise noise = new OpenSimplexNoise();
-        ArrayList<ArrayList<Boolean>> chunkArr = new ArrayList<ArrayList<Boolean>>();
-        ArrayList<ArrayList<Boolean>> chunkArr2 = new ArrayList<ArrayList<Boolean>>();
-        for (int y = 0; y < MAP_CHUNK_HEIGHT; y++)
-        {
-            ArrayList<Boolean> rowList = new ArrayList<Boolean>();
-            ArrayList<Boolean> rowList2 = new ArrayList<Boolean>();
-            for (int x = 0; x < MAP_CHUNK_WIDTH; x++)
-            {
-                double value = noise.eval(x / 6.0, y / 6.0);
-                int rgb = 0x2f81f0;
-                if(value < 0)
-                    rgb = 0x2279F0;
-                rowList.add(value < 0);
-                rowList2.add(value < -0.5);
-            }
-            chunkArr.add(rowList);
-            chunkArr2.add(rowList2);
-        }
-        for (int y = 0; y < MAP_CHUNK_HEIGHT; y++)
-        {
-            for (int x = 0; x < MAP_CHUNK_WIDTH; x++)
-            {
-                int val = getPointSurroundings(chunkArr, y, x);
-                if(val > 0) {
-                    Path path = getPathFromPointValue(val);
-                    path.offset(x * polySize, y * polySize);
-                    backgroundPolys.add(path);
-                }
-
-                val = getPointSurroundings(chunkArr2, y, x);
-                if(val > 0) {
-                    Path path = getPathFromPointValue(val);
-                    path.offset(x * polySize, y * polySize);
-                    backgroundPolys2.add(path);
-                }
-            }
-        }
-
         playerY = gameHeight - 260;
 
-    }
+        background = new Background(gameWidth, gameHeight);
 
-    private int getPointSurroundings(ArrayList<ArrayList<Boolean>> chunkArr, int y, int x){
-        int desc = 1;
-        if(!(chunkArr.get(y)).get(x))
-            return 0;
-
-        if(safeGetPointValue(chunkArr, y, x-1))
-            desc *= 2; //right
-        if(safeGetPointValue(chunkArr, y, x+1))
-            desc *= 3; //left
-        if(safeGetPointValue(chunkArr, y-1, x))
-            desc *= 5; //top
-        if(safeGetPointValue(chunkArr, y+1, x))
-            desc *= 7; //bottom
-
-        return desc;
-    }
-
-    private boolean safeGetPointValue(ArrayList<ArrayList<Boolean>> chunkArr, int y, int x){
-        if(chunkArr.size() < y+1 || y < 0)
-            return true;
-        if((chunkArr.get(y)).size() < x+1 || x < 0)
-            return true;
-        return (chunkArr.get(y)).get(x);
-    }
-
-    private Path getPathFromPointValue(int val){
-
-        Path square = new Path();
-        square.moveTo(0,0);
-        square.lineTo(polySize, 0);
-        square.lineTo(polySize, polySize);
-        square.lineTo(0, polySize);
-        square.lineTo(0, 0);
-
-        Path bigOlTriangle = new Path();
-        bigOlTriangle.moveTo(0,0);
-        bigOlTriangle.lineTo(polySize, 0);
-        bigOlTriangle.lineTo(0, polySize);
-
-        if(val == 10 || val == 15 || val == 21 || val == 14){
-            Matrix mMatrix = new Matrix();
-            RectF bounds = new RectF();
-            bigOlTriangle.computeBounds(bounds, true);
-            int rotations = 1;
-            if(val == 21)
-                rotations = 2;
-            else if(val == 14)
-                rotations = 3;
-            else if(val == 10)
-                rotations = 0;
-            mMatrix.postRotate(rotations*90.0F, bounds.centerX(), bounds.centerY());
-            bigOlTriangle.transform(mMatrix);
-            return bigOlTriangle;
-        }
-
-        return square;
     }
 
     public void draw() {
@@ -275,9 +174,6 @@ class GameView extends SurfaceView implements Runnable {
 
         canvas.drawColor(Color.parseColor("#2f81f0"));
 
-        if(background != null) {
-            canvas.drawBitmap(background, 0, backgroundPosition, null);
-        }
         drawBackground();
         drawParticles();
         drawTargets();
@@ -293,6 +189,7 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText("trgt: " + playerTarget, 20, 80, paint);
         canvas.drawText("run: " + tickCount, 20, 120, paint);
         canvas.drawText("spd: " + getTargetSpeed(), 20, 160, paint);
+        canvas.drawText(background.getStats(), 20, 200, paint);
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
@@ -301,13 +198,15 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawBackground(){
-        for(Path path : backgroundPolys){
-            paint.setColor(Color.parseColor("#2279F0"));
-            canvas.drawPath(path, paint);
-        }
-        for(Path path : backgroundPolys2){
-            paint.setColor(Color.parseColor("#0C69E8"));
-            canvas.drawPath(path, paint);
+        int startI = (int)(-backgroundPosition/background.getYPosition(1))-4;
+        for(int i = startI; i < startI + 40; i++) {
+            ArrayList<BackgroundTile> tiles = background.getMapChunk(i);
+            for(BackgroundTile tile : tiles){
+                paint.setColor(tile.getColor());
+                Path poly = tile.getPoly();
+                poly.offset(0, background.getYPosition(i)+backgroundPosition);
+                canvas.drawPath(poly, paint);
+            }
         }
     }
 
@@ -384,7 +283,7 @@ class GameView extends SurfaceView implements Runnable {
 
         }
 
-        backgroundPosition += 1;
+        backgroundPosition += getTargetSpeed()/2;
     }
 
     private int laneToX(int lane){
