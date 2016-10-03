@@ -29,6 +29,7 @@ public class AddWordActivity extends AppCompatActivity {
         Uri image = (Uri) getIntent().getExtras().get(EXTRA_IMAGE);
         if (image != null) {
             ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
+            // TODO Load with picasso? (would break shared element transition)
             imgWord.setImageURI(image);
         }
 

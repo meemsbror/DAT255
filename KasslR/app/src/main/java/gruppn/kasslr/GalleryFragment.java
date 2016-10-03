@@ -1,11 +1,18 @@
 package gruppn.kasslr;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -21,6 +28,7 @@ public class GalleryFragment extends Fragment {
     private Kasslr app;
 
     private GridView gridGallery;
+    private int imageCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,12 +55,28 @@ public class GalleryFragment extends Fragment {
     private void loadPictures() {
         File dir = app.getPictureDirectory();
         File[] files;
-        if ((files = dir.listFiles(FILTER)) == null || files.length == 0) {
-            // There are no images
+        if ((files = dir.listFiles(FILTER)) == null || files.length == imageCount) {
+            // There are no (new) images
             return;
         }
 
-        gridGallery.setAdapter(new ImageAdapter(getActivity(), files));
+        imageCount = files.length;
+        ImageAdapter adapter = new ImageAdapter(getActivity(), files);
+        gridGallery.setAdapter(adapter);
+        gridGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                File file = adapter.getItem(i);
+
+                Intent intent = new Intent(getActivity(), AddWordActivity.class);
+                intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                String transition = getString(R.string.transition_add_word);
+                ActivityOptionsCompat options = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(getActivity(), view, transition);
+
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            }
+        });
     }
 
     private class ImageAdapter extends BaseAdapter {
@@ -67,24 +91,30 @@ public class GalleryFragment extends Fragment {
             mImages = images;
         }
 
+        @Override
         public int getCount() {
             return mImages.length;
         }
 
-        public Object getItem(int position) {
+        @Override
+        public File getItem(int position) {
             return mImages[position];
         }
 
+        @Override
         public long getItemId(int position) {
             return 0;
         }
 
-        // create a new ImageView for each item referenced by the Adapter
+        @Override
         public View getView(int position, View view, ViewGroup parent) {
             ImageView imageView;
             if (view == null) {
                 imageView = new ImageView(mContext);
                 imageView.setPadding(PADDING, PADDING, PADDING, PADDING);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    imageView.setTransitionName(getString(R.string.transition_add_word));
+                }
             } else {
                 imageView = (ImageView) view;
             }
