@@ -53,9 +53,6 @@ public class ProfilePageFragment extends Fragment{
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
-        //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
-        //usernameText.setText(app.getUserId());
-
         //Change profile background
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
@@ -63,18 +60,11 @@ public class ProfilePageFragment extends Fragment{
                 .fit()
                 .into(imageView);
 
-        //Change profile pic
-        /*
-        CircleImageView imageView = (CircleImageView) getView().findViewById(R.id.profile_image);
-        Picasso.with(getContext())
-                .load(R.drawable.hehecat)
-                .fit()
-                .into(imageView);
-        */
-
         //Score
+        /*
         TextView points = (TextView)getView().findViewById(R.id.points);
         points.setText("" + Player.getScore());
+        */
     }
 
 }
