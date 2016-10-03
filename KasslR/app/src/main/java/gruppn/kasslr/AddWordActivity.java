@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 public class AddWordActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE = "image";
     public static final String EXTRA_IMAGE_DESCRIPTION = "image_description";
@@ -33,7 +35,7 @@ public class AddWordActivity extends AppCompatActivity {
             ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
             // TODO Load with picasso? (would break shared element transition)
             Bitmap myImg = BitmapFactory.decodeFile(image.getPath());
-            imgWord.setImageBitmap(Bitmap.createScaledBitmap(myImg, 480, 480, false));
+            imgWord.setImageBitmap(Bitmap.createScaledBitmap(myImg, getImageWidth(), getImageHeight(), false));
         }
 
         finishOnBack = getIntent().getExtras().getBoolean(EXTRA_FINISH_ON_BACK, false);
@@ -54,5 +56,13 @@ public class AddWordActivity extends AppCompatActivity {
         data.putExtra(EXTRA_IMAGE_DESCRIPTION, txtWord.getText().toString());
         setResult(txtWord.getText().length() > 0 ? RESULT_OK : RESULT_CANCELED, data);
         finish();
+    }
+
+    private int getImageWidth() {
+        return getResources().getDisplayMetrics().widthPixels * 3 / 4;
+}
+
+    private int getImageHeight() {
+        return getResources().getDisplayMetrics().widthPixels;
     }
 }
