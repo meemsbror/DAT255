@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Environment;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import gruppn.kasslr.model.Shelf;
 public class Kasslr extends Application {
     private Shelf shelf;
     private String userId;
+    private Bitmap sharedBitmap;
 
     @Override
     public void onCreate() {
@@ -56,5 +58,15 @@ public class Kasslr extends Application {
 
     public File getPictureDirectory() {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
+    }
+
+    public Bitmap getSharedBitmap() {
+        Bitmap temp = sharedBitmap;
+        sharedBitmap = null;
+        return temp;
+    }
+
+    public void setSharedBitmap(Bitmap bitmap) {
+        sharedBitmap = bitmap;
     }
 }

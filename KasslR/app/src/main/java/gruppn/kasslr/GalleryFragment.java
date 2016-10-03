@@ -1,8 +1,8 @@
 package gruppn.kasslr;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -66,6 +66,8 @@ public class GalleryFragment extends Fragment {
         gridGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                app.setSharedBitmap(((BitmapDrawable) ((ImageView) view).getDrawable()).getBitmap());
+
                 File file = adapter.getItem(i);
 
                 Intent intent = new Intent(getActivity(), AddWordActivity.class);

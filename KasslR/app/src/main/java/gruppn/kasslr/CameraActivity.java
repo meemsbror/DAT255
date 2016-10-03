@@ -200,7 +200,6 @@ public class CameraActivity extends AppCompatActivity implements
                 try {
                     os = new FileOutputStream(file);
                     os.write(data);
-                    os.close();
                 } catch (IOException e) {
                     Log.w(TAG, "Cannot write to " + file, e);
                     return;
@@ -220,6 +219,7 @@ public class CameraActivity extends AppCompatActivity implements
                         Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
                         intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
                         intent.putExtra(AddWordActivity.EXTRA_FINISH_ON_BACK, true);
+
                         String transition = getString(R.string.transition_add_word);
                         ActivityOptionsCompat options = ActivityOptionsCompat
                                 .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
