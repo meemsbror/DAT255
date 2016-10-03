@@ -5,10 +5,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
@@ -98,8 +102,8 @@ class GameView extends SurfaceView implements Runnable {
     Paint paint;
 
     final String DEBUG_TAG = "GAMELOGIC";
-    final int MAP_CHUNK_WIDTH = 16;
-    final int MAP_CHUNK_HEIGHT = 16*4;
+    final int MAP_CHUNK_WIDTH = 20;
+    final int MAP_CHUNK_HEIGHT = 40;
     final int NUM_LANES = 3;
 
     private float frameRate = 60;
@@ -117,6 +121,9 @@ class GameView extends SurfaceView implements Runnable {
     private Set<Target> liveTargets = new HashSet<Target>();
     private int score = 0;
 
+    private int polySize = 0;
+    private Set<Path> backgroundPolys = new HashSet<Path>();
+    private Set<Path> backgroundPolys2 = new HashSet<Path>();
     private Bitmap background;
     private float backgroundPosition = 0;
 
@@ -158,27 +165,107 @@ class GameView extends SurfaceView implements Runnable {
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
 
+        polySize = gameWidth / MAP_CHUNK_WIDTH;
 
         OpenSimplexNoise noise = new OpenSimplexNoise();
-        background = Bitmap.createBitmap(MAP_CHUNK_WIDTH, MAP_CHUNK_HEIGHT, Bitmap.Config.ARGB_8888);
-        background.setHasAlpha(false);
+        ArrayList<ArrayList<Boolean>> chunkArr = new ArrayList<ArrayList<Boolean>>();
+        ArrayList<ArrayList<Boolean>> chunkArr2 = new ArrayList<ArrayList<Boolean>>();
+        for (int y = 0; y < MAP_CHUNK_HEIGHT; y++)
+        {
+            ArrayList<Boolean> rowList = new ArrayList<Boolean>();
+            ArrayList<Boolean> rowList2 = new ArrayList<Boolean>();
+            for (int x = 0; x < MAP_CHUNK_WIDTH; x++)
+            {
+                double value = noise.eval(x / 6.0, y / 6.0);
+                int rgb = 0x2f81f0;
+                if(value < 0)
+                    rgb = 0x2279F0;
+                rowList.add(value < 0);
+                rowList2.add(value < -0.5);
+            }
+            chunkArr.add(rowList);
+            chunkArr2.add(rowList2);
+        }
         for (int y = 0; y < MAP_CHUNK_HEIGHT; y++)
         {
             for (int x = 0; x < MAP_CHUNK_WIDTH; x++)
             {
-                double value = noise.eval(x / 8.0, y / 8.0);
-                int rgb = 0x2f81f0;
-                if(value < 0.2)
-                    rgb = 0x2279F0;
-                if(value < -0.4)
-                    rgb = 0x0C69E8;
-                //int rgb = 0x010101 * (int)((value + 1.0) * 127.5);
-                background.setPixel(x, y, rgb);
+                int val = getPointSurroundings(chunkArr, y, x);
+                if(val > 0) {
+                    Path path = getPathFromPointValue(val);
+                    path.offset(x * polySize, y * polySize);
+                    backgroundPolys.add(path);
+                }
+
+                val = getPointSurroundings(chunkArr2, y, x);
+                if(val > 0) {
+                    Path path = getPathFromPointValue(val);
+                    path.offset(x * polySize, y * polySize);
+                    backgroundPolys2.add(path);
+                }
             }
         }
 
         playerY = gameHeight - 260;
 
+    }
+
+    private int getPointSurroundings(ArrayList<ArrayList<Boolean>> chunkArr, int y, int x){
+        int desc = 1;
+        if(!(chunkArr.get(y)).get(x))
+            return 0;
+
+        if(safeGetPointValue(chunkArr, y, x-1))
+            desc *= 2; //right
+        if(safeGetPointValue(chunkArr, y, x+1))
+            desc *= 3; //left
+        if(safeGetPointValue(chunkArr, y-1, x))
+            desc *= 5; //top
+        if(safeGetPointValue(chunkArr, y+1, x))
+            desc *= 7; //bottom
+
+        return desc;
+    }
+
+    private boolean safeGetPointValue(ArrayList<ArrayList<Boolean>> chunkArr, int y, int x){
+        if(chunkArr.size() < y+1 || y < 0)
+            return true;
+        if((chunkArr.get(y)).size() < x+1 || x < 0)
+            return true;
+        return (chunkArr.get(y)).get(x);
+    }
+
+    private Path getPathFromPointValue(int val){
+
+        Path square = new Path();
+        square.moveTo(0,0);
+        square.lineTo(polySize, 0);
+        square.lineTo(polySize, polySize);
+        square.lineTo(0, polySize);
+        square.lineTo(0, 0);
+
+        Path bigOlTriangle = new Path();
+        bigOlTriangle.moveTo(0,0);
+        bigOlTriangle.lineTo(polySize, 0);
+        bigOlTriangle.lineTo(0, polySize);
+
+        if(val == 10 || val == 15 || val == 21 || val == 14){
+            Matrix mMatrix = new Matrix();
+            RectF bounds = new RectF();
+            bigOlTriangle.computeBounds(bounds, true);
+            int rotations = 1;
+            if(val == 21)
+                rotations = 2;
+            else if(val == 14)
+                rotations = 3;
+            else if(val == 10)
+                rotations = 0;
+            mMatrix.postRotate(rotations*90.0F, bounds.centerX(), bounds.centerY());
+            bigOlTriangle.transform(mMatrix);
+            return bigOlTriangle;
+        }
+
+        return square;
     }
 
     public void draw() {
@@ -191,6 +278,7 @@ class GameView extends SurfaceView implements Runnable {
         if(background != null) {
             canvas.drawBitmap(background, 0, backgroundPosition, null);
         }
+        drawBackground();
         drawParticles();
         drawTargets();
 
@@ -210,6 +298,17 @@ class GameView extends SurfaceView implements Runnable {
         paint.setTextSize(80);
         canvas.drawText(score+"", gameWidth-100, 100, paint);
         ourHolder.unlockCanvasAndPost(canvas);
+    }
+
+    private void drawBackground(){
+        for(Path path : backgroundPolys){
+            paint.setColor(Color.parseColor("#2279F0"));
+            canvas.drawPath(path, paint);
+        }
+        for(Path path : backgroundPolys2){
+            paint.setColor(Color.parseColor("#0C69E8"));
+            canvas.drawPath(path, paint);
+        }
     }
 
     private void drawParticles(){
