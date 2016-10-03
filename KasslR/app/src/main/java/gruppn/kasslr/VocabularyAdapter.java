@@ -1,11 +1,17 @@
 package gruppn.kasslr;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -18,10 +24,14 @@ import gruppn.kasslr.model.Vocabulary;
 public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder> {
 
     private List<Vocabulary> vocabularyList;
+    private Activity activity;
 
-    public VocabularyAdapter(List<Vocabulary> vocabularyList) {
+    public VocabularyAdapter(Activity activity, List<Vocabulary> vocabularyList) {
         this.vocabularyList = vocabularyList;
+        this.activity = activity;
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -31,10 +41,9 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
     @Override
     public void onBindViewHolder(VocabularyViewHolder holder, int position) {
         Vocabulary v = vocabularyList.get(position);
-
         holder.owner.setText(v.getOwner());
         holder.title.setText(v.getTitle());
-
+    
     }
 
     @Override
@@ -45,18 +54,41 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
         return new VocabularyViewHolder(itemView);
     }
 
-    public static class VocabularyViewHolder extends RecyclerView.ViewHolder {
+    public class VocabularyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         protected TextView owner;
         protected TextView title;
 
-
         public VocabularyViewHolder(View v) {
             super(v);
+            v.setOnClickListener(this);
             owner = (TextView) v.findViewById(R.id.txtOwner);
             title = (TextView) v.findViewById(R.id.txtTitle);
 
         }
+
+        public void vocabularyTransition(View view){
+
+            Intent intent = new Intent(activity, VocabularyTransitionActivity.class);
+
+            String transitionName = activity.getString(R.string.transition_vocabulary);
+
+            CardView cardView = (CardView) view.findViewById(R.id.card_view);
+
+            ActivityOptionsCompat options =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
+                            cardView,   // The view which starts the transition
+                            transitionName    // The transitionName of the view we’re transitioning to
+                    );
+            ActivityCompat.startActivity(activity, intent, options.toBundle());
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(), "Clicked Country Position = ", Toast.LENGTH_SHORT).show();
+            vocabularyTransition(v);
+        }
+
 
     }
 

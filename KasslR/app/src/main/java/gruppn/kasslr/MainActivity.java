@@ -127,24 +127,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myIntent);
     }
 
-    public void vocabularyTransition(View view){
-
-        Intent intent = new Intent(MainActivity.this, VocabularyTransitionActivity.class);
-
-        String transitionName = getString(R.string.transition_vocabulary);
-
-        CardView cardView = (CardView) findViewById(R.id.card_view);
-
-        ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                        cardView,   // The view which starts the transition
-                        transitionName    // The transitionName of the view we’re transitioning to
-                );
-        ActivityCompat.startActivity(this, intent, options.toBundle());
-
-    }
-
-
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private final int MY_PERMISSIONS_REQUEST_STORAGE = 2;
 

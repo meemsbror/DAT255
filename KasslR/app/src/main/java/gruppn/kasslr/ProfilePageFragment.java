@@ -1,9 +1,13 @@
 package gruppn.kasslr;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * The activity for viewing the profile.
  */
-public class ProfilePageFragment extends Fragment {
+public class ProfilePageFragment extends Fragment{
     private Kasslr app;
 
     private RecyclerView.Adapter recyclerAdapter;
@@ -45,7 +49,8 @@ public class ProfilePageFragment extends Fragment {
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-        VocabularyAdapter va = new VocabularyAdapter(app.getShelf().getVocabularies());
+
+        VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
         //TextView usernameText = (TextView) getActivity().findViewById(R.id.user_profile_name);
