@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 public class AddWordActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE = "image";
     public static final String EXTRA_IMAGE_DESCRIPTION = "image_description";
+    public static final String EXTRA_FINISH_ON_BACK = "finish_back";
+
+    private boolean finishOnBack;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,17 @@ public class AddWordActivity extends AppCompatActivity {
         if (image != null) {
             ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
             imgWord.setImageURI(image);
+        }
+
+        finishOnBack = getIntent().getExtras().getBoolean(EXTRA_FINISH_ON_BACK, false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (finishOnBack) {
+            finish();
+        } else {
+            super.onBackPressed();
         }
     }
 

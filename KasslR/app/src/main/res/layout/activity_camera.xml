@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:keepScreenOn="true"
         android:adjustViewBounds="true"
+        android:transitionName="@string/transition_add_word"
         app:autoFocus="true"
         app:aspectRatio="4:3"
         app:facing="back"

@@ -14,6 +14,7 @@ import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -69,7 +70,7 @@ public class CameraActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_camera);
+        setContentView(R.layout.activity_camera);
 
         app = (Kasslr) getApplication();
         mCameraView = (CameraView) findViewById(R.id.camera);
@@ -92,7 +93,6 @@ public class CameraActivity extends AppCompatActivity implements
         super.onResume();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            // TODO this is broken... pls halp
             mCameraView.start();
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
@@ -116,7 +116,6 @@ public class CameraActivity extends AppCompatActivity implements
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mBackgroundHandler != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 mBackgroundHandler.getLooper().quitSafely();
@@ -125,6 +124,7 @@ public class CameraActivity extends AppCompatActivity implements
             }
             mBackgroundHandler = null;
         }
+        super.onDestroy();
     }
 
     @Override
@@ -192,8 +192,7 @@ public class CameraActivity extends AppCompatActivity implements
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
-            Toast.makeText(cameraView.getContext(), R.string.picture_taken, Toast.LENGTH_SHORT)
-                    .show();
+
             getBackgroundHandler().post(() -> {
                 File file = getNewPictureFile();
 
@@ -215,9 +214,20 @@ public class CameraActivity extends AppCompatActivity implements
                     }
                 }
 
-                Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
-                intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
-                startActivityForResult(intent, REQUEST_IMAGE_DESCRIPTION);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
+                        intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                        intent.putExtra(AddWordActivity.EXTRA_FINISH_ON_BACK, true);
+                        String transition = getString(R.string.transition_add_word);
+                        ActivityOptionsCompat options = ActivityOptionsCompat
+                                .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
+
+                        ActivityCompat.startActivityForResult(CameraActivity.this, intent,
+                                REQUEST_IMAGE_DESCRIPTION, options.toBundle());
+                    }
+                });
             });
         }
     };
