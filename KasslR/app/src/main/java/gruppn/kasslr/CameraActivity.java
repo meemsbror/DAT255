@@ -4,6 +4,7 @@ import com.google.android.cameraview.CameraView;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -77,7 +79,12 @@ public class CameraActivity extends AppCompatActivity implements
         mCameraView.addCallback(mCallback);
 
         Button takePicture = (Button) findViewById(R.id.snap);
-        takePicture.setOnClickListener(view -> mCameraView.takePicture());
+        takePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCameraView.takePicture();
+            }
+        });
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -190,44 +197,47 @@ public class CameraActivity extends AppCompatActivity implements
         }
 
         @Override
-        public void onPictureTaken(CameraView cameraView, final byte[] data) {
+        public void onPictureTaken(final CameraView cameraView, final byte[] data) {
             Log.d(TAG, "onPictureTaken " + data.length);
 
-            getBackgroundHandler().post(() -> {
-                File file = getNewPictureFile();
+            getBackgroundHandler().post(new Runnable() {
+                @Override
+                public void run() {
+                    final File file = getNewPictureFile();
 
-                OutputStream os = null;
-                try {
-                    os = new FileOutputStream(file);
-                    os.write(data);
-                } catch (IOException e) {
-                    Log.w(TAG, "Cannot write to " + file, e);
-                    return;
-                } finally {
-                    if (os != null) {
-                        try {
-                            os.close();
-                        } catch (IOException e) {
-                            // Ignore
+                    OutputStream os = null;
+                    try {
+                        os = new FileOutputStream(file);
+                        os.write(data);
+                    } catch (IOException e) {
+                        Log.w(TAG, "Cannot write to " + file, e);
+                        return;
+                    } finally {
+                        if (os != null) {
+                            try {
+                                os.close();
+                            } catch (IOException e) {
+                                // Ignore
+                            }
                         }
                     }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
+                            intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                            intent.putExtra(AddWordActivity.EXTRA_FINISH_ON_BACK, true);
+
+                            String transition = getString(R.string.transition_add_word);
+                            ActivityOptionsCompat options = ActivityOptionsCompat
+                                    .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
+
+                            ActivityCompat.startActivityForResult(CameraActivity.this, intent,
+                                    REQUEST_IMAGE_DESCRIPTION, options.toBundle());
+                        }
+                    });
                 }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
-                        intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
-                        intent.putExtra(AddWordActivity.EXTRA_FINISH_ON_BACK, true);
-
-                        String transition = getString(R.string.transition_add_word);
-                        ActivityOptionsCompat options = ActivityOptionsCompat
-                                .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
-
-                        ActivityCompat.startActivityForResult(CameraActivity.this, intent,
-                                REQUEST_IMAGE_DESCRIPTION, options.toBundle());
-                    }
-                });
             });
         }
     };
@@ -277,17 +287,23 @@ public class CameraActivity extends AppCompatActivity implements
             final Bundle args = getArguments();
             return new AlertDialog.Builder(getActivity())
                     .setMessage(args.getInt(ARG_MESSAGE))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        String[] permissions = args.getStringArray(ARG_PERMISSIONS);
-                        if (permissions == null) {
-                            throw new IllegalArgumentException();
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String[] permissions = args.getStringArray(ARG_PERMISSIONS);
+                            if (permissions == null) {
+                                throw new IllegalArgumentException();
+                            }
+                            ActivityCompat.requestPermissions(getActivity(), permissions,
+                                    args.getInt(ARG_REQUEST_CODE));
                         }
-                        ActivityCompat.requestPermissions(getActivity(), permissions,
-                                args.getInt(ARG_REQUEST_CODE));
                     })
-                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
-                        Toast.makeText(getActivity(), args.getInt(ARG_NOT_GRANTED_MESSAGE),
-                                Toast.LENGTH_SHORT).show();
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(getActivity(), args.getInt(ARG_NOT_GRANTED_MESSAGE),
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }).create();
         }
 

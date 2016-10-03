@@ -10,9 +10,6 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-        jackOptions {
-            enabled true
-        }
     }
     buildTypes {
         release {
@@ -22,7 +19,7 @@ android {
     }
     compileOptions {
         targetCompatibility 1.7
-        sourceCompatibility 1.8
+        sourceCompatibility 1.7
     }
 }
 

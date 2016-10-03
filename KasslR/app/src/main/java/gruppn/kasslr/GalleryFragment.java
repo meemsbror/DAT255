@@ -23,7 +23,12 @@ import java.io.File;
 import java.io.FileFilter;
 
 public class GalleryFragment extends Fragment {
-    private static final FileFilter FILTER = file -> file.getName().toLowerCase().endsWith(".jpg");
+    private static final FileFilter FILTER = new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+            return file.getName().toLowerCase().endsWith(".jpg");
+        }
+    };
 
     private Kasslr app;
 
@@ -61,7 +66,7 @@ public class GalleryFragment extends Fragment {
         }
 
         imageCount = files.length;
-        ImageAdapter adapter = new ImageAdapter(getActivity(), files);
+        final ImageAdapter adapter = new ImageAdapter(getActivity(), files);
         gridGallery.setAdapter(adapter);
         gridGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

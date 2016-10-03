@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
@@ -41,34 +43,37 @@ public class MainActivity extends AppCompatActivity {
         requestCameraPermission();
 
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(tabId -> {
-            int previous = selectedTab;
-            if (tabId != R.id.tab_camera) {
-                selectedTab = tabId;
-            }
-
-            boolean slideToRight = previous > tabId;
-            if (tabId == R.id.tab_feed) {
-                // Show the feed
-                if (previous == -1) {
-                    showFeed();
-                } else {
-                    slideToFragment(new FeedFragment(), slideToRight);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                int previous = selectedTab;
+                if (tabId != R.id.tab_camera) {
+                    selectedTab = tabId;
                 }
-            } else if (tabId == R.id.tab_search) {
-                //Show the search page
-                slideToFragment(new SearchFragment(), slideToRight);
-            } else if (tabId == R.id.tab_camera) {
-                // Show the camera
-                showCamera();
-            } else if (tabId == R.id.tab_favorite) {
-                // TODO Show the saved vocabularies
-                // This is temporary until we decide how to reach the gallery
-                slideToFragment(new GalleryFragment(), slideToRight);
-            } else if (tabId == R.id.tab_profile) {
-                slideToFragment(new ProfilePageFragment(), slideToRight);
-            } else {
-                //When can this happen?
+
+                boolean slideToRight = previous > tabId;
+                if (tabId == R.id.tab_feed) {
+                    // Show the feed
+                    if (previous == -1) {
+                        showFeed();
+                    } else {
+                        slideToFragment(new FeedFragment(), slideToRight);
+                    }
+                } else if (tabId == R.id.tab_search) {
+                    //Show the search page
+                    slideToFragment(new SearchFragment(), slideToRight);
+                } else if (tabId == R.id.tab_camera) {
+                    // Show the camera
+                    showCamera();
+                } else if (tabId == R.id.tab_favorite) {
+                    // TODO Show the saved vocabularies
+                    // This is temporary until we decide how to reach the gallery
+                    slideToFragment(new GalleryFragment(), slideToRight);
+                } else if (tabId == R.id.tab_profile) {
+                    slideToFragment(new ProfilePageFragment(), slideToRight);
+                } else {
+                    //When can this happen?
+                }
             }
         });
         for (int i = 0; i < bottomBar.getTabCount(); i++) {
