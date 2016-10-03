@@ -1,6 +1,8 @@
 package gruppn.kasslr;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,8 @@ public class AddWordActivity extends AppCompatActivity {
         if (image != null) {
             ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
             // TODO Load with picasso? (would break shared element transition)
-            imgWord.setImageURI(image);
+            Bitmap myImg = BitmapFactory.decodeFile(image.getPath());
+            imgWord.setImageBitmap(Bitmap.createScaledBitmap(myImg, 480, 480, false));
         }
 
         finishOnBack = getIntent().getExtras().getBoolean(EXTRA_FINISH_ON_BACK, false);
