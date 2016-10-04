@@ -100,7 +100,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSearch() {
-        showFragment(new SearchFragment());
+
+        SearchFragment searchFragment = new SearchFragment();
+        searchFragment.setShelf(app.getShelf());
+        showFragment(searchFragment);
+
+
+
     }
 
     public void showProfile() {
