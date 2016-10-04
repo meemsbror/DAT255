@@ -88,20 +88,18 @@ public class LaneGame extends Activity {
 
 class GameView extends SurfaceView implements Runnable {
 
-    private int gameWidth;
-    private int gameHeight;
     Thread gameThread = null;
     SurfaceHolder ourHolder;
+
+    private int gameWidth;
+    private int gameHeight;
     volatile boolean playing;
-    //Bitmap gameBitmap;
     Canvas canvas;
     Paint paint;
 
     final String DEBUG_TAG = "GAMELOGIC";
-    final int MAP_CHUNK_WIDTH = 20;
-    final int MAP_CHUNK_HEIGHT = 40;
     final int NUM_LANES = 3;
-    final int BACKGROUND_COLOR = Color.parseColor("#030303");
+    final int BACKGROUND_COLOR = Color.parseColor("#000000");
 
     private float frameRate = 80;
     private float frameTime = 1000 / frameRate;
@@ -158,8 +156,13 @@ class GameView extends SurfaceView implements Runnable {
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
         playerY = gameHeight - 260;
+        playerX = gameWidth / 2;
 
         background = new Background(gameWidth, gameHeight);
+
+        for(int i = 0; i < gameHeight; i+=2){
+            spawnStars(i);
+        }
 
     }
 
@@ -307,14 +310,19 @@ class GameView extends SurfaceView implements Runnable {
         }
 
         // spawn stars
+        spawnStars(0);
+
+    }
+
+    private void spawnStars(int y){
+        Random rand = new Random();
         if(rand.nextFloat() < 0.1) {
             float x = rand.nextInt(gameWidth);
             int depth = rand.nextInt(3) + 1;
-            float deltaY = (depth) * 0.9f + depth*getTargetSpeed()/30f;
-            Particle particle = new Particle(x, 0, 0, deltaY, 3000, 128+rand.nextInt(127), depth, false);
+            float deltaY = depth*depth*getTargetSpeed()/30f;
+            Particle particle = new Particle(x, y, 0, deltaY, 20000, 128+rand.nextInt(127), depth, false);
             particles.add(particle);
         }
-
     }
 
     private void updateParticles(){
