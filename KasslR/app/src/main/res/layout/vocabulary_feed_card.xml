@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:id="@+id/textView1"
+            android:id="@+id/vocabulary_name"
             android:layout_gravity="left|top" />
 
         <ImageButton
