@@ -178,7 +178,17 @@ class GameView extends SurfaceView implements Runnable {
         drawTargets();
 
         paint.setColor(Color.WHITE);
-        canvas.drawRect(new Rect((int)(playerX-50), (int)playerY, (int)(playerX-50)+100, (int)playerY+100), paint);
+        Path playerPath = new Path();
+        playerPath.moveTo(50,-50);
+        playerPath.lineTo(100,50);
+        playerPath.lineTo(100,140);
+        playerPath.lineTo(0,140);
+        playerPath.lineTo(0,50);
+        playerPath.lineTo(50,-50);
+
+        playerPath.offset(playerX-50, playerY-50);
+        canvas.drawPath(playerPath, paint);
+        //canvas.drawRect(new Rect((int)(playerX-50), (int)playerY, (int)(playerX-50)+100, (int)playerY+100), paint);
 
 
         paint.setColor(Color.WHITE);
