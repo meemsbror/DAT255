@@ -7,13 +7,22 @@ import android.widget.Switch;
  */
 
 public class Player {
-    public static final String EXTRA_USER_ID = "userId";
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-    public static int score = 0;
+    public String getUserId() {
 
-    public static final int COMPLETE_VOCABULARY_SCORE = 2;
-    public static final int COMPLETE_ACHIEVEMENT_SCORE = 20;
-    public static final int CREATE_VOCABULARY_SCORE = 25;
+        return userId;
+    }
+
+    public String userId = "Namn";
+
+    public int score = 0;
+
+    public final int COMPLETE_VOCABULARY_SCORE = 2;
+    public final int COMPLETE_ACHIEVEMENT_SCORE = 20;
+    public final int CREATE_VOCABULARY_SCORE = 25;
 
     public enum CompletedAction{
         COMPLETE_VOCABULARY, CREATE_VOCABULARY, ACHIEVEMENT
@@ -22,7 +31,10 @@ public class Player {
     public Player(){
         //score = DB.getScore
     }
-    public static void incScore(CompletedAction completedAction){
+    public Player(String name){
+        userId = name;
+    }
+    public void incScore(CompletedAction completedAction){
         switch(completedAction){
             case CREATE_VOCABULARY: score = score + CREATE_VOCABULARY_SCORE;
                 break;
@@ -34,7 +46,7 @@ public class Player {
         }
     }
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 }

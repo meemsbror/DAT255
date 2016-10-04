@@ -53,6 +53,9 @@ public class ProfilePageFragment extends Fragment{
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
+        TextView points = (TextView) getView().findViewById(R.id.score);
+        points.setText("" + app.getCurrentScore());
+
         //Change profile background
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
