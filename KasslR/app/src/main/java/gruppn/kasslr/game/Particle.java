@@ -1,5 +1,7 @@
 package gruppn.kasslr.game;
 
+import android.graphics.Color;
+
 /**
  * Created by Adam on 2016-09-29.
  */
@@ -13,8 +15,10 @@ public class Particle {
     private int lifeSpan;
     private int age;
     private int temperature;
+    private int size;
+    private boolean hasGravity;
 
-    public Particle(float x, float y, float deltaX, float deltaY, int lifeSpan, int temperature){
+    public Particle(float x, float y, float deltaX, float deltaY, int lifeSpan, int temperature, int size, boolean hasGravity){
         this.x = x;
         this.y = y;
         this.deltaX = deltaX;
@@ -22,14 +26,24 @@ public class Particle {
         this.lifeSpan = lifeSpan;
         this.temperature = temperature;
         this.age = 0;
+        this.size = size;
+        this.hasGravity = hasGravity;
     }
 
-    public void tick(){
+    public void tick(int yBoundary){
         age++;
         x += deltaX;
         y += deltaY;
 
-        y += 8;
+        if(hasGravity)
+            y += 8;
+
+        if(y > yBoundary)
+            age = lifeSpan + 1;
+    }
+
+    public int getColor(double progress){
+        return Color.argb((int)(progress*255.0), 255-getTemperature()/2, 255-getTemperature()/2, getTemperature());
     }
 
     public boolean isDead(){
@@ -54,5 +68,9 @@ public class Particle {
 
     public int getTemperature() {
         return temperature;
+    }
+
+    public int getSize(){
+        return size;
     }
 }

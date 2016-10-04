@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -183,13 +184,14 @@ class GameView extends SurfaceView implements Runnable {
 
 
         paint.setColor(Color.WHITE);
-        paint.setTextSize(50);
+        paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("FPS: " + fps, 20, 40, paint);
         canvas.drawText("trgt: " + playerTarget, 20, 80, paint);
         canvas.drawText("run: " + tickCount, 20, 120, paint);
         canvas.drawText("spd: " + getTargetSpeed(), 20, 160, paint);
-        canvas.drawText(background.getStats(), 20, 200, paint);
+        canvas.drawText("particles: " + particles.size(), 20, 200, paint);
+        canvas.drawText(background.getStats(), 20, 240, paint);
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
@@ -215,14 +217,14 @@ class GameView extends SurfaceView implements Runnable {
     private void drawParticles(){
         for(Particle particle : particles){
             float progress = ((particle.getLifeSpan()-particle.getAge())*1.0F / particle.getLifeSpan()*1.0F);
-            paint.setColor(Color.argb((int)(progress*255.0), particle.getTemperature(), particle.getTemperature(), 255));
-            canvas.drawCircle(particle.getX(), particle.getY(), progress*20.0F, paint);
+            paint.setColor(particle.getColor(progress));
+            canvas.drawCircle(particle.getX(), particle.getY(), progress*particle.getSize(), paint);
         }
     }
 
     private void drawTargets(){
         for(Target target : liveTargets){
-            paint.setColor(Color.WHITE);
+            paint.setColor(Color.RED);
             if(target.isBenign())
                 paint.setColor(Color.GREEN);
             canvas.drawCircle(target.getX(), target.getY(), 20, paint);
@@ -245,6 +247,14 @@ class GameView extends SurfaceView implements Runnable {
             if(velocityX < 0 && playerTarget > -1)
                 playerTarget -= 1;
             // vertical movement
+
+            if (playerX > laneToX(playerTarget)) {
+                playerDeltaX = -30;
+            }
+            if (playerX < laneToX(playerTarget)) {
+                playerDeltaX = 30;
+            }
+
         }else{
             Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
           //  playerDeltaY += velocityY/2000;
@@ -256,22 +266,16 @@ class GameView extends SurfaceView implements Runnable {
 
         if(playerY+100 > gameHeight || playerY < 0)
             playerDeltaY = -playerDeltaY;
-        if(playerX > laneToX(playerTarget)) {
-            if(playerDeltaX > 0)
-                playerDeltaX = -3;
-            else
-                playerDeltaX *= 1.2;
-        }
-        if(playerX < laneToX(playerTarget)){
-            if(playerDeltaX < 0)
-                playerDeltaX = 3;
-            else
-                playerDeltaX *= 1.2;
 
+        if(playerDeltaX > 0 && playerX > laneToX(playerTarget) || playerDeltaX < 0 && playerX < laneToX(playerTarget)){
+            playerDeltaX = 0;
+            playerX = laneToX(playerTarget);
         }
+
+
+        playerX += playerDeltaX;
 
         playerY += playerDeltaY;
-        playerX += playerDeltaX;
 
         playerDeltaY *= 0.995;
 
@@ -285,7 +289,7 @@ class GameView extends SurfaceView implements Runnable {
 
         }
 
-        backgroundPosition += getTargetSpeed()/5;
+        backgroundPosition += Math.sqrt(getTargetSpeed())/4;
     }
 
     private int laneToX(int lane){
@@ -293,24 +297,36 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnParticles(){
-        int target = 300 - particles.size();
+
         Random rand = new Random();
-        for (int i=0; i<target; i++){
-            float x = playerX;
-            float y = playerY+70;
-            float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
-            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
-            int lifespan = rand.nextInt(300);
-            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, rand.nextInt(255));
+
+        //spawn exhaust
+        for (int i=0; i < rand.nextInt(9); i++){
+            float x = playerX-40+rand.nextInt(80);
+            float y = playerY+80;
+            float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
+            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
+            int lifespan = rand.nextInt(200);
+            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, rand.nextInt(255), 20, true);
             particles.add(particle);
         }
+
+        // spawn stars
+        if(rand.nextFloat() < 0.1) {
+            float x = rand.nextInt(gameWidth);
+            int depth = rand.nextInt(3) + 1;
+            float deltaY = (depth) * 0.9f + depth*getTargetSpeed()/30f;
+            Particle particle = new Particle(x, 0, 0, deltaY, 3000, 128+rand.nextInt(127), depth, false);
+            particles.add(particle);
+        }
+
     }
 
     private void updateParticles(){
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
             Particle particle = iterator.next();
-            particle.tick();
+            particle.tick(gameHeight);
 
             if(particle.isDead())
                 iterator.remove();
@@ -338,7 +354,7 @@ class GameView extends SurfaceView implements Runnable {
             Target target = iterator.next();
             target.tick(getTargetSpeed());
 
-            if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 10){
+            if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 50){
                 if(target.isBenign())
                     score++;
                 else

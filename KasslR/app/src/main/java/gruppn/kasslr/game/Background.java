@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Background {
     final int MAP_CHUNK_WIDTH = 16;
-    final double MAP_SCALE = 4.0;
+    final double MAP_SCALE = 7.0;
     final int MAP_LEVELS = 4;
 
     private int gameWidth = 0;
@@ -49,13 +49,10 @@ public class Background {
 
     public ArrayList<ArrayList<BackgroundTile>> getChunks(int y){
 
-        System.out.println("gettin cuhnks at y: " + y);
         if(y < lastY) {
             lastY = y;
             mapChunks.remove(0);
             generateChunk(y);
-        }else{
-            return mapChunks;
         }
 
         return mapChunks;
