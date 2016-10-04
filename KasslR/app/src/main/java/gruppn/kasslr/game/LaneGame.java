@@ -107,7 +107,7 @@ class GameView extends SurfaceView implements Runnable {
     final int NUM_LANES = 3;
     final int BACKGROUND_COLOR = Color.parseColor("#030303");
 
-    private float frameRate = 60;
+    private float frameRate = 80;
     private float frameTime = 1000 / frameRate;
     private double fps = 0;
 
@@ -198,15 +198,17 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawBackground(){
-        int startI = (int)(-backgroundPosition/background.getYPosition(1))-4;
-        for(int i = startI; i < startI + 40; i++) {
-            ArrayList<BackgroundTile> tiles = background.getMapChunk(i);
+        int startI = (int)(-backgroundPosition/background.getYPosition(-1));
+        ArrayList<ArrayList<BackgroundTile>> chunks = background.getChunks(startI);
+        int i = 0;
+        for(ArrayList<BackgroundTile> tiles : chunks) {
             for(BackgroundTile tile : tiles){
                 paint.setColor(tile.getColor());
                 Path poly = tile.getPoly();
-                poly.offset(0, background.getYPosition(i)+backgroundPosition);
+                poly.offset(0, gameHeight+background.getYPosition(i)+backgroundPosition%background.getYPosition(-1));
                 canvas.drawPath(poly, paint);
             }
+            i++;
         }
     }
 
@@ -283,7 +285,7 @@ class GameView extends SurfaceView implements Runnable {
 
         }
 
-        backgroundPosition += getTargetSpeed()/2;
+        backgroundPosition += getTargetSpeed()/5;
     }
 
     private int laneToX(int lane){
@@ -324,7 +326,7 @@ class GameView extends SurfaceView implements Runnable {
         int benignTargetNum = rand.nextInt(NUM_LANES);
         for(int i=0; i < NUM_LANES; i++){
             int x = laneToX(i-1);
-            int y = -rand.nextInt(gameHeight/2);
+            int y = -rand.nextInt(gameHeight/3);
             Target target = new Target(x, y, benignTargetNum == i);
             liveTargets.add(target);
         }
