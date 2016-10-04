@@ -105,6 +105,7 @@ class GameView extends SurfaceView implements Runnable {
     final int MAP_CHUNK_WIDTH = 20;
     final int MAP_CHUNK_HEIGHT = 40;
     final int NUM_LANES = 3;
+    final int BACKGROUND_COLOR = Color.parseColor("#030303");
 
     private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
@@ -115,7 +116,6 @@ class GameView extends SurfaceView implements Runnable {
     private float playerDeltaY = 0;
     private float playerDeltaX = 2;
     private int playerTarget = 0;
-    private PlayerState playerState = PlayerState.IDLE;
 
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
@@ -172,13 +172,13 @@ class GameView extends SurfaceView implements Runnable {
         if(gameWidth == 0 || gameHeight == 0)
             updateGameDimensions();
 
-        canvas.drawColor(Color.parseColor("#2f81f0"));
+        canvas.drawColor(BACKGROUND_COLOR);
 
         drawBackground();
         drawParticles();
         drawTargets();
 
-        paint.setColor(Color.DKGRAY);
+        paint.setColor(Color.WHITE);
         canvas.drawRect(new Rect((int)(playerX-50), (int)playerY, (int)(playerX-50)+100, (int)playerY+100), paint);
 
 
@@ -213,7 +213,7 @@ class GameView extends SurfaceView implements Runnable {
     private void drawParticles(){
         for(Particle particle : particles){
             float progress = ((particle.getLifeSpan()-particle.getAge())*1.0F / particle.getLifeSpan()*1.0F);
-            paint.setColor(Color.argb((int)(progress*255.0), 255, 255, 255));
+            paint.setColor(Color.argb((int)(progress*255.0), particle.getTemperature(), particle.getTemperature(), 255));
             canvas.drawCircle(particle.getX(), particle.getY(), progress*20.0F, paint);
         }
     }
@@ -258,13 +258,13 @@ class GameView extends SurfaceView implements Runnable {
             if(playerDeltaX > 0)
                 playerDeltaX = -3;
             else
-                playerDeltaX *= 1.1;
+                playerDeltaX *= 1.2;
         }
         if(playerX < laneToX(playerTarget)){
             if(playerDeltaX < 0)
                 playerDeltaX = 3;
             else
-                playerDeltaX *= 1.1;
+                playerDeltaX *= 1.2;
 
         }
 
@@ -299,7 +299,7 @@ class GameView extends SurfaceView implements Runnable {
             float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
             float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
             int lifespan = rand.nextInt(300);
-            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan);
+            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, rand.nextInt(255));
             particles.add(particle);
         }
     }
@@ -371,8 +371,4 @@ class GameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
-}
-
-enum PlayerState{
-    IDLE, MOVING, ATTACKING;
 }
