@@ -39,7 +39,7 @@ public class Background {
         polySize = gameWidth / MAP_CHUNK_WIDTH;
         noise = new OpenSimplexNoise();
 
-        colors = new int[]{Color.parseColor("#2279F0"), Color.parseColor("#0C69E8")};
+        colors = new int[]{Color.parseColor("#150024"), Color.parseColor("#2F004F")};
     }
 
     public ArrayList<BackgroundTile> getMapChunk(int y){
