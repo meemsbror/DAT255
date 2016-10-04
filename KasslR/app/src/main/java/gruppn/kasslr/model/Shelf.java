@@ -3,10 +3,6 @@ package gruppn.kasslr.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 2016-09-28.
- */
-
 public class Shelf {
     private List<VocabularyItem> items;
     private List<Vocabulary> vocabularies;

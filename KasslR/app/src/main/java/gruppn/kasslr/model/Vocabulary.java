@@ -5,10 +5,6 @@ import org.json.JSONException;
 
 import java.util.List;
 
-/**
- * Created by Adam on 2016-09-28.
- */
-
 public class Vocabulary {
     private String owner;
     private String title;
