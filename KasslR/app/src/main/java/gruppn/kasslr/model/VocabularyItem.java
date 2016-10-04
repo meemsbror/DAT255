@@ -3,10 +3,6 @@ package gruppn.kasslr.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Adam on 2016-09-28.
- */
-
 public class VocabularyItem {
     private String name;
     private String imageUrl;

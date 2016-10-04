@@ -22,7 +22,7 @@
         android:overScrollMode="always"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:id="@+id/scrollView2"
+        android:id="@+id/scrollView"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
@@ -34,139 +34,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view"
-                android:layout_gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="10dp"
-                cardCornerRadius="4dp">
-
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:paddingBottom="10dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:text="Stolar och hundar"
-                        android:id="@+id/textView1"
-                        android:layout_gravity="left|top" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton"
-                        android:layout_gravity="left|bottom" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton2"
-                        android:layout_gravity="center_horizontal|bottom" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton3"
-                        android:layout_gravity="right|bottom"
-                        android:onClick="changeToGame"
-                        android:src="@mipmap/greenarrow"
-                        android:scaleType="fitStart" />
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView1"
-                        android:layout_gravity="center"
-                        android:src="@mipmap/hund"/>
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView2"
-                        android:layout_gravity="left|center_vertical"
-                        android:src="@mipmap/stol"/>
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView3"
-                        android:layout_gravity="right|center_vertical"
-                        android:src="@mipmap/dog"/>
-
-                </FrameLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_gravity="center"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                app:cardPreventCornerOverlap="false"
-                app:cardUseCompatPadding="true"
-                app:cardElevation="10dp"
-                cardCornerRadius="4dp">
-
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:paddingBottom="10dp">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:text="Stolar och hundar"
-                        android:id="@+id/textView2"
-                        android:layout_gravity="left|top" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton6"
-                        android:layout_gravity="left|bottom" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton7"
-                        android:layout_gravity="center_horizontal|bottom" />
-
-                    <ImageButton
-                        android:layout_width="88dp"
-                        android:layout_height="44dp"
-                        android:id="@+id/imageButton8"
-                        android:layout_gravity="right|bottom"
-                        android:onClick="changeToGame"
-                        android:src="@mipmap/greenarrow"
-                        android:scaleType="fitStart" />
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView4"
-                        android:layout_gravity="center"
-                        android:src="@mipmap/hund"/>
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView5"
-                        android:layout_gravity="left|center_vertical"
-                        android:src="@mipmap/stol"/>
-
-                    <ImageView
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
-                        android:id="@+id/imageView6"
-                        android:layout_gravity="right|center_vertical"
-                        android:src="@mipmap/dog"/>
-
-                </FrameLayout>
-            </android.support.v7.widget.CardView>
         </LinearLayout>
     </ScrollView>
 
