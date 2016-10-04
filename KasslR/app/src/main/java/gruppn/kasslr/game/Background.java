@@ -20,18 +20,19 @@ import java.util.List;
 
 public class Background {
     final int MAP_CHUNK_WIDTH = 16;
-    final double MAP_SCALE = 6.0;
-    final int MAP_LEVELS = 3;
+    final double MAP_SCALE = 4.0;
+    final int MAP_LEVELS = 4;
 
     private int gameWidth = 0;
     private int gameHeight = 0;
     private int polySize = 0;
 
     private int[] colors;
+    private int lastY = 0;
 
     OpenSimplexNoise noise;
     private final HashMap<Coordinate, Integer> noiseArray = new HashMap<Coordinate, Integer>();
-    private final SparseArray<ArrayList<BackgroundTile>> mapChunks = new SparseArray<ArrayList<BackgroundTile>>();
+    private final ArrayList<ArrayList<BackgroundTile>> mapChunks = new ArrayList<ArrayList<BackgroundTile>>();
 
     public Background(int width, int height){
         this.gameWidth = width;
@@ -39,34 +40,33 @@ public class Background {
         polySize = gameWidth / MAP_CHUNK_WIDTH;
         noise = new OpenSimplexNoise();
 
-        colors = new int[]{Color.parseColor("#2279F0"), Color.parseColor("#0C69E8")};
+        colors = new int[]{Color.parseColor("#150024"), Color.parseColor("#2F004F"), Color.parseColor("#780096")};
+
+        for(int i=80;i>=0;i--){
+            generateChunk(i);
+        }
     }
 
-    public ArrayList<BackgroundTile> getMapChunk(int y){
+    public ArrayList<ArrayList<BackgroundTile>> getChunks(int y){
 
-        ArrayList<BackgroundTile> chunk = mapChunks.get(y);
-        if(chunk != null)
-            return chunk;
+        System.out.println("gettin cuhnks at y: " + y);
+        if(y < lastY) {
+            lastY = y;
+            mapChunks.remove(0);
+            generateChunk(y);
+        }else{
+            return mapChunks;
+        }
 
-        if(y%30 == 0)
-            clearOldChunks(y);
-
-        return generateChunk(y);
+        return mapChunks;
     }
 
     public String getStats(){
         return "chnks: " + mapChunks.size() + "\nnoise: " + noiseArray.size();
     }
 
-    private void clearOldChunks(int y) {
-        if(mapChunks.size() > 100) {
-            int target = mapChunks.size() - 100;
-            mapChunks.removeAtRange(0, target);
-        }
-    }
-
     public int getYPosition(int y){
-        return polySize*y;
+        return polySize*(-y);
     }
 
     private ArrayList<BackgroundTile> generateChunk(int y) {
@@ -83,7 +83,7 @@ public class Background {
                 }
             }
         }
-        mapChunks.put(y, tiles);
+        mapChunks.add(tiles);
         return tiles;
     }
 
@@ -116,7 +116,9 @@ public class Background {
         double value = noise.eval(x / MAP_SCALE, y / MAP_SCALE);
 
         int depth = 0;
-        if(value < -0.5)
+        if(value < -0.7)
+            depth = 3;
+        else if(value < -0.5)
             depth = 2;
         else if(value < 0)
             depth = 1;
