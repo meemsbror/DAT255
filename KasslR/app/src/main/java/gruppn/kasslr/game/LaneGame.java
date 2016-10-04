@@ -50,13 +50,8 @@ public class LaneGame extends Activity {
     }
 
     @Override
-    public void onDestroy() {
-        view.pause();
-        super.onDestroy();
-    }
-
-    @Override
     public void onPause() {
+        view.pause();
         finish();
         super.onPause();
     }
