@@ -21,7 +21,7 @@ public class Shelf {
     }
 
     public void addItems(List<VocabularyItem> items) {
-        items.addAll(items);
+        this.items.addAll(items);
     }
 
     public List<Vocabulary> getVocabularies() {
@@ -33,7 +33,7 @@ public class Shelf {
     }
 
     public void addVocabularies(List<Vocabulary> vocabularies) {
-        vocabularies.addAll(vocabularies);
+        this.vocabularies.addAll(vocabularies);
     }
 
     @Override
