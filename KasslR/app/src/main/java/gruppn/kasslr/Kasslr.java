@@ -3,14 +3,23 @@ package gruppn.kasslr;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
+import java.util.List;
 
+import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Shelf;
+import gruppn.kasslr.model.Vocabulary;
+import gruppn.kasslr.model.VocabularyItem;
 
 public class Kasslr extends Application {
+    private static final String DEBUG_TAG = "Kasslr";
+
     private Shelf shelf;
     private Player profileInformation = new Player();
     private Bitmap sharedBitmap;
@@ -20,7 +29,13 @@ public class Kasslr extends Application {
         super.onCreate();
 
         shelf = new Shelf();
+        loadShelf();
+
         initUserData();
+    }
+
+    private void loadShelf() {
+        new LoadShelfTask().execute(shelf);
     }
 
     private void initUserData() {
@@ -75,5 +90,50 @@ public class Kasslr extends Application {
 
     public void setSharedBitmap(Bitmap bitmap) {
         sharedBitmap = bitmap;
+    }
+
+    private class LoadShelfTask extends AsyncTask<Shelf, Void, ShelfResult> {
+        @Override
+        protected ShelfResult doInBackground(Shelf... shelfs) {
+            if (shelfs.length == 0) {
+                throw new IllegalArgumentException();
+            }
+
+            ShelfResult result = new ShelfResult();
+            result.shelf = shelfs[0];
+
+            KasslrDatabase db = null;
+            try {
+                db = new KasslrDatabase(getApplicationContext());
+                result.items = db.getItems();
+                result.vocabularies = db.getVocabularies();
+            } catch (SQLiteException e) {
+                Log.e(DEBUG_TAG, "Failed to load shelf", e);
+            } finally {
+                if (db != null) {
+                    db.close();
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(ShelfResult result) {
+            if (result.items != null) {
+                Log.d(DEBUG_TAG, "Loaded " + result.items.size() + " items into shelf");
+                result.shelf.addItems(result.items);
+            }
+            if (result.vocabularies != null) {
+                Log.d(DEBUG_TAG, "Loaded " + result.vocabularies.size() + " vocabularies into shelf");
+                result.shelf.addVocabularies(result.vocabularies);
+            }
+        }
+    }
+
+    private class ShelfResult {
+        private Shelf shelf;
+        private List<VocabularyItem> items;
+        private List<Vocabulary> vocabularies;
     }
 }

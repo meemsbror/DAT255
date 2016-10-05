@@ -7,7 +7,7 @@ public class Shelf {
     private List<VocabularyItem> items;
     private List<Vocabulary> vocabularies;
 
-    public Shelf(){
+    public Shelf() {
         items = new ArrayList<>();
         vocabularies = new ArrayList<>();
     }
@@ -20,12 +20,20 @@ public class Shelf {
         items.add(item);
     }
 
+    public void addItems(List<VocabularyItem> items) {
+        items.addAll(items);
+    }
+
     public List<Vocabulary> getVocabularies() {
         return vocabularies;
     }
 
     public void addVocabulary(Vocabulary voc){
         vocabularies.add(voc);
+    }
+
+    public void addVocabularies(List<Vocabulary> vocabularies) {
+        vocabularies.addAll(vocabularies);
     }
 
     @Override
