@@ -143,6 +143,8 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
+            db = getWritableDatabase();
+
             if (item.getId() != 0) {
                 // Item exists in database; update name
                 db.execSQL("UPDATE items SET name = ? WHERE id = ?",
@@ -152,7 +154,6 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 db.execSQL("INSERT INTO items (name, image) VALUES (?, ?)",
                         new Object[] { item.getName(), item.getImageName() });
 
-                cursor.close();
                 cursor = db.rawQuery("SELECT last_insert_rowid()", null);
                 cursor.moveToNext();
                 item.setId(cursor.getInt(0));

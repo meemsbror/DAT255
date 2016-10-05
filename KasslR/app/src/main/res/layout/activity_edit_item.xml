@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AddWordActivity">
+    tools:context=".EditItemActivity">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtWord"
-        android:layout_above="@+id/btnAddWord"
+        android:layout_above="@+id/btnSaveWord"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:inputType="textAutoCorrect" />
@@ -38,10 +38,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_word"
-        android:id="@+id/btnAddWord"
+        android:text="@string/save"
+        android:id="@+id/btnSaveWord"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="returnWord" />
+        android:onClick="saveItem" />
 
 </RelativeLayout>

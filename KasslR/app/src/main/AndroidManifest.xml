@@ -28,7 +28,7 @@
             android:label="@string/title_activity_navigateable"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".AddWordActivity" />
+        <activity android:name=".EditItemActivity" />
         <activity android:name=".game.LaneGame" />
         <activity android:name=".VocabularyTransitionActivity"></activity>
     </application>

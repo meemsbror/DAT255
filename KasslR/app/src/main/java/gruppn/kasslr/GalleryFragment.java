@@ -3,12 +3,13 @@ package gruppn.kasslr;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +22,14 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
+import gruppn.kasslr.model.VocabularyItem;
 
 public class GalleryFragment extends Fragment {
+    private static final String DEBUG_TAG = "GalleryFragment";
     private static final FileFilter FILTER = new FileFilter() {
         @Override
         public boolean accept(File file) {
@@ -33,7 +40,7 @@ public class GalleryFragment extends Fragment {
     private Kasslr app;
 
     private GridView gridGallery;
-    private int imageCount = 0;
+    private int itemCount = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,36 +54,14 @@ public class GalleryFragment extends Fragment {
         app = (Kasslr) getActivity().getApplication();
 
         gridGallery = (GridView) getActivity().findViewById(R.id.grid_gallery_photos);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Populate gallery
-        loadPictures();
-    }
-
-    private void loadPictures() {
-        File dir = app.getImageDirectory();
-        File[] files;
-        if ((files = dir.listFiles(FILTER)) == null || files.length == imageCount) {
-            // There are no (new) images
-            return;
-        }
-
-        imageCount = files.length;
-        final ImageAdapter adapter = new ImageAdapter(getActivity(), files);
-        gridGallery.setAdapter(adapter);
         gridGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                VocabularyItem item = (VocabularyItem) adapterView.getItemAtPosition(i);
                 app.setSharedBitmap(((BitmapDrawable) ((ImageView) view).getDrawable()).getBitmap());
 
-                File file = adapter.getItem(i);
-
-                Intent intent = new Intent(getActivity(), AddWordActivity.class);
-                intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
+                Intent intent = new Intent(getActivity(), EditItemActivity.class);
+                intent.putExtra(EditItemActivity.EXTRA_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
                 String transition = getString(R.string.transition_add_word);
                 ActivityOptionsCompat options = ActivityOptionsCompat
                         .makeSceneTransitionAnimation(getActivity(), view, transition);
@@ -86,26 +71,40 @@ public class GalleryFragment extends Fragment {
         });
     }
 
-    private class ImageAdapter extends BaseAdapter {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Populate gallery
+        loadItems();
+    }
+
+    private void loadItems() {
+        if (itemCount != app.getShelf().getItems().size()) {
+            new LoadItemsTask().execute(app.getShelf().getItems());
+        }
+    }
+
+    private class ItemAdapter extends BaseAdapter {
         private static final int COLUMNS = 2;
         private static final int PADDING = 8;
 
         private Context mContext;
-        private File[] mImages;
+        private VocabularyItem[] mItems;
 
-        public ImageAdapter(Context c, File[] images) {
+        public ItemAdapter(Context c, VocabularyItem[] items) {
             mContext = c;
-            mImages = images;
+            mItems = items;
         }
 
         @Override
         public int getCount() {
-            return mImages.length;
+            return mItems.length;
         }
 
         @Override
-        public File getItem(int position) {
-            return mImages[position];
+        public VocabularyItem getItem(int position) {
+            return mItems[position];
         }
 
         @Override
@@ -129,8 +128,43 @@ public class GalleryFragment extends Fragment {
             int width = mContext.getResources().getDisplayMetrics().widthPixels / COLUMNS - PADDING * 2;
             int height = width * 4 / 3 - PADDING * 2;
 
-            Picasso.with(mContext).load(mImages[position]).resize(width, height).into(imageView);
+            File imageFile = app.getImageFile(mItems[position]);
+            Picasso.with(mContext).load(imageFile).resize(width, height).into(imageView);
             return imageView;
+        }
+    }
+
+    private class LoadItemsTask extends AsyncTask<List<VocabularyItem>, Void, ItemAdapter> {
+        @Override
+        protected ItemAdapter doInBackground(List<VocabularyItem>... lists) {
+            if (lists.length == 0) {
+                Log.e(DEBUG_TAG, "No list supplied to LoadItemsTask");
+                return null;
+            }
+
+            VocabularyItem[] items = lists[0].toArray(new VocabularyItem[lists[0].size()]);
+
+            Log.d(DEBUG_TAG, "Start sorting items");
+            Arrays.sort(items, new Comparator<VocabularyItem>() {
+                @Override
+                public int compare(VocabularyItem x, VocabularyItem y) {
+                    long a = app.getImageFile(x).lastModified();
+                    long b = app.getImageFile(y).lastModified();
+
+                    return a == b ? 0 : a > b ? 1 : -1;
+                }
+            });
+            Log.d(DEBUG_TAG, "Finished sorting items");
+
+            return new ItemAdapter(getActivity(), items);
+        }
+
+        @Override
+        protected void onPostExecute(ItemAdapter itemAdapter) {
+            if (itemAdapter != null) {
+                gridGallery.setAdapter(itemAdapter);
+                itemCount = itemAdapter.getCount();
+            }
         }
     }
 }
