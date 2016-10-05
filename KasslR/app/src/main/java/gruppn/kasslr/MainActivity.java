@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReSelected(@IdRes int tabId) {
                 if (tabId == R.id.tab_feed) {
 
-                    slideToFragment(new FeedFragment(), Directions.UP, false);
+                    slideToFragment(new FeedFragment(), Directions.DOWN, false);
                 }
             }
         });
@@ -265,6 +265,6 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println(app.getShelf().toString());
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
-        slideToFragment(new FeedFragment(), Directions.DOWN, false);
+        slideToFragment(new FeedFragment(), Directions.UP, false);
     }
 }
