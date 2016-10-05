@@ -108,6 +108,30 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         return vocabularies;
     }
 
+    public List<VocabularyItem> getItems() throws SQLiteException {
+        List<VocabularyItem> items = new ArrayList<>();
+
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getReadableDatabase();
+
+            cursor = db.rawQuery("SELECT id, name, image FROM items", null);
+            while (cursor.moveToNext()) {
+                items.add(new VocabularyItem(cursor.getString(1), cursor.getString(2), cursor.getInt(0)));
+            }
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return items;
+    }
+
     public void save(VocabularyItem item) throws SQLiteException {
         if (item.getName().isEmpty()) {
             throw new IllegalArgumentException("An item must have a name");
