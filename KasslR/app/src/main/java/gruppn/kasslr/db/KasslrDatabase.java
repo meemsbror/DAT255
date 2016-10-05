@@ -136,7 +136,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         if (item.getName().isEmpty()) {
             throw new IllegalArgumentException("An item must have a name");
         }
-        if (item.getImageUrl().isEmpty()) {
+        if (item.getImageName().isEmpty()) {
             throw new IllegalArgumentException("An item must have an image");
         }
 
@@ -150,7 +150,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             } else {
                 // Item does not exist; insert new
                 db.execSQL("INSERT INTO items (name, image) VALUES (?, ?)",
-                        new Object[] { item.getName(), item.getImageUrl() });
+                        new Object[] { item.getName(), item.getImageName() });
 
                 cursor.close();
                 cursor = db.rawQuery("SELECT last_insert_rowid()", null);

@@ -16,11 +16,12 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
     private List<Vocabulary> vocabularies;
     private Activity activity;
-
+    private Kasslr app;
 
     public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies){
         this.vocabularies = vocabularies;
         this.activity = activity;
+        app = (Kasslr) activity.getApplication();
     }
 
     @Override
@@ -59,13 +60,13 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             Bitmap[] bitmaps = new Bitmap[3];
 
             if (items.size() > 2) {
-                bitmaps[2] = createBitmap(items.get(2).getImageUrl());
+                bitmaps[2] = createBitmap(items.get(2));
             }
             if (items.size() > 1) {
-                bitmaps[1] = createBitmap(items.get(1).getImageUrl());
+                bitmaps[1] = createBitmap(items.get(1));
             }
             if (items.size() > 0) {
-                bitmaps[0] = createBitmap(items.get(0).getImageUrl());
+                bitmaps[0] = createBitmap(items.get(0));
             } else {
                 throw new IllegalStateException("No items in vocabulary");
             }
@@ -75,8 +76,8 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
     }
 
-    private Bitmap createBitmap(String imgUrl){
-        Bitmap bm = BitmapFactory.decodeFile(imgUrl);
+    private Bitmap createBitmap(VocabularyItem item){
+        Bitmap bm = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
         return bm;
     }
 }

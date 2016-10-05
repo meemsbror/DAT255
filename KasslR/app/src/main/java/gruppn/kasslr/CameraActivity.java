@@ -253,7 +253,7 @@ public class CameraActivity extends AppCompatActivity implements
     }
 
     private File getNewPictureFile() {
-        File dir = app.getPictureDirectory();
+        File dir = app.getImageDirectory();
         if (!dir.exists()) {
             dir.mkdir();
         }

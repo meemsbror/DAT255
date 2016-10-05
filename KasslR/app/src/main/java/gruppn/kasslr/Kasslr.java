@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
 import java.util.List;
 
 import gruppn.kasslr.db.KasslrDatabase;
@@ -19,6 +22,13 @@ import gruppn.kasslr.model.VocabularyItem;
 
 public class Kasslr extends Application {
     private static final String DEBUG_TAG = "Kasslr";
+
+    private static final FileFilter IMAGE_FILTER = new FileFilter() {
+        @Override
+        public boolean accept(File file) {
+            return file.getName().toLowerCase().endsWith(".jpg");
+        }
+    };
 
     private Shelf shelf;
     private Player profileInformation = new Player();
@@ -78,8 +88,17 @@ public class Kasslr extends Application {
         return profileInformation.getUserId();
     }
 
-    public File getPictureDirectory() {
+    public File getImageDirectory() {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
+    }
+
+    public File[] getImageFiles() {
+        File[] images = getImageDirectory().listFiles(IMAGE_FILTER);
+        return images == null ? new File[] {} : images;
+    }
+
+    public File getImageFile(VocabularyItem item) {
+        return new File(getImageDirectory(), item.getImageName() + ".jpg");
     }
 
     public Bitmap getSharedBitmap() {
@@ -115,7 +134,39 @@ public class Kasslr extends Application {
                 }
             }
 
+            if (result.items == null) {
+                result.items = new ArrayList<>();
+            }
+
+            addItemsWithoutNames(result.items);
+
             return result;
+        }
+
+        private void addItemsWithoutNames(List<VocabularyItem> items) {
+            List<VocabularyItem> itemsWithoutName = new ArrayList<>();
+
+            for (File file : getImageFiles()) {
+                String name = file.getName();
+                name = name.substring(0, name.indexOf(".jpg"));
+
+                if (!imageNameExists(items, name)) {
+                    itemsWithoutName.add(new VocabularyItem("", name));
+                }
+            }
+
+            items.addAll(itemsWithoutName);
+        }
+
+        private boolean imageNameExists(List<VocabularyItem> items, String name) {
+            boolean exists = false;
+            for (VocabularyItem item : items) {
+                if (name.equals(item.getImageName())) {
+                    exists = true;
+                    break;
+                }
+            }
+            return exists;
         }
 
         @Override

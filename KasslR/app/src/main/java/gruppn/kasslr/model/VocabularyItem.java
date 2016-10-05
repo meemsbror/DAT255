@@ -3,18 +3,20 @@ package gruppn.kasslr.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class VocabularyItem {
     private int id;
     private String name;
-    private String imageUrl;
+    private String image;
 
-    public VocabularyItem(String name, String imageUrl) {
+    public VocabularyItem(String name, String imageName) {
         this.name = name;
-        this.imageUrl = imageUrl;
+        this.image = imageName;
     }
 
-    public VocabularyItem(String name, String imageUrl, int id) {
-        this(name, imageUrl);
+    public VocabularyItem(String name, String imageName, int id) {
+        this(name, imageName);
         this.id = id;
     }
 
@@ -34,18 +36,21 @@ public class VocabularyItem {
         this.name = name.trim();
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    /**
+     * @return The name of the image without file extension
+     */
+    public String getImageName() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageName(String image) {
+        this.image = image;
     }
 
     public JSONObject toJSON() throws JSONException {
         JSONObject item = new JSONObject();
         item.put("Word", name);
-        item.put("Picture", imageUrl);
+        item.put("Picture", image);
 
         return item;
     }

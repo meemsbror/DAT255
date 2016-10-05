@@ -58,7 +58,7 @@ public class GalleryFragment extends Fragment {
     }
 
     private void loadPictures() {
-        File dir = app.getPictureDirectory();
+        File dir = app.getImageDirectory();
         File[] files;
         if ((files = dir.listFiles(FILTER)) == null || files.length == imageCount) {
             // There are no (new) images
