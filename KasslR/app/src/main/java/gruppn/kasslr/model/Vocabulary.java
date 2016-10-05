@@ -6,13 +6,27 @@ import org.json.JSONException;
 import java.util.List;
 
 public class Vocabulary {
+    private int id;
     private String owner;
     private String title;
     private List<VocabularyItem> items;
 
-    public Vocabulary(String owner, String title){
+    public Vocabulary(String owner, String title) {
         this.owner = owner;
         this.title = title;
+    }
+
+    public Vocabulary(String owner, String title, int id) {
+        this(owner, title);
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getOwner() {
@@ -20,7 +34,7 @@ public class Vocabulary {
     }
 
     public void setOwner(String owner) {
-        this.owner = owner;
+        this.owner = owner.trim();
     }
 
     public String getTitle() {
@@ -28,7 +42,7 @@ public class Vocabulary {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title.trim();
     }
 
     public List<VocabularyItem> getItems() {
