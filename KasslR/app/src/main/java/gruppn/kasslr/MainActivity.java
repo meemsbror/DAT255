@@ -102,11 +102,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void showFragment(Fragment fragment) {
+        getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
-    public void slideToFragment(Fragment fragment, Directions directions, Boolean backStack) {
+    public void slideToFragment(Fragment fragment, Directions directions, boolean backStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        getSupportFragmentManager().popBackStack();
         if (backStack) {
             transaction.addToBackStack(null);
         }
