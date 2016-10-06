@@ -92,8 +92,10 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void saveItem(View view) {
         item.setName(txtWord.getText().toString().trim());
-        new SaveItemsTask().execute(item);
-        finish();
+        if (!item.getName().isEmpty()) {
+            new SaveItemsTask().execute(item);
+        }
+        onBackPressed();
     }
 
     private int getImageWidth() {

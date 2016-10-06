@@ -227,7 +227,7 @@ public class CameraActivity extends AppCompatActivity {
                             intent.putExtra(EditItemActivity.EXTRA_IMAGE_URI, Uri.fromFile(file));
                             intent.putExtra(EditItemActivity.EXTRA_FINISH_ON_BACK, true);
 
-                            String transition = getString(R.string.transition_add_word);
+                            String transition = getString(R.string.transition_edit_item_image);
                             ActivityOptionsCompat options = ActivityOptionsCompat
                                     .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
 

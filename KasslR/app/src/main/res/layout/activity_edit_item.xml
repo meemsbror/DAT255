@@ -15,7 +15,7 @@
         android:id="@+id/imgWord"
         android:layout_centerInParent="true"
         android:layout_above="@+id/lblWordDescription"
-        android:transitionName="@string/transition_add_word"
+        android:transitionName="@string/transition_edit_item_image"
         android:paddingBottom="50dp" />
 
     <TextView
@@ -30,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txtWord"
+        android:transitionName="@string/transition_edit_item_name"
         android:layout_above="@+id/btnSaveWord"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

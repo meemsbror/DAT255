@@ -1,23 +1,24 @@
 package gruppn.kasslr;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -39,7 +40,9 @@ public class GalleryFragment extends Fragment {
 
     private Kasslr app;
 
-    private GridView gridGallery;
+    //private GridView gridGallery;
+    private RecyclerView recyclerView;
+    private ItemAdapter adapter;
     private int itemCount = 0;
 
     @Override
@@ -53,6 +56,7 @@ public class GalleryFragment extends Fragment {
 
         app = (Kasslr) getActivity().getApplication();
 
+        /*
         gridGallery = (GridView) getActivity().findViewById(R.id.grid_gallery_photos);
         gridGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,6 +73,21 @@ public class GalleryFragment extends Fragment {
                 ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
             }
         });
+        */
+
+        recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view_gallery);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            private int margin = getResources().getDimensionPixelSize(R.dimen.gallery_spacing);
+
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                outRect.set(margin, margin, margin, margin);
+            }
+        });
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        adapter = new ItemAdapter(new VocabularyItem[0]);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -85,60 +104,102 @@ public class GalleryFragment extends Fragment {
         }
     }
 
-    private class ItemAdapter extends BaseAdapter {
-        private Context mContext;
+    private class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         private VocabularyItem[] mItems;
 
-        public ItemAdapter(Context c, VocabularyItem[] items) {
-            mContext = c;
+        public ItemAdapter(VocabularyItem[] items) {
             mItems = items;
         }
 
+        public void setItems(VocabularyItem[] items) {
+            mItems = items;
+            notifyDataSetChanged();
+        }
+
         @Override
-        public int getCount() {
+        public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view =  LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.vocabulary_item, parent, false);
+            return new ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ItemViewHolder holder, int position) {
+            holder.setItem(mItems[position]);
+        }
+
+        @Override
+        public int getItemCount() {
             return mItems.length;
         }
 
-        @Override
         public VocabularyItem getItem(int position) {
             return mItems[position];
         }
+    }
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
+    private class ItemViewHolder extends RecyclerView.ViewHolder {
+        private TextView name;
+        private ImageView image;
+
+        public ItemViewHolder(final View view) {
+            super(view);
+            name = (TextView) view.findViewById(R.id.txtItem);
+            image = (ImageView) view.findViewById(R.id.imgItem);
+
         }
 
-        @Override
-        public View getView(int position, View view, ViewGroup parent) {
-            int width;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                width = ((GridView) parent).getColumnWidth();
-            } else {
-                width = parent.getWidth() / ((GridView) parent).getNumColumns() - R.dimen.gallery_spacing;
-            }
-            int height = width * 4 / 3;
+        public void setItem(final VocabularyItem item) {
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    app.setSharedBitmap(((BitmapDrawable) image.getDrawable()).getBitmap());
 
-            ImageView imageView;
-            if (view == null) {
-                imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(width, height));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    imageView.setTransitionName(getString(R.string.transition_add_word));
+                    Intent intent = new Intent(getActivity(), EditItemActivity.class);
+                    intent.putExtra(EditItemActivity.EXTRA_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            getActivity(),
+                            Pair.create((View) name, getString(R.string.transition_edit_item_name)),
+                            Pair.create((View) image, getString(R.string.transition_edit_item_image)));
+
+                    ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                 }
-            } else {
-                imageView = (ImageView) view;
-            }
+            };
 
-            File imageFile = app.getImageFile(mItems[position]);
-            Picasso.with(mContext).load(imageFile).fit().into(imageView);
-            return imageView;
+            name.setOnClickListener(listener);
+            image.setOnClickListener(listener);
+
+            name.setVisibility(View.GONE);
+
+            image.post(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.with(getContext())
+                            .load(app.getImageFile(item))
+                            .resize(image.getMeasuredWidth(), image.getMeasuredWidth() * 4 / 3)
+                            .into(image, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    if (!item.getName().isEmpty()) {
+                                        name.setText(item.getName());
+                                        name.setVisibility(View.VISIBLE);
+                                    }
+                                }
+
+                                @Override
+                                public void onError() {
+                                    // Do nothing
+                                }
+                            });
+                }
+            });
         }
     }
 
-    private class LoadItemsTask extends AsyncTask<List<VocabularyItem>, Void, ItemAdapter> {
+    private class LoadItemsTask extends AsyncTask<List<VocabularyItem>, Void, VocabularyItem[]> {
         @Override
-        protected ItemAdapter doInBackground(List<VocabularyItem>... lists) {
+        protected VocabularyItem[] doInBackground(List<VocabularyItem>... lists) {
             if (lists.length == 0) {
                 Log.e(DEBUG_TAG, "No list supplied to LoadItemsTask");
                 return null;
@@ -165,14 +226,14 @@ public class GalleryFragment extends Fragment {
             });
             Log.d(DEBUG_TAG, "Finished sorting items");
 
-            return new ItemAdapter(getActivity(), items);
+            return items;
         }
 
         @Override
-        protected void onPostExecute(ItemAdapter itemAdapter) {
-            if (itemAdapter != null) {
-                gridGallery.setAdapter(itemAdapter);
-                itemCount = itemAdapter.getCount();
+        protected void onPostExecute(VocabularyItem[] items) {
+            if (items != null) {
+                adapter.setItems(items);
+                itemCount = items.length;
             }
         }
     }
