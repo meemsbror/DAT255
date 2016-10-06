@@ -144,14 +144,21 @@ public class GalleryFragment extends Fragment {
                 return null;
             }
 
-            VocabularyItem[] items = lists[0].toArray(new VocabularyItem[lists[0].size()]);
+            // Get last modified date for each item
+            final List<VocabularyItem> itemList = lists[0];
+            VocabularyItem[] items = itemList.toArray(new VocabularyItem[itemList.size()]);
+            final long[] lastModified = new long[items.length];
+            for (int i = 0; i < items.length; i++) {
+                lastModified[i] = app.getImageFile(items[i]).lastModified();
+            }
 
+            // Sort items by date
             Log.d(DEBUG_TAG, "Start sorting items");
             Arrays.sort(items, new Comparator<VocabularyItem>() {
                 @Override
                 public int compare(VocabularyItem x, VocabularyItem y) {
-                    long a = app.getImageFile(x).lastModified();
-                    long b = app.getImageFile(y).lastModified();
+                    long a = lastModified[itemList.indexOf(x)];
+                    long b = lastModified[itemList.indexOf(y)];
 
                     return a == b ? 0 : a > b ? 1 : -1;
                 }
