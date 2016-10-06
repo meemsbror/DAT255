@@ -54,6 +54,8 @@ public class ProfilePageFragment extends Fragment{
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
                 .load(R.drawable.tempbackground)
+                .centerCrop()
+                .fit()
                 .into(imageView);
 
         //Score
