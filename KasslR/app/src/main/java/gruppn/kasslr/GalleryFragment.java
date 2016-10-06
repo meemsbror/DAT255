@@ -86,15 +86,16 @@ public class GalleryFragment extends Fragment {
     }
 
     private class ItemAdapter extends BaseAdapter {
-        private static final int COLUMNS = 2;
-        private static final int PADDING = 8;
+        private static final int SPACING_DP = 4;
 
         private Context mContext;
         private VocabularyItem[] mItems;
+        private int spacingPixels;
 
         public ItemAdapter(Context c, VocabularyItem[] items) {
             mContext = c;
             mItems = items;
+            spacingPixels = (int) (c.getResources().getDisplayMetrics().density * SPACING_DP);
         }
 
         @Override
@@ -114,10 +115,18 @@ public class GalleryFragment extends Fragment {
 
         @Override
         public View getView(int position, View view, ViewGroup parent) {
+            int width;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                width = ((GridView) parent).getColumnWidth();
+            } else {
+                width = parent.getWidth() / ((GridView) parent).getNumColumns() - spacingPixels;
+            }
+            int height = width * 4 / 3;
+
             ImageView imageView;
             if (view == null) {
                 imageView = new ImageView(mContext);
-                imageView.setPadding(PADDING, PADDING, PADDING, PADDING);
+                imageView.setLayoutParams(new GridView.LayoutParams(width, height));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     imageView.setTransitionName(getString(R.string.transition_add_word));
                 }
@@ -125,11 +134,8 @@ public class GalleryFragment extends Fragment {
                 imageView = (ImageView) view;
             }
 
-            int width = mContext.getResources().getDisplayMetrics().widthPixels / COLUMNS - PADDING * 2;
-            int height = width * 4 / 3 - PADDING * 2;
-
             File imageFile = app.getImageFile(mItems[position]);
-            Picasso.with(mContext).load(imageFile).resize(width, height).into(imageView);
+            Picasso.with(mContext).load(imageFile).fit().into(imageView);
             return imageView;
         }
     }
