@@ -20,13 +20,13 @@ import gruppn.kasslr.model.VocabularyItem;
 public class EditItemActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "image";
     public static final String EXTRA_ITEM_INDEX = "item_index";
-    public static final String EXTRA_FINISH_ON_BACK = "finish_back";
+    public static final String EXTRA_EXIT_TRANSITION = "exit_transition";
 
     private static final String DEBUG_TAG = "EditItemActivity";
 
     private Kasslr app;
     private VocabularyItem item;
-    private boolean finishOnBack;
+    private boolean exitTransition;
 
     private TextView txtWord;
 
@@ -78,15 +78,19 @@ public class EditItemActivity extends AppCompatActivity {
         }
         imgWord.setImageBitmap(Bitmap.createScaledBitmap(bitmap, getImageWidth(), getImageHeight(), false));
 
-        finishOnBack = getIntent().getExtras().getBoolean(EXTRA_FINISH_ON_BACK, false);
+        exitTransition = getIntent().getExtras().getBoolean(EXTRA_EXIT_TRANSITION, true);
     }
 
     @Override
     public void onBackPressed() {
-        if (finishOnBack) {
+        close();
+    }
+
+    private void close() {
+        if (!exitTransition) {
             finish();
         } else {
-            super.onBackPressed();
+            supportFinishAfterTransition();
         }
     }
 
@@ -95,7 +99,9 @@ public class EditItemActivity extends AppCompatActivity {
         if (!item.getName().isEmpty()) {
             new SaveItemsTask().execute(item);
         }
-        onBackPressed();
+
+        setResult(app.getShelf().getItems().indexOf(item));
+        close();
     }
 
     private int getImageWidth() {

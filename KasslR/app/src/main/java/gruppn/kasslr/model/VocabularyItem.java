@@ -3,12 +3,11 @@ package gruppn.kasslr.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-
 public class VocabularyItem {
     private int id;
     private String name;
     private String image;
+    private long lastModified;
 
     public VocabularyItem(String name, String imageName) {
         this.name = name;
@@ -45,6 +44,14 @@ public class VocabularyItem {
 
     public void setImageName(String image) {
         this.image = image;
+    }
+
+    public long getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(long lastModified) {
+        this.lastModified = lastModified;
     }
 
     public JSONObject toJSON() throws JSONException {

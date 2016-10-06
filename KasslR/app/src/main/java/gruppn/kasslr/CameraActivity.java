@@ -225,7 +225,7 @@ public class CameraActivity extends AppCompatActivity {
                         public void run() {
                             Intent intent = new Intent(CameraActivity.this, EditItemActivity.class);
                             intent.putExtra(EditItemActivity.EXTRA_IMAGE_URI, Uri.fromFile(file));
-                            intent.putExtra(EditItemActivity.EXTRA_FINISH_ON_BACK, true);
+                            intent.putExtra(EditItemActivity.EXTRA_EXIT_TRANSITION, false);
 
                             String transition = getString(R.string.transition_edit_item_image);
                             ActivityOptionsCompat options = ActivityOptionsCompat

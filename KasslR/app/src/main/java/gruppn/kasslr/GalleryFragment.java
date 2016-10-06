@@ -23,13 +23,16 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import gruppn.kasslr.model.VocabularyItem;
 
 public class GalleryFragment extends Fragment {
+    public static final int REQUEST_EDIT_ITEM = 1;
+
     private static final String DEBUG_TAG = "GalleryFragment";
     private static final FileFilter FILTER = new FileFilter() {
         @Override
@@ -86,7 +89,7 @@ public class GalleryFragment extends Fragment {
         });
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ItemAdapter(new VocabularyItem[0]);
+        adapter = new ItemAdapter(new ArrayList<VocabularyItem>());
         recyclerView.setAdapter(adapter);
     }
 
@@ -104,14 +107,27 @@ public class GalleryFragment extends Fragment {
         }
     }
 
-    private class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
-        private VocabularyItem[] mItems;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(DEBUG_TAG, "requestCode: " + requestCode + ", resultCode: " + resultCode);
+        if (requestCode == REQUEST_EDIT_ITEM) {
+            if (resultCode >= 0 && resultCode < itemCount) {
+                // Get item
+                VocabularyItem item = app.getShelf().getItems().get(resultCode);
+                adapter.notifyItemChanged(item);
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
-        public ItemAdapter(VocabularyItem[] items) {
+    private class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+        private List<VocabularyItem> mItems;
+
+        public ItemAdapter(List<VocabularyItem> items) {
             mItems = items;
         }
 
-        public void setItems(VocabularyItem[] items) {
+        public void setItems(List<VocabularyItem> items) {
             mItems = items;
             notifyDataSetChanged();
         }
@@ -125,16 +141,23 @@ public class GalleryFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ItemViewHolder holder, int position) {
-            holder.setItem(mItems[position]);
+            holder.setItem(mItems.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return mItems.length;
+            return mItems.size();
         }
 
         public VocabularyItem getItem(int position) {
-            return mItems[position];
+            return mItems.get(position);
+        }
+
+        public void notifyItemChanged(VocabularyItem item) {
+            int position = mItems.indexOf(item);
+            if (position >= 0 && position < mItems.size()) {
+                notifyItemChanged(position);
+            }
         }
     }
 
@@ -171,7 +194,7 @@ public class GalleryFragment extends Fragment {
                     ActivityOptionsCompat options = ActivityOptionsCompat
                             .makeSceneTransitionAnimation(getActivity(), transitions);
 
-                    ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                    ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_EDIT_ITEM, options.toBundle());
                 }
             };
 
@@ -205,29 +228,27 @@ public class GalleryFragment extends Fragment {
         }
     }
 
-    private class LoadItemsTask extends AsyncTask<List<VocabularyItem>, Void, VocabularyItem[]> {
+    private class LoadItemsTask extends AsyncTask<List<VocabularyItem>, Void, List<VocabularyItem>> {
         @Override
-        protected VocabularyItem[] doInBackground(List<VocabularyItem>... lists) {
+        protected List<VocabularyItem> doInBackground(List<VocabularyItem>... lists) {
             if (lists.length == 0) {
                 Log.e(DEBUG_TAG, "No list supplied to LoadItemsTask");
                 return null;
             }
 
             // Get last modified date for each item
-            final List<VocabularyItem> itemList = lists[0];
-            VocabularyItem[] items = itemList.toArray(new VocabularyItem[itemList.size()]);
-            final long[] lastModified = new long[items.length];
-            for (int i = 0; i < items.length; i++) {
-                lastModified[i] = app.getImageFile(items[i]).lastModified();
+            final List<VocabularyItem> items = new ArrayList<>(lists[0]);
+            for (VocabularyItem item : items) {
+                item.setLastModified(app.getImageFile(item).lastModified());
             }
 
             // Sort items by date
             Log.d(DEBUG_TAG, "Start sorting items");
-            Arrays.sort(items, new Comparator<VocabularyItem>() {
+            Collections.sort(items, new Comparator<VocabularyItem>() {
                 @Override
                 public int compare(VocabularyItem x, VocabularyItem y) {
-                    long a = lastModified[itemList.indexOf(x)];
-                    long b = lastModified[itemList.indexOf(y)];
+                    long a = x.getLastModified();
+                    long b = y.getLastModified();
 
                     return a == b ? 0 : a > b ? 1 : -1;
                 }
@@ -238,10 +259,10 @@ public class GalleryFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(VocabularyItem[] items) {
+        protected void onPostExecute(List<VocabularyItem> items) {
             if (items != null) {
                 adapter.setItems(items);
-                itemCount = items.length;
+                itemCount = items.size();
             }
         }
     }

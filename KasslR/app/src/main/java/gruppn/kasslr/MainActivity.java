@@ -276,4 +276,14 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
         slideToFragment(new FeedFragment(), Directions.UP, false);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
+    }
 }
