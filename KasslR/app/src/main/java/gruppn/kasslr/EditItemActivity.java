@@ -8,7 +8,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +20,6 @@ import gruppn.kasslr.model.VocabularyItem;
 public class EditItemActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "image";
     public static final String EXTRA_ITEM_INDEX = "item_index";
-    public static final String EXTRA_IMAGE_DESCRIPTION = "image_description";
     public static final String EXTRA_FINISH_ON_BACK = "finish_back";
 
     private static final String DEBUG_TAG = "EditItemActivity";
@@ -55,6 +56,17 @@ public class EditItemActivity extends AppCompatActivity {
             Log.e(DEBUG_TAG, "Extras must either contain item index or an image uri");
             finish();
         }
+
+        txtWord.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
+                if (action == EditorInfo.IME_ACTION_DONE) {
+                    saveItem(textView);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // Set item name
         txtWord.setText(item.getName());
