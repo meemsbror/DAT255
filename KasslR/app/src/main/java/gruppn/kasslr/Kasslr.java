@@ -8,7 +8,18 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -40,37 +51,69 @@ public class Kasslr extends Application {
 
         shelf = new Shelf();
         loadShelf();
-
-        initUserData();
     }
 
     private void loadShelf() {
         new LoadShelfTask().execute(shelf);
     }
 
-    private void initUserData() {
+    public void initUserData(Context context) {
+
+        requestNewUser(context);
+
+        //hehe
+        /*
+
         SharedPreferences sharedPref = getSharedPreferences(Kasslr.class.getName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         String tempUserId = sharedPref.getString(getString(R.string.key_user_id), "none");
 
-        if(tempUserId.equals("none")){
-            tempUserId = requestNewUser();
+        if(tempUserId.equals("none") || tempUserId.equals("dassid")){
+            requestNewUser(context);
+        }else{
+            updateUserId(tempUserId);
         }
+        */
 
-        profileInformation.setUserId(tempUserId);
     }
 
-    private String requestNewUser() {
+    public void updateUserId(String newId){
+        profileInformation.setUserId(newId);
+    }
+
+    private void requestNewUser(Context context) {
         SharedPreferences sharedPref = getSharedPreferences(Kasslr.class.getName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        Player newUser = new Player("userID");
+        String android_id = Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+        System.out.println("Adnroid id: " + android_id);
+        String url = Web.baseUrl+"?action=login&device="+android_id;
 
-        editor.putString(getString(R.string.key_user_id), newUser.getUserId());
-        editor.commit();
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
-        return newUser.getUserId();
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            System.out.println(response.toString());
+                            updateUserId(response.getString("user"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+
+        Web.getInstance(context).addToRequestQueue(jsObjRequest);
+
     }
 
     public void increaseScore(Player.CompletedAction completedAction){

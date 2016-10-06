@@ -48,7 +48,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         List<VocabularyItem> items = v.getItems();
 
         setPictures(holder, items);
-        holder.setName(v.getTitle());
+        holder.setVocabulary(v);
 
 
     }

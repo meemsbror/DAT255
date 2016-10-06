@@ -28,6 +28,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
+import gruppn.kasslr.model.VocabularyItem;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         app = (Kasslr) getApplication();
+        app.initUserData(this);
         setContentView(R.layout.activity_main);
         requestCameraPermission();
         initiateBottomBar();
@@ -117,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void changeToGame(View view){
+    public void changeToGame(View view, Vocabulary vocabulary){
+        System.out.println("Starting game for vocabulary " + vocabulary.getTitle());
         Intent myIntent = new Intent(this,LaneGame.class);
         startActivity(myIntent);
     }
@@ -263,6 +266,10 @@ public class MainActivity extends AppCompatActivity {
         app.increaseScore(Player.CompletedAction.CREATE_VOCABULARY);
         EditText vocName = (EditText)findViewById(R.id.newVocName);
         Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
+
+        // temporary
+        voc.setItems(app.getShelf().getItems());
+
         app.getShelf().addVocabulary(voc);
 
         System.out.println(app.getShelf().toString());
