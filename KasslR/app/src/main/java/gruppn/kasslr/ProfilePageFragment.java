@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * The activity for viewing the profile.
@@ -27,7 +25,7 @@ public class ProfilePageFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_profile_page, container, false);
+        return inflater.inflate(R.layout.fragment_profile_page, container, false);
     }
 
     @Override
@@ -48,14 +46,14 @@ public class ProfilePageFragment extends Fragment{
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
-        TextView points = (TextView) getView().findViewById(R.id.score);
-        points.setText("" + app.getCurrentScore());
+        //TextView points = (TextView) getView().findViewById(R.id.score);
+        //points.setText("" + app.getCurrentScore());
 
         //Change profile background
+
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
                 .load(R.drawable.tempbackground)
-                .fit()
                 .into(imageView);
 
         //Score

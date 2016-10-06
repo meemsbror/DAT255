@@ -30,7 +30,7 @@
         <activity android:name=".CameraActivity" />
         <activity android:name=".EditItemActivity" />
         <activity android:name=".game.LaneGame" />
-        <activity android:name=".VocabularyTransitionActivity"></activity>
+        <activity android:name=".VocabularyTransitionActivity" />
     </application>
 
 </manifest>
