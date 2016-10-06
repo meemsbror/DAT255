@@ -158,10 +158,18 @@ public class GalleryFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), EditItemActivity.class);
                     intent.putExtra(EditItemActivity.EXTRA_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
 
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            getActivity(),
-                            Pair.create((View) name, getString(R.string.transition_edit_item_name)),
-                            Pair.create((View) image, getString(R.string.transition_edit_item_image)));
+                    Pair<View, String>[] transitions;
+                    if (item.getName().isEmpty()) {
+                        transitions = new Pair[] {
+                                Pair.create((View) image, getString(R.string.transition_edit_item_image)) };
+                    } else {
+                        transitions = new Pair[] {
+                                Pair.create((View) image, getString(R.string.transition_edit_item_image)),
+                                Pair.create((View) name, getString(R.string.transition_edit_item_name)) };
+                    }
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat
+                            .makeSceneTransitionAnimation(getActivity(), transitions);
 
                     ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
                 }
