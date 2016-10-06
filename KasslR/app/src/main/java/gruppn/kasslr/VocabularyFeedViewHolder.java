@@ -58,6 +58,16 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         }
     }
 
+    public ImageView getImageView(int i){
+        if(i == 1)
+            return this.image1;
+        else if(i == 2)
+            return this.image2;
+        else if(i == 3)
+            return this.image3;
+        return null;
+    }
+
     public void setVocabulary(Vocabulary vocabulary){
         this.vocabulary = vocabulary;
         this.name.setText(vocabulary.getTitle());

@@ -2,12 +2,18 @@ package gruppn.kasslr;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.List;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
@@ -17,6 +23,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     private List<Vocabulary> vocabularies;
     private Activity activity;
     private Kasslr app;
+    private Context mContext;
 
     public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies){
         this.vocabularies = vocabularies;
@@ -34,6 +41,9 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         View itemView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.vocabulary_feed_card,parent,false);
+
+        this.mContext = parent.getContext();
+
         return new VocabularyFeedViewHolder(itemView);
     }
 
@@ -53,25 +63,22 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
     }
 
-    private void setPictures(VocabularyFeedViewHolder holder, List<VocabularyItem> items){
+    private void setPictures(VocabularyFeedViewHolder holder, final List<VocabularyItem> items){
 
-        if(items != null) {
+        int maxImages = 3;
+        if(items.size() < 3)
+            maxImages = items.size();
 
-            Bitmap[] bitmaps = new Bitmap[3];
+        for(int i = 0; i < maxImages; i++) {
+            final ImageView img = holder.getImageView(i+1);
+            final File imageFile = app.getImageFile(items.get(i));
+            img.post(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.with(mContext).load(imageFile).resize(img.getMeasuredWidth(),img.getMeasuredHeight()).into(img);
+                }
+            });
 
-            if (items.size() > 2) {
-                bitmaps[2] = createBitmap(items.get(2));
-            }
-            if (items.size() > 1) {
-                bitmaps[1] = createBitmap(items.get(1));
-            }
-            if (items.size() > 0) {
-                bitmaps[0] = createBitmap(items.get(0));
-            } else {
-                throw new IllegalStateException("No items in vocabulary");
-            }
-
-            holder.setPictures(bitmaps);
         }
 
     }
