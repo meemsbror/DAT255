@@ -78,13 +78,26 @@ public class Kasslr extends Application {
 
     }
 
-    public void updateUserId(String newId){
+    public void updateUserId(String newId) {
+
+        SharedPreferences sharedPref = getSharedPreferences(Kasslr.class.getName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        if (newId.equals("offline")) {
+
+            newId = sharedPref.getString(getString(R.string.key_user_id), "none");
+
+        }
+
+        editor.putString(getString(R.string.key_user_id), newId);
+        editor.apply();
+
+        System.out.println("logged in with user id " + newId);
+
         profileInformation.setUserId(newId);
     }
 
     private void requestNewUser(Context context) {
-        SharedPreferences sharedPref = getSharedPreferences(Kasslr.class.getName(), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
 
         String android_id = Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
@@ -107,8 +120,7 @@ public class Kasslr extends Application {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // TODO Auto-generated method stub
-
+                        updateUserId("offline");
                     }
                 });
 
