@@ -1,6 +1,8 @@
 package gruppn.kasslr;
 
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,7 +44,6 @@ public class ProfilePageFragment extends Fragment{
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
@@ -63,6 +64,18 @@ public class ProfilePageFragment extends Fragment{
         TextView points = (TextView)getView().findViewById(R.id.points);
         points.setText("" + Player.getScore());
         */
+
+
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab_profile);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "hehe", Snackbar.LENGTH_SHORT)
+                        .setAction("Vad ska stå här då", null).show();
+            }
+        });
+
+
     }
 
 }
