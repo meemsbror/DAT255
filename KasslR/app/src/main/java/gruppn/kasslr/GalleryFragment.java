@@ -86,16 +86,12 @@ public class GalleryFragment extends Fragment {
     }
 
     private class ItemAdapter extends BaseAdapter {
-        private static final int SPACING_DP = 4;
-
         private Context mContext;
         private VocabularyItem[] mItems;
-        private int spacingPixels;
 
         public ItemAdapter(Context c, VocabularyItem[] items) {
             mContext = c;
             mItems = items;
-            spacingPixels = (int) (c.getResources().getDisplayMetrics().density * SPACING_DP);
         }
 
         @Override
@@ -119,7 +115,7 @@ public class GalleryFragment extends Fragment {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 width = ((GridView) parent).getColumnWidth();
             } else {
-                width = parent.getWidth() / ((GridView) parent).getNumColumns() - spacingPixels;
+                width = parent.getWidth() / ((GridView) parent).getNumColumns() - R.dimen.gallery_spacing;
             }
             int height = width * 4 / 3;
 
