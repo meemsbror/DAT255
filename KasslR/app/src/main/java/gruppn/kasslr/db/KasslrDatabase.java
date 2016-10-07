@@ -226,8 +226,8 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         if (vocabulary.getTitle().isEmpty()) {
             throw new IllegalArgumentException("A vocabulary must have a title");
         }
-        if (vocabulary.getItems().isEmpty()) {
-            throw new IllegalArgumentException("A vocabulary must have at least one item");
+        if (vocabulary.getItems().size() < 3) {
+            throw new IllegalArgumentException("A vocabulary must have at least three items");
         }
 
         SQLiteDatabase db = null;
