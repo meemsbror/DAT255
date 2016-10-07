@@ -5,7 +5,7 @@
     android:id="@+id/card_view"
     android:layout_gravity="center"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="220dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true"
     app:cardElevation="10dp"
@@ -13,37 +13,43 @@
     app:cardBackgroundColor="@color/cardview_dark_background">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="3">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/vocabulary_image1"
+            android:layout_gravity="center"
+            android:src="@mipmap/hund"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/vocabulary_image2"
+            android:layout_gravity="right|center_vertical"
+            android:src="@mipmap/dog"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/vocabulary_image3"
+            android:layout_gravity="left|center_vertical"
+            android:src="@mipmap/stol"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight=".30"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView1"
-            android:layout_gravity="center"
-            android:src="@mipmap/hund"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight=".30"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView2"
-            android:layout_gravity="left|center_vertical"
-            android:src="@mipmap/stol" />
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_weight=".30"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView3"
-            android:layout_gravity="right|center_vertical"
-            android:src="@mipmap/dog"/>
-        </LinearLayout>
+        android:layout_height="match_parent">
 
 
         <TextView
@@ -54,28 +60,16 @@
             android:textColor="@color/cardview_light_background"
             android:textSize="24sp"
             android:padding="6dp"
-            android:background="@drawable/cardgradient" />
+            android:background="@drawable/cardgradient"
+            android:text="Vocabulary name"/>
 
-        <ImageButton
-            android:layout_width="88dp"
-            android:layout_height="44dp"
-            android:id="@+id/imageButton1"
-            android:layout_gravity="left|bottom" />
-
-        <ImageButton
-            android:layout_width="88dp"
-            android:layout_height="44dp"
-            android:id="@+id/imageButton2"
-            android:layout_gravity="center_horizontal|bottom" />
-
-        <ImageButton
-            android:layout_width="88dp"
-            android:layout_height="44dp"
-            android:id="@+id/imageButton3"
-            android:layout_gravity="right|bottom"
-            android:onClick="changeToGame"
-            android:src="@mipmap/greenarrow"
-            android:scaleType="fitStart" />
+        <ImageView
+            android:layout_width="132dp"
+            android:layout_height="132dp"
+            app:srcCompat="@drawable/white_play"
+            android:id="@+id/play_button"
+            android:layout_gravity="center|center"
+            android:src="@drawable/white_play" />
 
     </FrameLayout>
 </android.support.v7.widget.CardView>

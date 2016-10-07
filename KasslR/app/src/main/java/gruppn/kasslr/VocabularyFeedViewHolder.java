@@ -21,19 +21,18 @@ import static java.security.AccessController.getContext;
 public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
     protected TextView name, owner;
-    private ImageView image1, image2, image3;
-    private ImageButton playButton;
+    private ImageView image1, image2, image3, playButton;
     private Vocabulary vocabulary;
 
 
     public VocabularyFeedViewHolder(View v){
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
-        image1 = (ImageView) v.findViewById(R.id.imageView1);
-        image2 = (ImageView) v.findViewById(R.id.imageView2);
-        image3 = (ImageView) v.findViewById(R.id.imageView3);
+        image1 = (ImageView) v.findViewById(R.id.vocabulary_image1);
+        image2 = (ImageView) v.findViewById(R.id.vocabulary_image2);
+        image3 = (ImageView) v.findViewById(R.id.vocabulary_image3);
 
-        playButton = (ImageButton) v.findViewById(R.id.imageButton2);
+        playButton = (ImageView) v.findViewById(R.id.play_button);
 
         playButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
@@ -48,8 +47,9 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     }
 
     public void setPictures(Bitmap [] bitmaps){
-        this.image1.setImageBitmap(bitmaps[0]);
-
+        if(bitmaps[0]!=null){
+            this.image1.setImageBitmap(bitmaps[0]);
+        }
         if(bitmaps[1]!=null){
             this.image2.setImageBitmap(bitmaps[1]);
         }
@@ -58,7 +58,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    public ImageView getImageView(int i){
+    private ImageView getImageView(int i){
         if(i == 1)
             return this.image1;
         else if(i == 2)
