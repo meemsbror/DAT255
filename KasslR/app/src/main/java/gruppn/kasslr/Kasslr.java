@@ -47,7 +47,7 @@ public class Kasslr extends Application {
     };
 
     private Shelf shelf;
-    private Player profileInformation = new Player();
+    private ProfileInformation profileInformation = new ProfileInformation();
     private Bitmap sharedBitmap;
 
     @Override
@@ -79,6 +79,7 @@ public class Kasslr extends Application {
         }else{
             updateUserId(tempUserId);
         }
+<<<<<<< 2b3dd62f294e0a3dd78d2561031f4154557038f5
         */
 
     }
@@ -209,11 +210,11 @@ public class Kasslr extends Application {
         }
     }
 
-    public void increaseScore(Player.CompletedAction completedAction){
+    public void increaseScore(profileInformation.CompletedAction completedAction){
         profileInformation.incScore(completedAction);
     }
     public int getCurrentScore(){
-        return profileInformation.getScore();
+        return Integer.parseInt(getString(R.string.score));
     }
 
     public Shelf getShelf() {
@@ -221,7 +222,7 @@ public class Kasslr extends Application {
     }
 
     public String getUserId() {
-        return profileInformation.getUserId();
+        return getString(R.string.key_user_id);
     }
 
     public File getImageDirectory() {
