@@ -58,7 +58,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    private ImageView getImageView(int i){
+    public ImageView getImageView(int i){
         if(i == 1)
             return this.image1;
         else if(i == 2)
