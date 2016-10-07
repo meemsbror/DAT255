@@ -75,6 +75,8 @@ public class AddVocabularyFragment extends Fragment {
 
         app.getShelf().addVocabulary(vocabulary);
         new SaveVocabulariesTask().execute(vocabulary);
+
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     private class SaveVocabulariesTask extends AsyncTask<Vocabulary, Void, Void> {

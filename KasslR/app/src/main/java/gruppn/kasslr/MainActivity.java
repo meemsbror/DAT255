@@ -29,17 +29,22 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomBar bottomBar;
     private int selectedTab = -1;
-    private enum Directions {
-        UP(R.anim.enter_from_bottom, R.anim.exit_to_top),
+    private enum Direction {
         DOWN(R.anim.enter_from_top, R.anim.exit_to_bottom),
         LEFT(R.anim.enter_from_right, R.anim.exit_to_left),
+        UP(R.anim.enter_from_bottom, R.anim.exit_to_top),
         RIGHT(R.anim.enter_from_left, R.anim.exit_to_right);
+
         private @AnimRes int enter;
         private @AnimRes int exit;
 
-        private Directions(int enter, int exit) {
+        Direction(int enter, int exit) {
             this.enter = enter;
             this.exit = exit;
+        }
+
+        public Direction getOpposite() {
+            return values()[(ordinal() + 2) % 4];
         }
 
         public int getEnter() {
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openAddVocabulary(View view) {
-        slideToFragment(new AddVocabularyFragment(), Directions.DOWN, true);
+        slideToFragment(new AddVocabularyFragment(), Direction.DOWN, true);
     }
 
     public void showFeed() {
@@ -100,14 +105,16 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
-    public void slideToFragment(Fragment fragment, Directions directions, boolean backStack) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    public void slideToFragment(Fragment fragment, Direction direction, boolean backStack) {
         getSupportFragmentManager().popBackStack();
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        Direction opposite = direction.getOpposite();
+        transaction.setCustomAnimations(direction.getEnter(), direction.getExit(), opposite.getEnter(), opposite.getExit());
+        transaction.replace(R.id.main_frame, fragment);
         if (backStack) {
             transaction.addToBackStack(null);
         }
-        transaction.setCustomAnimations(directions.getEnter(), directions.getExit());
-        transaction.replace(R.id.main_frame, fragment);
         transaction.commit();
     }
 
@@ -170,9 +177,9 @@ public class MainActivity extends AppCompatActivity {
                 if (tabId != R.id.tab_camera) {
                     selectedTab = tabId;
                 }
-                Directions directions = Directions.LEFT;
+                Direction directions = Direction.LEFT;
                 if (previous > tabId) {
-                    directions = Directions.RIGHT;
+                    directions = Direction.RIGHT;
                 }
 
                 if (tabId == R.id.tab_feed) {
@@ -204,8 +211,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
                 if (tabId == R.id.tab_feed) {
-
-                    slideToFragment(new FeedFragment(), Directions.DOWN, false);
+                    getSupportFragmentManager().popBackStack();
                 }
             }
         });
@@ -267,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println(app.getShelf().toString());
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
-        slideToFragment(new FeedFragment(), Directions.UP, false);
+        slideToFragment(new FeedFragment(), Direction.UP, false);
     }
     */
 
