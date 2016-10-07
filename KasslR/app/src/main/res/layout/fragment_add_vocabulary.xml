@@ -20,19 +20,18 @@
         android:contentDescription="Name"
         android:hint="@string/add_vocabulary_name_description" />
 
-    <GridView
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/newVocName"
-        android:id="@+id/grid_gallery_vocabularyItems"
-        android:numColumns="2" />
-
     <Button
         android:text="Done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/submitVoc"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:onClick="createVocabulary" />
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+    <FrameLayout
+        android:id="@+id/frame_vocabulary_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/newVocName"
+        android:layout_above="@id/submitVoc" />
 </RelativeLayout>

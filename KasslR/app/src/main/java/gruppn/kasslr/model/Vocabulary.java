@@ -3,6 +3,7 @@ package gruppn.kasslr.model;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vocabulary {
@@ -14,6 +15,7 @@ public class Vocabulary {
     public Vocabulary(String owner, String title) {
         this.owner = owner;
         this.title = title;
+        items = new ArrayList<>();
     }
 
     public Vocabulary(String owner, String title, int id) {

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,15 @@ import gruppn.kasslr.model.VocabularyItem;
     http://stackoverflow.com/questions/21881992/when-is-sqliteopenhelper-oncreate-onupgrade-run
 */
 public class KasslrDatabase extends SQLiteOpenHelper {
+    private static final String DEBUG_TAG = "KasslrDatabase";
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "kasslr";
 
+    private Context mContext;
+
     public KasslrDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     @Override
@@ -68,17 +73,53 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         */
     }
 
+    public void reset() {
+        mContext.deleteDatabase(DATABASE_NAME);
+    }
+
+    public void dump() {
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+
+            Log.d(DEBUG_TAG, "Dumping items");
+            Cursor c = db.rawQuery("SELECT id, name, image FROM items", null);
+            while (c.moveToNext()) {
+                Log.d(DEBUG_TAG, "id: " + c.getInt(0) + ", name: " + c.getString(1) + ", image: " + c.getString(2));
+            }
+            c.close();
+
+            Log.d(DEBUG_TAG, "Dumping vocabularies");
+            c = db.rawQuery("SELECT id, name, owner FROM vocabularies", null);
+            while (c.moveToNext()) {
+                Log.d(DEBUG_TAG, "id: " + c.getInt(0) + ", name: " + c.getString(1) + ", owner: " + c.getString(2));
+            }
+            c.close();
+
+            Log.d(DEBUG_TAG, "Dumping vocabulary_content");
+            c = db.rawQuery("SELECT vocabulary_id, item_id FROM vocabulary_content", null);
+            while (c.moveToNext()) {
+                Log.d(DEBUG_TAG, "vocabulary_id: " + c.getInt(0) + ", item_id: " + c.getInt(1));
+            }
+            c.close();
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
+
     public List<Vocabulary> getVocabularies() throws SQLiteException {
         List<Vocabulary> vocabularies = new ArrayList<>();
 
         SQLiteDatabase db = null;
-        Cursor cVocabularies = null;
+        Cursor cVoc = null;
         try {
             db = getReadableDatabase();
 
-            cVocabularies = db.rawQuery("SELECT * FROM vocabularies", null);
-            while (cVocabularies.moveToNext()) {
-                Vocabulary vocabulary = new Vocabulary(cVocabularies.getString(1), cVocabularies.getString(2), cVocabularies.getInt(0));
+            cVoc = db.rawQuery("SELECT id, name, owner FROM vocabularies", null);
+            while (cVoc.moveToNext()) {
+                Vocabulary vocabulary = new Vocabulary(cVoc.getString(2), cVoc.getString(1), cVoc.getInt(0));
 
                 List<VocabularyItem> items = new ArrayList<>();
                 Cursor cItems = null;
@@ -90,18 +131,21 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                     while (cItems.moveToNext()) {
                         items.add(new VocabularyItem(cItems.getString(1), cItems.getString(2), cItems.getInt(0)));
                     }
+                    vocabulary.setItems(items);
                 } finally {
                     if (cItems != null) {
                         cItems.close();
                     }
                 }
+
+                vocabularies.add(vocabulary);
             }
         } finally {
             if (db != null) {
                 db.close();
             }
-            if (cVocabularies != null) {
-                cVocabularies.close();
+            if (cVoc != null) {
+                cVoc.close();
             }
         }
 
@@ -132,7 +176,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         return items;
     }
 
-    public void save(VocabularyItem item) throws SQLiteException {
+    public void save(VocabularyItem item, SQLiteDatabase db) throws SQLiteException {
         if (item.getName().isEmpty()) {
             throw new IllegalArgumentException("An item must have a name");
         }
@@ -140,11 +184,8 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             throw new IllegalArgumentException("An item must have an image");
         }
 
-        SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
-            db = getWritableDatabase();
-
             if (item.getId() != 0) {
                 // Item exists in database; update name
                 db.execSQL("UPDATE items SET name = ? WHERE id = ?",
@@ -159,11 +200,21 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 item.setId(cursor.getInt(0));
             }
         } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public void save(VocabularyItem item) throws SQLiteException {
+        SQLiteDatabase db = null;
+
+        try {
+            db = getWritableDatabase();
+            save(item, db);
+        } finally {
             if (db != null) {
                 db.close();
-            }
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
             }
         }
     }
@@ -203,11 +254,8 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             }
 
             for (VocabularyItem item : vocabulary.getItems()) {
-                // Save item
-                save(item);
-
                 // Save connection between item and vocabulary
-                db.execSQL("INSERT IGNORE INTO vocabulary_content (vocabulary_id, item_id) VALUES (?, ?)",
+                db.execSQL("INSERT INTO vocabulary_content (vocabulary_id, item_id) VALUES (?, ?)",
                         new Object[] { vocabulary.getId(), item.getId() });
             }
         } finally {

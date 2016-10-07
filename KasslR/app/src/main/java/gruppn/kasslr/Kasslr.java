@@ -5,18 +5,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,10 +47,10 @@ public class Kasslr extends Application {
         super.onCreate();
 
         shelf = new Shelf();
-        loadShelf();
     }
 
-    private void loadShelf() {
+    public void loadShelf() {
+        Log.d(DEBUG_TAG, "Loading shelf");
         new LoadShelfTask().execute(shelf);
     }
 
@@ -202,11 +199,11 @@ public class Kasslr extends Application {
             List<VocabularyItem> itemsWithoutName = new ArrayList<>();
 
             for (File file : getImageFiles()) {
-                String name = file.getName();
-                name = name.substring(0, name.indexOf(".jpg"));
+                String imageName = file.getName();
+                imageName = imageName.substring(0, imageName.indexOf(".jpg"));
 
-                if (!imageNameExists(items, name)) {
-                    itemsWithoutName.add(new VocabularyItem("", name));
+                if (!imageNameExists(items, imageName)) {
+                    itemsWithoutName.add(new VocabularyItem("", imageName));
                 }
             }
 
@@ -228,10 +225,12 @@ public class Kasslr extends Application {
         protected void onPostExecute(ShelfResult result) {
             if (result.items != null) {
                 Log.d(DEBUG_TAG, "Loaded " + result.items.size() + " items into shelf");
+                result.shelf.getItems().clear();
                 result.shelf.addItems(result.items);
             }
             if (result.vocabularies != null) {
                 Log.d(DEBUG_TAG, "Loaded " + result.vocabularies.size() + " vocabularies into shelf");
+                result.shelf.getVocabularies().clear();
                 result.shelf.addVocabularies(result.vocabularies);
             }
         }

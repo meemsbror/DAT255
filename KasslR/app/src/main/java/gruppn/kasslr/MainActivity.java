@@ -6,21 +6,14 @@ import android.content.pm.PackageManager;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabReselectListener;
@@ -28,7 +21,6 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
-import gruppn.kasslr.model.VocabularyItem;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -65,11 +57,11 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         app = (Kasslr) getApplication();
+        app.loadShelf();
         app.initUserData(this);
         setContentView(R.layout.activity_main);
         requestCameraPermission();
         initiateBottomBar();
-
     }
 
     @Override
@@ -261,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
         app.increaseScore(Player.CompletedAction.CREATE_VOCABULARY);
@@ -276,6 +269,7 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
         slideToFragment(new FeedFragment(), Directions.UP, false);
     }
+    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

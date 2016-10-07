@@ -61,4 +61,12 @@ public class VocabularyItem {
 
         return item;
     }
+
+    @Override
+    public String toString() {
+        return "VocabularyItem{"
+                + "name=" + name
+                + ",image=" + image
+                + "}";
+    }
 }

@@ -75,7 +75,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             img.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(mContext).load(imageFile).resize(img.getMeasuredWidth(),img.getMeasuredHeight()).into(img);
+                    Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
                 }
             });
 
