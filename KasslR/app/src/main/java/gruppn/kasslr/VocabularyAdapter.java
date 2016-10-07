@@ -24,6 +24,10 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
 
     }
 
+    public void updateVocabularyList(List<Vocabulary> vocabularyList){
+        this.vocabularyList = vocabularyList;
+    }
+
 
     @Override
     public int getItemCount() {
