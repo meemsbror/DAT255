@@ -55,14 +55,14 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 updateSearch();
-                System.out.println("submit");
+                //System.out.println("submit");
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
                 updateSearch();
-                System.out.println("change");
+                //System.out.println("change");
                 return false;
             }
         });
@@ -77,16 +77,19 @@ public class SearchFragment extends Fragment {
 
         for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {
 
-            if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)){
+            if (!vocabularyList.contains(vocabulary)) {
 
-                vocabularyList.add(vocabulary);
+                if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)){
 
-            } else {
-                for(VocabularyItem  vocabularyItem : vocabulary.getItems()){
-                    if (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string)) {
+                    vocabularyList.add(vocabulary);
 
-                        vocabularyList.add(vocabulary);
+                } else {
+                    for (VocabularyItem vocabularyItem : vocabulary.getItems()) {
+                        if (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string)) {
 
+                            vocabularyList.add(vocabulary);
+
+                        }
                     }
                 }
             }
