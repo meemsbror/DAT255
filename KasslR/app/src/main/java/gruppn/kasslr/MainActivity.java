@@ -5,19 +5,15 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
@@ -216,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
-        app.increaseScore(Player.CompletedAction.CREATE_VOCABULARY);
+        app.increaseScore(ScoreHelper.CompletedAction.CREATE_VOCABULARY);
         EditText vocName = (EditText)findViewById(R.id.newVocName);
         Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
         app.getShelf().addVocabulary(voc);

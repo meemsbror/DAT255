@@ -12,7 +12,7 @@ import gruppn.kasslr.model.Shelf;
 
 public class Kasslr extends Application {
     private Shelf shelf;
-    private Player profileInformation = new Player();
+    private ScoreHelper scoreHelper = new ScoreHelper();
     private Bitmap sharedBitmap;
 
     @Override
@@ -32,27 +32,25 @@ public class Kasslr extends Application {
         if(tempUserId.equals("none")){
             tempUserId = requestNewUser();
         }
-
-        profileInformation.setUserId(tempUserId);
     }
 
     private String requestNewUser() {
         SharedPreferences sharedPref = getSharedPreferences(Kasslr.class.getName(), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        Player newUser = new Player("userID");
+        String userID = "dassid";
 
-        editor.putString(getString(R.string.key_user_id), newUser.getUserId());
+        editor.putString(getString(R.string.key_user_id), userID);
         editor.commit();
 
-        return newUser.getUserId();
+        return userID;
     }
 
-    public void increaseScore(Player.CompletedAction completedAction){
-        profileInformation.incScore(completedAction);
+    public void increaseScore(ScoreHelper.CompletedAction completedAction){
+        scoreHelper.incScore(completedAction);
     }
     public int getCurrentScore(){
-        return profileInformation.getScore();
+        return Integer.parseInt(getString(R.string.score));
     }
 
     public Shelf getShelf() {
@@ -60,7 +58,7 @@ public class Kasslr extends Application {
     }
 
     public String getUserId() {
-        return profileInformation.getUserId();
+        return getString(R.string.key_user_id);
     }
 
     public File getPictureDirectory() {

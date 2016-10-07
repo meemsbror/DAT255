@@ -50,12 +50,27 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:text="TextView"
+                android:text="@string/score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignStart="@+id/user_profile_name"
                 android:id="@+id/score" />
+
+            <ImageButton
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/settings"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:adjustViewBounds="true"
+                android:maxWidth="42dp"
+                android:maxHeight="42dp"
+                android:scaleType="fitCenter"
+                android:background="@null" />
 
             <!--
             <de.hdodenhof.circleimageview.CircleImageView
