@@ -1,5 +1,6 @@
 package gruppn.kasslr;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -102,10 +103,12 @@ public class GalleryFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_EDIT_ITEM) {
-            if (resultCode >= 0 && resultCode < itemCount) {
+        if (requestCode == REQUEST_EDIT_ITEM && resultCode == Activity.RESULT_OK) {
+            int index = data.getIntExtra(EditItemActivity.RESULT_ITEM_INDEX, -1);
+
+            if (index >= 0 && index < itemCount) {
                 // Get item
-                VocabularyItem item = app.getShelf().getItems().get(resultCode);
+                VocabularyItem item = app.getShelf().getItems().get(index);
                 adapter.notifyItemChanged(item);
             }
         }

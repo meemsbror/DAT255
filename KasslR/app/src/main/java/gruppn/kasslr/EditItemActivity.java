@@ -1,5 +1,6 @@
 package gruppn.kasslr;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ public class EditItemActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "image";
     public static final String EXTRA_ITEM_INDEX = "item_index";
     public static final String EXTRA_EXIT_TRANSITION = "exit_transition";
+    public static final String RESULT_ITEM_INDEX = "item_index";
 
     private static final String DEBUG_TAG = "EditItemActivity";
 
@@ -100,7 +102,9 @@ public class EditItemActivity extends AppCompatActivity {
             new SaveItemsTask().execute(item);
         }
 
-        setResult(app.getShelf().getItems().indexOf(item));
+        Intent result = new Intent();
+        result.putExtra(RESULT_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
+        setResult(RESULT_OK, result);
         close();
     }
 
