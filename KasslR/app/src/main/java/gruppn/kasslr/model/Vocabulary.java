@@ -11,6 +11,7 @@ public class Vocabulary {
     private String owner;
     private String title;
     private List<VocabularyItem> items;
+    private int universalId;
 
     public Vocabulary(String owner, String title) {
         this.owner = owner;
@@ -29,6 +30,14 @@ public class Vocabulary {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getUniversalId() {
+        return universalId;
+    }
+
+    public void setUniversalId(int universalId) {
+        this.universalId = universalId;
     }
 
     public String getOwner() {

@@ -14,14 +14,22 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Shelf;
@@ -123,6 +131,82 @@ public class Kasslr extends Application {
 
         Web.getInstance(context).addToRequestQueue(jsObjRequest);
 
+    }
+
+    public void uploadVocabulary(Context context, final Vocabulary vocabulary) {
+        String url = Web.baseUrl+"?action=new_vocabulary";
+
+        final Map<String, String> params = new HashMap();
+        params.put("user", profileInformation.getUserId());
+        params.put("title", vocabulary.getTitle());
+
+        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        System.out.println(response);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            System.out.println(jsonResponse.getInt("vocabularyId"));
+
+                            vocabulary.setUniversalId(jsonResponse.getInt("vocabularyId"));
+                            uploadVocabularyItems(vocabulary);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        System.out.println(error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                return params;
+            }
+        };
+
+        Web.getInstance(context).addToRequestQueue(strRequest);
+    }
+
+
+    public void uploadMultipart(String imagePath, String word, String user, int vocabularyId) {
+
+        //Uploading code
+        try {
+            String uploadId = UUID.randomUUID().toString();
+
+            //Creating a multi part request
+            new MultipartUploadRequest(this, uploadId, Web.baseUrl+"?action=new_item")
+                    .setUtf8Charset()
+                    .addFileToUpload(imagePath, "image")
+                    .addParameter("word", word)
+                    .addParameter("user", user)
+                    .addParameter("vocabularyId", String.valueOf(vocabularyId))
+                    .setNotificationConfig(new UploadNotificationConfig())
+                    .setMaxRetries(2)
+                    .startUpload(); //Starting the upload
+
+        } catch (Exception exc) {
+            System.out.println(exc.toString());
+        }
+    }
+
+    private void uploadVocabularyItems(Vocabulary vocabulary) {
+        for(VocabularyItem item : vocabulary.getItems()){
+            String imagePath = getImageFile(item).getPath();
+            String word = item.getName();
+            uploadMultipart(imagePath, word, getUserId(), vocabulary.getUniversalId());
+        }
     }
 
     public void increaseScore(Player.CompletedAction completedAction){

@@ -74,6 +74,7 @@ public class AddVocabularyFragment extends Fragment {
         vocabulary.setItems(items);
 
         app.getShelf().addVocabulary(vocabulary);
+        app.uploadVocabulary(getContext(), vocabulary);
         new SaveVocabulariesTask().execute(vocabulary);
 
         getActivity().getSupportFragmentManager().popBackStack();
