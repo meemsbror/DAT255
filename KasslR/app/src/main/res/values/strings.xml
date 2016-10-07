@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">KasslR</string>
     <string name="title_activity_navigateable">Navigateable</string>
-    <string name="add_word">Lägg till ord</string>
+    <string name="save">Spara</string>
     <string name="camera_permission_confirmation">This function lets you take photos of subjects. In order to do that, it needs permission to access camera.</string>
     <string name="camera_permission_not_granted">You cannot add new words without camera access.</string>
     <string name="picture_taken">Picture taken</string>
@@ -13,7 +13,12 @@
     <string name="what_is_this">Vad är detta för något?</string>
     <string name="profile_name">Namn</string>
     <string name="transition_vocabulary">Vocabulary Transition</string>
-    <string name="transition_add_word">Add Word Transition</string>
+    <string name="transition_edit_item_image">Edit Word Image Transition</string>
+    <string name="transition_edit_item_name">Edit Word Name Transition</string>
+    <string name="add_vocabulary_name_description">Exempel: Matbutiken, militär...</string>
+    <string name="vocabulary_missing_title">Du måste välja ett namn på glosboken</string>
+    <string name="vocabulary_missing_items">Du måste välja minst 3 glosor</string>
 
     <string name="key_user_id">kasslr.userid</string>
+
 </resources>

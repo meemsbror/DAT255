@@ -3,28 +3,25 @@ package gruppn.kasslr;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import gruppn.kasslr.game.LaneGame;
 import gruppn.kasslr.model.Vocabulary;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +29,27 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomBar bottomBar;
     private int selectedTab = -1;
+    private enum Directions {
+        UP(R.anim.enter_from_bottom, R.anim.exit_to_top),
+        DOWN(R.anim.enter_from_top, R.anim.exit_to_bottom),
+        LEFT(R.anim.enter_from_right, R.anim.exit_to_left),
+        RIGHT(R.anim.enter_from_left, R.anim.exit_to_right);
+        private @AnimRes int enter;
+        private @AnimRes int exit;
+
+        private Directions(int enter, int exit) {
+            this.enter = enter;
+            this.exit = exit;
+        }
+
+        public int getEnter() {
+            return enter;
+        }
+
+        public int getExit() {
+            return exit;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,46 +57,11 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         app = (Kasslr) getApplication();
+        app.loadShelf();
+        app.initUserData(this);
         setContentView(R.layout.activity_main);
         requestCameraPermission();
-
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                int previous = selectedTab;
-                if (tabId != R.id.tab_camera) {
-                    selectedTab = tabId;
-                }
-
-                boolean slideToRight = previous > tabId;
-                if (tabId == R.id.tab_feed) {
-                    // Show the feed
-                    if (previous == -1) {
-                        showFeed();
-                    } else {
-                        slideToFragment(new FeedFragment(), slideToRight);
-                    }
-                } else if (tabId == R.id.tab_search) {
-                    //Show the search page
-                    slideToFragment(new SearchFragment(), slideToRight);
-                } else if (tabId == R.id.tab_camera) {
-                    // Show the camera
-                    showCamera();
-                } else if (tabId == R.id.tab_favorite) {
-                    // TODO Show the saved vocabularies
-                    // This is temporary until we decide how to reach the gallery
-                    slideToFragment(new GalleryFragment(), slideToRight);
-                } else if (tabId == R.id.tab_profile) {
-                    slideToFragment(new ProfilePageFragment(), slideToRight);
-                } else {
-                    //When can this happen?
-                }
-            }
-        });
-        for (int i = 0; i < bottomBar.getTabCount(); i++) {
-            bottomBar.getTabAtPosition(i).setGravity(Gravity.CENTER_VERTICAL);
-        }
+        initiateBottomBar();
     }
 
     @Override
@@ -92,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openAddVocabulary(View view) {
-        showFragment(new AddVocabularyFragment());
+        slideToFragment(new AddVocabularyFragment(), Directions.DOWN, true);
     }
 
     public void showFeed() {
@@ -119,21 +102,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void showFragment(Fragment fragment) {
+        getSupportFragmentManager().popBackStack();
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
-    public void slideToFragment(Fragment fragment, boolean slideRight) {
+    public void slideToFragment(Fragment fragment, Directions directions, boolean backStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        if (slideRight) {
-            transaction.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-        } else {
-            transaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+        getSupportFragmentManager().popBackStack();
+        if (backStack) {
+            transaction.addToBackStack(null);
         }
+        transaction.setCustomAnimations(directions.getEnter(), directions.getExit());
         transaction.replace(R.id.main_frame, fragment);
         transaction.commit();
     }
 
-    public void changeToGame(View view){
+    public void changeToGame(View view, Vocabulary vocabulary){
+        System.out.println("Starting game for vocabulary " + vocabulary.getTitle());
         Intent myIntent = new Intent(this,LaneGame.class);
         startActivity(myIntent);
     }
@@ -181,6 +166,60 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void initiateBottomBar() {
+
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                int previous = selectedTab;
+                if (tabId != R.id.tab_camera) {
+                    selectedTab = tabId;
+                }
+                Directions directions = Directions.LEFT;
+                if (previous > tabId) {
+                    directions = Directions.RIGHT;
+                }
+
+                if (tabId == R.id.tab_feed) {
+                    // Show the feed
+                    if (previous == -1) {
+                        showFeed();
+                    } else {
+                        slideToFragment(new FeedFragment(), directions, false);
+                    }
+                } else if (tabId == R.id.tab_search) {
+                    //Show the search page
+                    slideToFragment(new SearchFragment(), directions, false);
+                } else if (tabId == R.id.tab_camera) {
+                    // Show the camera
+                    showCamera();
+                } else if (tabId == R.id.tab_favorite) {
+                    // TODO Show the saved vocabularies
+                    // This is temporary until we decide how to reach the gallery
+                    slideToFragment(new GalleryFragment(), directions, false);
+                } else if (tabId == R.id.tab_profile) {
+                    slideToFragment(new ProfilePageFragment(), directions, false);
+                } else {
+                    //When can this happen?
+                }
+            }
+        });
+
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                if (tabId == R.id.tab_feed) {
+
+                    slideToFragment(new FeedFragment(), Directions.DOWN, false);
+                }
+            }
+        });
+        for (int i = 0; i < bottomBar.getTabCount(); i++) {
+            bottomBar.getTabAtPosition(i).setGravity(Gravity.CENTER_VERTICAL);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -220,14 +259,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /*
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
+        app.increaseScore(Player.CompletedAction.CREATE_VOCABULARY);
         EditText vocName = (EditText)findViewById(R.id.newVocName);
         Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
+
+        // temporary
+        voc.setItems(app.getShelf().getItems());
+
         app.getShelf().addVocabulary(voc);
 
         System.out.println(app.getShelf().toString());
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
-        showFeed();
+        slideToFragment(new FeedFragment(), Directions.UP, false);
+    }
+    */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment != null) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+        }
     }
 }

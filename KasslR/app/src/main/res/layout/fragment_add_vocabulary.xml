@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:text="So this is where you add new vocabularies"
-        android:layout_width="335dp"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
         android:ems="10"
         android:id="@+id/newVocName"
         android:inputType="textAutoCorrect"
-        android:contentDescription="Name" />
+        android:contentDescription="Name"
+        android:hint="@string/add_vocabulary_name_description" />
 
     <Button
         android:text="Done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:id="@+id/submitVoc"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:onClick="createVocabulary" />
-</LinearLayout>
+        style="@style/Widget.AppCompat.Button.Colored" />
+
+    <FrameLayout
+        android:id="@+id/frame_vocabulary_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/newVocName"
+        android:layout_above="@id/submitVoc" />
+</RelativeLayout>

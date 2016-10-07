@@ -1,7 +1,6 @@
 package gruppn.kasslr;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -11,15 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
-
 import gruppn.kasslr.model.Vocabulary;
-
-/**
- * Created by Daniel on 2016-09-30.
- */
 
 public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.VocabularyViewHolder> {
 

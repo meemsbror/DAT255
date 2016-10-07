@@ -1,5 +1,7 @@
 package gruppn.kasslr.game;
 
+import android.graphics.Color;
+
 /**
  * Created by Adam on 2016-09-29.
  */
@@ -12,73 +14,63 @@ public class Particle {
     private float deltaY;
     private int lifeSpan;
     private int age;
+    private int temperature;
+    private int size;
+    private boolean hasGravity;
 
-    public Particle(float x, float y, float deltaX, float deltaY, int lifeSpan){
+    public Particle(float x, float y, float deltaX, float deltaY, int lifeSpan, int temperature, int size, boolean hasGravity){
         this.x = x;
         this.y = y;
         this.deltaX = deltaX;
         this.deltaY = deltaY;
         this.lifeSpan = lifeSpan;
+        this.temperature = temperature;
         this.age = 0;
+        this.size = size;
+        this.hasGravity = hasGravity;
+    }
+
+    public void tick(int yBoundary){
+        age++;
+        x += deltaX;
+        y += deltaY;
+
+        if(hasGravity)
+            y += 8;
+
+        if(y > yBoundary)
+            age = lifeSpan + 1;
+    }
+
+    public int getColor(double progress){
+        return Color.argb((int)(progress*255.0), 255-getTemperature()/2, 255-getTemperature()/2, getTemperature());
+    }
+
+    public boolean isDead(){
+        return (age > lifeSpan);
     }
 
     public float getX() {
         return x;
     }
 
-    public void setX(float x) {
-        this.x = x;
-    }
-
     public float getY() {
         return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getDeltaX() {
-        return deltaX;
-    }
-
-    public void setDeltaX(float deltaX) {
-        this.deltaX = deltaX;
-    }
-
-    public float getDeltaY() {
-        return deltaY;
-    }
-
-    public void setDeltaY(float deltaY) {
-        this.deltaY = deltaY;
     }
 
     public int getLifeSpan() {
         return lifeSpan;
     }
 
-    public void setLifeSpan(int lifeSpan) {
-        this.lifeSpan = lifeSpan;
-    }
-
     public int getAge() {
         return age;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public int getTemperature() {
+        return temperature;
     }
 
-    public void tick(){
-        age++;
-        x += deltaX;
-        y += deltaY;
-
-        y += 8;
-    }
-
-    public boolean isDead(){
-        return (age > lifeSpan);
+    public int getSize(){
+        return size;
     }
 }

@@ -3,15 +3,11 @@ package gruppn.kasslr.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Adam on 2016-09-28.
- */
-
 public class Shelf {
     private List<VocabularyItem> items;
     private List<Vocabulary> vocabularies;
 
-    public Shelf(){
+    public Shelf() {
         items = new ArrayList<>();
         vocabularies = new ArrayList<>();
     }
@@ -24,12 +20,20 @@ public class Shelf {
         items.add(item);
     }
 
+    public void addItems(List<VocabularyItem> items) {
+        this.items.addAll(items);
+    }
+
     public List<Vocabulary> getVocabularies() {
         return vocabularies;
     }
 
     public void addVocabulary(Vocabulary voc){
         vocabularies.add(voc);
+    }
+
+    public void addVocabularies(List<Vocabulary> vocabularies) {
+        this.vocabularies.addAll(vocabularies);
     }
 
     @Override

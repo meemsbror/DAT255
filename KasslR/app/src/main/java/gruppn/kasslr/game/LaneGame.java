@@ -12,6 +12,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -49,13 +50,8 @@ public class LaneGame extends Activity {
     }
 
     @Override
-    public void onDestroy() {
-        view.pause();
-        super.onDestroy();
-    }
-
-    @Override
     public void onPause() {
+        view.pause();
         finish();
         super.onPause();
     }
@@ -92,21 +88,20 @@ public class LaneGame extends Activity {
 
 class GameView extends SurfaceView implements Runnable {
 
-    private int gameWidth;
-    private int gameHeight;
     Thread gameThread = null;
     SurfaceHolder ourHolder;
+
+    private int gameWidth;
+    private int gameHeight;
     volatile boolean playing;
-    //Bitmap gameBitmap;
     Canvas canvas;
     Paint paint;
 
     final String DEBUG_TAG = "GAMELOGIC";
-    final int MAP_CHUNK_WIDTH = 20;
-    final int MAP_CHUNK_HEIGHT = 40;
     final int NUM_LANES = 3;
+    final int BACKGROUND_COLOR = Color.parseColor("#000000");
 
-    private float frameRate = 60;
+    private float frameRate = 80;
     private float frameTime = 1000 / frameRate;
     private double fps = 0;
 
@@ -115,7 +110,6 @@ class GameView extends SurfaceView implements Runnable {
     private float playerDeltaY = 0;
     private float playerDeltaX = 2;
     private int playerTarget = 0;
-    private PlayerState playerState = PlayerState.IDLE;
 
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
@@ -162,8 +156,13 @@ class GameView extends SurfaceView implements Runnable {
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
         playerY = gameHeight - 260;
+        playerX = gameWidth / 2;
 
         background = new Background(gameWidth, gameHeight);
+
+        for(int i = 0; i < gameHeight; i+=2){
+            spawnStars(i);
+        }
 
     }
 
@@ -172,24 +171,35 @@ class GameView extends SurfaceView implements Runnable {
         if(gameWidth == 0 || gameHeight == 0)
             updateGameDimensions();
 
-        canvas.drawColor(Color.parseColor("#2f81f0"));
+        canvas.drawColor(BACKGROUND_COLOR);
 
         drawBackground();
         drawParticles();
         drawTargets();
 
-        paint.setColor(Color.DKGRAY);
-        canvas.drawRect(new Rect((int)(playerX-50), (int)playerY, (int)(playerX-50)+100, (int)playerY+100), paint);
+        paint.setColor(Color.WHITE);
+        Path playerPath = new Path();
+        playerPath.moveTo(50,-50);
+        playerPath.lineTo(100,50);
+        playerPath.lineTo(100,140);
+        playerPath.lineTo(0,140);
+        playerPath.lineTo(0,50);
+        playerPath.lineTo(50,-50);
+
+        playerPath.offset(playerX-50, playerY-50);
+        canvas.drawPath(playerPath, paint);
+        //canvas.drawRect(new Rect((int)(playerX-50), (int)playerY, (int)(playerX-50)+100, (int)playerY+100), paint);
 
 
         paint.setColor(Color.WHITE);
-        paint.setTextSize(50);
+        paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("FPS: " + fps, 20, 40, paint);
         canvas.drawText("trgt: " + playerTarget, 20, 80, paint);
         canvas.drawText("run: " + tickCount, 20, 120, paint);
         canvas.drawText("spd: " + getTargetSpeed(), 20, 160, paint);
-        canvas.drawText(background.getStats(), 20, 200, paint);
+        canvas.drawText("particles: " + particles.size(), 20, 200, paint);
+        canvas.drawText(background.getStats(), 20, 240, paint);
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
@@ -198,29 +208,31 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawBackground(){
-        int startI = (int)(-backgroundPosition/background.getYPosition(1))-4;
-        for(int i = startI; i < startI + 40; i++) {
-            ArrayList<BackgroundTile> tiles = background.getMapChunk(i);
+        int startI = (int)(-backgroundPosition/background.getYPosition(-1));
+        ArrayList<ArrayList<BackgroundTile>> chunks = background.getChunks(startI);
+        int i = 0;
+        for(ArrayList<BackgroundTile> tiles : chunks) {
             for(BackgroundTile tile : tiles){
                 paint.setColor(tile.getColor());
                 Path poly = tile.getPoly();
-                poly.offset(0, background.getYPosition(i)+backgroundPosition);
+                poly.offset(0, gameHeight+background.getYPosition(i)+backgroundPosition%background.getYPosition(-1));
                 canvas.drawPath(poly, paint);
             }
+            i++;
         }
     }
 
     private void drawParticles(){
         for(Particle particle : particles){
             float progress = ((particle.getLifeSpan()-particle.getAge())*1.0F / particle.getLifeSpan()*1.0F);
-            paint.setColor(Color.argb((int)(progress*255.0), 255, 255, 255));
-            canvas.drawCircle(particle.getX(), particle.getY(), progress*20.0F, paint);
+            paint.setColor(particle.getColor(progress));
+            canvas.drawCircle(particle.getX(), particle.getY(), progress*particle.getSize(), paint);
         }
     }
 
     private void drawTargets(){
         for(Target target : liveTargets){
-            paint.setColor(Color.WHITE);
+            paint.setColor(Color.RED);
             if(target.isBenign())
                 paint.setColor(Color.GREEN);
             canvas.drawCircle(target.getX(), target.getY(), 20, paint);
@@ -243,6 +255,14 @@ class GameView extends SurfaceView implements Runnable {
             if(velocityX < 0 && playerTarget > -1)
                 playerTarget -= 1;
             // vertical movement
+
+            if (playerX > laneToX(playerTarget)) {
+                playerDeltaX = -30;
+            }
+            if (playerX < laneToX(playerTarget)) {
+                playerDeltaX = 30;
+            }
+
         }else{
             Log.d(DEBUG_TAG, "flick verticla w/ velocity " + velocityY);
           //  playerDeltaY += velocityY/2000;
@@ -254,22 +274,16 @@ class GameView extends SurfaceView implements Runnable {
 
         if(playerY+100 > gameHeight || playerY < 0)
             playerDeltaY = -playerDeltaY;
-        if(playerX > laneToX(playerTarget)) {
-            if(playerDeltaX > 0)
-                playerDeltaX = -3;
-            else
-                playerDeltaX *= 1.1;
-        }
-        if(playerX < laneToX(playerTarget)){
-            if(playerDeltaX < 0)
-                playerDeltaX = 3;
-            else
-                playerDeltaX *= 1.1;
 
+        if(playerDeltaX > 0 && playerX > laneToX(playerTarget) || playerDeltaX < 0 && playerX < laneToX(playerTarget)){
+            playerDeltaX = 0;
+            playerX = laneToX(playerTarget);
         }
+
+
+        playerX += playerDeltaX;
 
         playerY += playerDeltaY;
-        playerX += playerDeltaX;
 
         playerDeltaY *= 0.995;
 
@@ -283,7 +297,7 @@ class GameView extends SurfaceView implements Runnable {
 
         }
 
-        backgroundPosition += getTargetSpeed()/2;
+        backgroundPosition += Math.sqrt(getTargetSpeed())/4;
     }
 
     private int laneToX(int lane){
@@ -291,15 +305,32 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnParticles(){
-        int target = 300 - particles.size();
+
         Random rand = new Random();
-        for (int i=0; i<target; i++){
-            float x = playerX;
-            float y = playerY+70;
-            float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
-            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*5.0F - 2.5F);
-            int lifespan = rand.nextInt(300);
-            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan);
+
+        //spawn exhaust
+        for (int i=0; i < rand.nextInt(9); i++){
+            float x = playerX-40+rand.nextInt(80);
+            float y = playerY+80;
+            float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
+            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
+            int lifespan = rand.nextInt(200);
+            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, rand.nextInt(255), 20, true);
+            particles.add(particle);
+        }
+
+        // spawn stars
+        spawnStars(0);
+
+    }
+
+    private void spawnStars(int y){
+        Random rand = new Random();
+        if(rand.nextFloat() < 0.1) {
+            float x = rand.nextInt(gameWidth);
+            int depth = rand.nextInt(3) + 1;
+            float deltaY = depth*depth*getTargetSpeed()/30f;
+            Particle particle = new Particle(x, y, 0, deltaY, 20000, 128+rand.nextInt(127), depth, false);
             particles.add(particle);
         }
     }
@@ -308,7 +339,7 @@ class GameView extends SurfaceView implements Runnable {
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
             Particle particle = iterator.next();
-            particle.tick();
+            particle.tick(gameHeight);
 
             if(particle.isDead())
                 iterator.remove();
@@ -324,7 +355,7 @@ class GameView extends SurfaceView implements Runnable {
         int benignTargetNum = rand.nextInt(NUM_LANES);
         for(int i=0; i < NUM_LANES; i++){
             int x = laneToX(i-1);
-            int y = -rand.nextInt(gameHeight/2);
+            int y = -rand.nextInt(gameHeight/3);
             Target target = new Target(x, y, benignTargetNum == i);
             liveTargets.add(target);
         }
@@ -336,7 +367,7 @@ class GameView extends SurfaceView implements Runnable {
             Target target = iterator.next();
             target.tick(getTargetSpeed());
 
-            if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 10){
+            if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 50){
                 if(target.isBenign())
                     score++;
                 else
@@ -371,8 +402,4 @@ class GameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
-}
-
-enum PlayerState{
-    IDLE, MOVING, ATTACKING;
 }

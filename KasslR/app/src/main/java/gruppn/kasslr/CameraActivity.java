@@ -33,13 +33,11 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 
-public class CameraActivity extends AppCompatActivity implements
-        ActivityCompat.OnRequestPermissionsResultCallback {
+public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
-    private static final int REQUEST_IMAGE_DESCRIPTION = 2;
 
     private static final String FRAGMENT_DIALOG = "dialog";
 
@@ -225,16 +223,15 @@ public class CameraActivity extends AppCompatActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Intent intent = new Intent(CameraActivity.this, AddWordActivity.class);
-                            intent.putExtra(AddWordActivity.EXTRA_IMAGE, Uri.fromFile(file));
-                            intent.putExtra(AddWordActivity.EXTRA_FINISH_ON_BACK, true);
+                            Intent intent = new Intent(CameraActivity.this, EditItemActivity.class);
+                            intent.putExtra(EditItemActivity.EXTRA_IMAGE_URI, Uri.fromFile(file));
+                            intent.putExtra(EditItemActivity.EXTRA_EXIT_TRANSITION, false);
 
-                            String transition = getString(R.string.transition_add_word);
+                            String transition = getString(R.string.transition_edit_item_image);
                             ActivityOptionsCompat options = ActivityOptionsCompat
                                     .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
 
-                            ActivityCompat.startActivityForResult(CameraActivity.this, intent,
-                                    REQUEST_IMAGE_DESCRIPTION, options.toBundle());
+                            ActivityCompat.startActivity(CameraActivity.this, intent, options.toBundle());
                         }
                     });
                 }
@@ -242,18 +239,8 @@ public class CameraActivity extends AppCompatActivity implements
         }
     };
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_DESCRIPTION) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Added " + data.getExtras().getString(AddWordActivity.EXTRA_IMAGE_DESCRIPTION)
-                        + " to vocabulary", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     private File getNewPictureFile() {
-        File dir = app.getPictureDirectory();
+        File dir = app.getImageDirectory();
         if (!dir.exists()) {
             dir.mkdir();
         }

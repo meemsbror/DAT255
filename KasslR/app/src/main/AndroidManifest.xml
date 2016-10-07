@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gruppn.kasslr">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -28,9 +29,9 @@
             android:label="@string/title_activity_navigateable"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CameraActivity" />
-        <activity android:name=".AddWordActivity" />
+        <activity android:name=".EditItemActivity" />
         <activity android:name=".game.LaneGame" />
-        <activity android:name=".VocabularyTransitionActivity"></activity>
+        <activity android:name=".VocabularyTransitionActivity" />
     </application>
 
 </manifest>

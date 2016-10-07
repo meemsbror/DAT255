@@ -1,25 +1,20 @@
 package gruppn.kasslr;
 
-import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Picasso;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import com.squareup.picasso.Picasso;
 
 /**
  * The activity for viewing the profile.
@@ -32,7 +27,7 @@ public class ProfilePageFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_profile_page, container, false);
+        return inflater.inflate(R.layout.fragment_profile_page, container, false);
     }
 
     @Override
@@ -49,14 +44,18 @@ public class ProfilePageFragment extends Fragment{
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
+        //TextView points = (TextView) getView().findViewById(R.id.score);
+        //points.setText("" + app.getCurrentScore());
+
         //Change profile background
+
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
                 .load(R.drawable.tempbackground)
+                .centerCrop()
                 .fit()
                 .into(imageView);
 
@@ -65,6 +64,18 @@ public class ProfilePageFragment extends Fragment{
         TextView points = (TextView)getView().findViewById(R.id.points);
         points.setText("" + Player.getScore());
         */
+
+
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab_profile);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "hehe", Snackbar.LENGTH_SHORT)
+                        .setAction("Vad ska stå här då", null).show();
+            }
+        });
+
+
     }
 
 }
