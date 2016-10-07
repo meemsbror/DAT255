@@ -1,13 +1,17 @@
 package gruppn.kasslr;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.SearchView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import gruppn.kasslr.model.Shelf;
 import gruppn.kasslr.model.Vocabulary;
@@ -18,44 +22,77 @@ import static gruppn.kasslr.R.layout.fragment_search;
 
 public class SearchFragment extends Fragment {
 
-    ScrollView scrollView;
-
-    Shelf shelf;
+    private Kasslr app;
+    private RecyclerView recyclerView_search;
+    private SearchView searchView_search;
+    private VocabularyAdapter va;
+    private List<Vocabulary> vocabularyList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(fragment_search, container, false);
-    }
-
-    public void setShelf(Shelf shelf){
 
     }
 
-    public void onClick(View view){
-        updateSearch(shelf);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState); //add point
+
+        this.app = (Kasslr) getActivity().getApplication();
+
+        recyclerView_search = (RecyclerView) getView().findViewById(R.id.recyclerView_search);
+        searchView_search = (SearchView) getView().findViewById(R.id.searchView_search);
+        va = new VocabularyAdapter(getActivity(), vocabularyList);
+
+        recyclerView_search.setAdapter(va);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView_search.setLayoutManager(llm);
+
+
+        searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                updateSearch();
+                System.out.println("submit");
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                updateSearch();
+                System.out.println("change");
+                return false;
+            }
+        });
+
     }
 
-    public void updateSearch(Shelf shelf){
 
-        String string = getView().findViewById(R.id.searchView).toString();
+    public void updateSearch(){
+        vocabularyList.clear();
+        recyclerView_search.removeAllViews();
+        String string = searchView_search.getQuery().toString();
 
-        scrollView.removeAllViews();
-
-        for (Vocabulary vocabulary : shelf.getVocabularies()) {
+        for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {
 
             if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)){
 
-                //scrollView.addView(vocabulary);
+                vocabularyList.add(vocabulary);
 
             } else {
                 for(VocabularyItem  vocabularyItem : vocabulary.getItems()){
                     if (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string)) {
 
-                        //något här
+                        vocabularyList.add(vocabulary);
 
                     }
                 }
             }
         }
+        //va = new VocabularyAdapter(getActivity(), vocabularyList);
+        va.updateVocabularyList(vocabularyList);
+
     }
 }

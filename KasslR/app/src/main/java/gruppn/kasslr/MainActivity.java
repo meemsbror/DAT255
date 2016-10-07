@@ -83,13 +83,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showSearch() {
-
-        SearchFragment searchFragment = new SearchFragment();
-        searchFragment.setShelf(app.getShelf());
-        showFragment(searchFragment);
-
-
-
+        showFragment(new SearchFragment());
     }
 
     public void showProfile() {
