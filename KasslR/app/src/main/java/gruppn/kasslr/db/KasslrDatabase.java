@@ -22,7 +22,7 @@ import gruppn.kasslr.model.VocabularyItem;
 */
 public class KasslrDatabase extends SQLiteOpenHelper {
     private static final String DEBUG_TAG = "KasslrDatabase";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "kasslr";
 
     private Context mContext;
@@ -45,7 +45,8 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE vocabularies ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + "name TEXT,"
-                + "owner TEXT"
+                + "owner TEXT,"
+                + "universal_id INTEGER DEFAULT 0"
                 + ")");
 
         // Create vocabulary_content table
@@ -58,19 +59,19 @@ public class KasslrDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d(DEBUG_TAG, "Upgrading database from " + oldVersion + " to " + newVersion);
+
         // Upgrade or create additional tables if necessary
-        /*
         switch (oldVersion) {
             case 1:
-                // Upgrade from version 1 to 2 (no break statement until last case)
+                // Upgrade from version 1 to 2
+                db.execSQL("ALTER TABLE vocabularies ADD COLUMN universal_id INTEGER DEFAULT 0");
             case 2:
                 // Upgrade from version 2 to 3
 
-                break;
             default:
                 break;
         }
-        */
     }
 
     public void reset() {
@@ -90,9 +91,10 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             c.close();
 
             Log.d(DEBUG_TAG, "Dumping vocabularies");
-            c = db.rawQuery("SELECT id, name, owner FROM vocabularies", null);
+            c = db.rawQuery("SELECT id, name, owner, universal_id FROM vocabularies", null);
             while (c.moveToNext()) {
-                Log.d(DEBUG_TAG, "id: " + c.getInt(0) + ", name: " + c.getString(1) + ", owner: " + c.getString(2));
+                Log.d(DEBUG_TAG, "id: " + c.getInt(0) + ", name: " + c.getString(1) + ", owner: "
+                        + c.getString(2) + ", universal_id: " + c.getInt(3));
             }
             c.close();
 
@@ -117,9 +119,9 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         try {
             db = getReadableDatabase();
 
-            cVoc = db.rawQuery("SELECT id, name, owner FROM vocabularies", null);
+            cVoc = db.rawQuery("SELECT id, name, owner, universal_id FROM vocabularies", null);
             while (cVoc.moveToNext()) {
-                Vocabulary vocabulary = new Vocabulary(cVoc.getString(2), cVoc.getString(1), cVoc.getInt(0));
+                Vocabulary vocabulary = new Vocabulary(cVoc.getString(2), cVoc.getString(1), cVoc.getInt(0), cVoc.getInt(3));
 
                 List<VocabularyItem> items = new ArrayList<>();
                 Cursor cItems = null;
@@ -236,17 +238,17 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             db = getWritableDatabase();
 
             if (vocabulary.getId() != 0) {
-                // Vocabulary exists in database; update name/owner
-                db.execSQL("UPDATE vocabularies SET name = ?, owner = ? WHERE id = ?",
-                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner(), vocabulary.getId() });
+                // Vocabulary exists in database; update values
+                db.execSQL("UPDATE vocabularies SET name = ?, owner = ?, universal_id = ? WHERE id = ?",
+                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner(), vocabulary.getUniversalId(), vocabulary.getId() });
 
                 // Delete previous connections
                 db.execSQL("DELETE FROM vocabulary_content WHERE vocabulary_id = ?",
                         new Object[] { vocabulary.getId() });
             } else {
                 // Vocabulary does not exist; insert new
-                db.execSQL("INSERT INTO vocabularies (name, owner) VALUES (?, ?)",
-                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner() });
+                db.execSQL("INSERT INTO vocabularies (name, owner, universal_id) VALUES (?, ?, ?)",
+                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner(), vocabulary.getUniversalId() });
 
                 cursor = db.rawQuery("SELECT last_insert_rowid()", null);
                 cursor.moveToNext();

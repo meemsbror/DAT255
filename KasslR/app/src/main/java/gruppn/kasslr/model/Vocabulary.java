@@ -19,9 +19,10 @@ public class Vocabulary {
         items = new ArrayList<>();
     }
 
-    public Vocabulary(String owner, String title, int id) {
+    public Vocabulary(String owner, String title, int id, int universalId) {
         this(owner, title);
         this.id = id;
+        this.universalId = universalId;
     }
 
     public int getId() {
