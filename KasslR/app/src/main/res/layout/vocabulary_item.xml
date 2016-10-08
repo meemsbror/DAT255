@@ -14,7 +14,7 @@
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="#CC333333"
+        android:background="@color/colorPrimaryTransparent"
         android:gravity="center"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
