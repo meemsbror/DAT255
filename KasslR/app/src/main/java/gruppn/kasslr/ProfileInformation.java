@@ -1,5 +1,6 @@
 package gruppn.kasslr;
 
+import android.net.Uri;
 import android.widget.Switch;
 
 /**
@@ -11,6 +12,9 @@ public class ProfileInformation {
     public int score = 0;
     public String name = "Namn";
 
+
+    public Uri profilePicture;
+
     private final int COMPLETE_VOCABULARY_SCORE = 2;
     private final int COMPLETE_ACHIEVEMENT_SCORE = 20;
     private final int CREATE_VOCABULARY_SCORE = 25;
@@ -20,7 +24,7 @@ public class ProfileInformation {
     }
 
     public ProfileInformation(){
-        //Todo, load name and score from DB
+        //Todo, load name, profile picture and score from DB
         //score = DB.getScore
         //name = DB.getName
     }
@@ -49,5 +53,13 @@ public class ProfileInformation {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Uri getPicture() {
+        return profilePicture;
+    }
+
+    public void setPicture(Uri picture) {
+        this.profilePicture = picture;
     }
 }

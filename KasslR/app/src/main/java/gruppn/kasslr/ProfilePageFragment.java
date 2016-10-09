@@ -89,6 +89,9 @@ public class ProfilePageFragment extends Fragment{
                 .fit()
                 .into(imageView);
 
+        //Change profile picture
+        changeProfilePicture(app.getProfilePicture());
+
         //SettingsButton
         settings = (ImageButton) getView().findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
@@ -140,19 +143,17 @@ public class ProfilePageFragment extends Fragment{
         });
     }
 
-    public void changeBackgroundPicture(Uri uri){
-        final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
-        Picasso.with(getContext())
-                .load(uri)
-                .fit()
-                .into(imageView);
+    public void changeProfilePicture(Uri uri){
+        app.setProfilePicture(uri);
+        final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_picture);
+        imageView.setImageURI(uri);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PICK_IMAGE){
             if(data != null)
             {
-                changeBackgroundPicture(data.getData());
+                changeProfilePicture(data.getData());
             }
         }
     }

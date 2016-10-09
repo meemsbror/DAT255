@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
@@ -65,6 +66,12 @@ public class Kasslr extends Application {
     }
     public int getScore(){
         return profileInformation.getScore();
+    }
+    public Uri getProfilePicture(){
+        return profileInformation.getPicture();
+    }
+    public void setProfilePicture(Uri pic){
+        profileInformation.setPicture(pic);
     }
 
     public File getPictureDirectory() {
