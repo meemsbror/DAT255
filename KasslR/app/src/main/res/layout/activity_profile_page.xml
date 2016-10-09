@@ -78,6 +78,18 @@
                 android:background="@null"
                 android:onClick="openSettings" />
 
+            <ImageView
+                android:adjustViewBounds="true"
+                android:maxWidth="128dp"
+                android:maxHeight="128dp"
+                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_action_profile"
+                android:layout_alignBottom="@+id/user_profile_name"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/profile_picture" />
+
             <!--
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"

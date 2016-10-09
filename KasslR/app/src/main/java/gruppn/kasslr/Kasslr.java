@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
@@ -100,7 +101,6 @@ public class Kasslr extends Application {
 
         System.out.println("logged in with user id " + newId);
 
-        profileInformation.setUserId(newId);
     }
 
     private void requestNewUser(Context context) {
@@ -209,7 +209,7 @@ public class Kasslr extends Application {
         }
     }
 
-    public void increaseScore(profileInformation.CompletedAction completedAction){
+    public void increaseScore(ProfileInformation.CompletedAction completedAction){
         profileInformation.incScore(completedAction);
     }
 
@@ -228,6 +228,12 @@ public class Kasslr extends Application {
     }
     public int getScore(){
         return profileInformation.getScore();
+    }
+    public Uri getProfilePicture(){
+        return profileInformation.getPicture();
+    }
+    public void setProfilePicture(Uri pic){
+        profileInformation.setPicture(pic);
     }
 
     public File getImageDirectory() {

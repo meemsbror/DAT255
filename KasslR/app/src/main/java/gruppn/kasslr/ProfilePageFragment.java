@@ -89,8 +89,7 @@ public class ProfilePageFragment extends Fragment{
 
 
 
-
-
+        //Vad är detta för knapp?
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab_profile);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +98,10 @@ public class ProfilePageFragment extends Fragment{
                         .setAction("Vad ska stå här då", null).show();
             }
         });
+
+
+        //Change profile picture
+        changeProfilePicture(app.getProfilePicture());
 
         //SettingsButton
         settings = (ImageButton) getView().findViewById(R.id.settings);
@@ -151,19 +154,17 @@ public class ProfilePageFragment extends Fragment{
         });
     }
 
-    public void changeBackgroundPicture(Uri uri){
-        final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
-        Picasso.with(getContext())
-                .load(uri)
-                .fit()
-                .into(imageView);
+    public void changeProfilePicture(Uri uri){
+        app.setProfilePicture(uri);
+        final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_picture);
+        imageView.setImageURI(uri);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PICK_IMAGE){
             if(data != null)
             {
-                changeBackgroundPicture(data.getData());
+                changeProfilePicture(data.getData());
             }
         }
     }
