@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,9 +47,9 @@ public class SearchFragment extends Fragment {
 
         recyclerView_search.setAdapter(va);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView_search.setLayoutManager(llm);
+        GridLayoutManager GLM = new GridLayoutManager(getActivity(), 3);
+        
+        recyclerView_search.setLayoutManager(GLM);
 
 
         searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
