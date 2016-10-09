@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="4dp">
 
-    <ImageView
-        android:id="@+id/imgItem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
-        android:transitionName="@string/transition_edit_item_image" />
+    <RelativeLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/txtItem"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/colorPrimaryTransparent"
-        android:gravity="center"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:transitionName="@string/transition_edit_item_name" />
+        <ImageView
+            android:id="@+id/imgItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:transitionName="@string/transition_edit_item_image" />
 
-    <ImageView
-        android:id="@+id/imgCheckbox"
-        android:visibility="invisible"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:scaleType="center"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" />
+        <TextView
+            android:id="@+id/txtItem"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimaryTransparent"
+            android:gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:transitionName="@string/transition_edit_item_name" />
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/imgCheckbox"
+            android:visibility="invisible"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
