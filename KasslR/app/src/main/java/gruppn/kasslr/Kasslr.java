@@ -12,7 +12,7 @@ import gruppn.kasslr.model.Shelf;
 
 public class Kasslr extends Application {
     private Shelf shelf;
-    private ScoreHelper scoreHelper = new ScoreHelper();
+    private ProfileInformation profileInformation = new ProfileInformation();
     private Bitmap sharedBitmap;
 
     @Override
@@ -46,11 +46,8 @@ public class Kasslr extends Application {
         return userID;
     }
 
-    public void increaseScore(ScoreHelper.CompletedAction completedAction){
-        scoreHelper.incScore(completedAction);
-    }
-    public int getCurrentScore(){
-        return Integer.parseInt(getString(R.string.score));
+    public void increaseScore(ProfileInformation.CompletedAction completedAction){
+        profileInformation.incScore(completedAction);
     }
 
     public Shelf getShelf() {
@@ -59,6 +56,15 @@ public class Kasslr extends Application {
 
     public String getUserId() {
         return getString(R.string.key_user_id);
+    }
+    public String getUserName() {
+        return profileInformation.getName();
+    }
+    public void setUserName(String newName){
+        profileInformation.setName(newName);
+    }
+    public int getScore(){
+        return profileInformation.getScore();
     }
 
     public File getPictureDirectory() {

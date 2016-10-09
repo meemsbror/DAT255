@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
-        app.increaseScore(ScoreHelper.CompletedAction.CREATE_VOCABULARY);
+        app.increaseScore(ProfileInformation.CompletedAction.CREATE_VOCABULARY);
         EditText vocName = (EditText)findViewById(R.id.newVocName);
         Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
         app.getShelf().addVocabulary(voc);
