@@ -15,8 +15,8 @@ import gruppn.kasslr.model.Vocabulary;
 
 public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
-    protected TextView name, owner;
-    private ImageView image1, image2, image3, playButton, ownerPicture;
+    protected TextView name, owner, playText;
+    protected ImageView image1, image2, image3, playButton, ownerPicture;
     private Vocabulary vocabulary;
     protected LinearLayout detailed;
     protected CardView cardView;
@@ -29,6 +29,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
         owner = (TextView) v.findViewById(R.id.owner_name);
+        playText = (TextView) v.findViewById(R.id.play_text);
         image1 = (ImageView) v.findViewById(R.id.vocabulary_image1);
         image2 = (ImageView) v.findViewById(R.id.vocabulary_image2);
         image3 = (ImageView) v.findViewById(R.id.vocabulary_image3);

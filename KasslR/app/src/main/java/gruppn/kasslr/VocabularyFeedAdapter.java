@@ -54,7 +54,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         final boolean isExpanded = position == mExpandedPosition;
         holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
-        holder.owner.setVisibility(isExpanded?View.GONE:View.VISIBLE);
+        holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,5 +103,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             public void run(){
             Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img)
         */
+        holder.owner.setText(v.getOwner());
     }
 }
