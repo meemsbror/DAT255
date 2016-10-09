@@ -54,6 +54,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         final boolean isExpanded = position == mExpandedPosition;
         holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
+        holder.owner.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +72,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         Vocabulary v = vocabularies.get(position);
         List<VocabularyItem> items = v.getItems();
         setPictures(holder, items);
+        setOwner(holder,v);
         holder.setVocabulary(v);
     }
 
@@ -89,13 +91,17 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                     Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
                 }
             });
-
         }
-
     }
 
-    private Bitmap createBitmap(VocabularyItem item){
-        Bitmap bm = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
-        return bm;
+    private void setOwner(VocabularyFeedViewHolder holder, Vocabulary v){
+        /*
+        final ImageView img = holder.getImageView(4);
+        final File imageFile = app.getImageFile(v.getOwner.getProfilePicture);
+        img.post(new Runnable){
+            @Override
+            public void run(){
+            Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img)
+        */
     }
 }
