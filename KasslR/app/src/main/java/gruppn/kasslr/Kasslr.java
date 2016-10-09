@@ -178,8 +178,7 @@ public class Kasslr extends Application {
 
         Web.getInstance(context).addToRequestQueue(strRequest);
     }
-
-
+    
     public void uploadMultipart(String imagePath, String word, String user, int vocabularyId) {
 
         //Uploading code
@@ -213,9 +212,6 @@ public class Kasslr extends Application {
     public void increaseScore(profileInformation.CompletedAction completedAction){
         profileInformation.incScore(completedAction);
     }
-    public int getCurrentScore(){
-        return Integer.parseInt(getString(R.string.score));
-    }
 
     public Shelf getShelf() {
         return shelf;
@@ -223,6 +219,15 @@ public class Kasslr extends Application {
 
     public String getUserId() {
         return getString(R.string.key_user_id);
+    }
+    public String getUserName() {
+        return profileInformation.getName();
+    }
+    public void setUserName(String newName){
+        profileInformation.setName(newName);
+    }
+    public int getScore(){
+        return profileInformation.getScore();
     }
 
     public File getImageDirectory() {

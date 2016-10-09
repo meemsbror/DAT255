@@ -36,7 +36,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="0dp" />
 
-            <TextView
+            <EditText
                 android:id="@+id/user_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,10 +44,12 @@
                 android:layout_centerHorizontal="false"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
-                android:text="Name"
                 android:textColor="#fff"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:inputType="textPersonName"
+                android:cursorVisible="false"
+                android:imeOptions="actionDone"/>
 
             <TextView
                 android:text="0"
@@ -70,7 +72,8 @@
                 android:maxWidth="42dp"
                 android:maxHeight="42dp"
                 android:scaleType="fitCenter"
-                android:background="@null" />
+                android:background="@null"
+                android:onClick="openSettings" />
 
             <!--
             <de.hdodenhof.circleimageview.CircleImageView
