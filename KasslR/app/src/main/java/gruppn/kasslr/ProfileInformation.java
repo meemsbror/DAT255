@@ -11,6 +11,7 @@ public class ProfileInformation {
 
     public int score = 0;
     public String name = "Namn";
+    public String userId = "dassid";
 
 
     public Uri profilePicture;
@@ -19,7 +20,9 @@ public class ProfileInformation {
     private final int COMPLETE_ACHIEVEMENT_SCORE = 20;
     private final int CREATE_VOCABULARY_SCORE = 25;
 
-
+    public String getUserId() {
+        return userId;
+    }
 
     public enum CompletedAction{
         COMPLETE_VOCABULARY, CREATE_VOCABULARY, ACHIEVEMENT

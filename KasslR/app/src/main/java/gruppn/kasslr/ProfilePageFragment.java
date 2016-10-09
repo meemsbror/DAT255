@@ -18,6 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +73,7 @@ public class ProfilePageFragment extends Fragment{
         final TextView points = (TextView) getView().findViewById(R.id.score);
         points.setText("" + app.getScore());
 
+
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
         recyclerView.setHasFixedSize(true);
@@ -78,7 +85,6 @@ public class ProfilePageFragment extends Fragment{
         VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
-
         //Change profile background
         final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
@@ -86,8 +92,6 @@ public class ProfilePageFragment extends Fragment{
                 .centerCrop()
                 .fit()
                 .into(imageView);
-
-
 
         //Vad är detta för knapp?
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.fab_profile);

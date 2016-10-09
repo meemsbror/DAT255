@@ -44,6 +44,7 @@
                 android:layout_centerHorizontal="false"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="20dp"
+                android:text="Namn"
                 android:textColor="#fff"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -59,7 +60,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/user_profile_name"
                 android:id="@+id/score" />
 
             <ImageButton
@@ -68,7 +68,6 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/settings"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
                 android:adjustViewBounds="true"

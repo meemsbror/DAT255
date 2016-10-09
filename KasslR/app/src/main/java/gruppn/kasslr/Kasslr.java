@@ -80,7 +80,6 @@ public class Kasslr extends Application {
         }else{
             updateUserId(tempUserId);
         }
-<<<<<<< 2b3dd62f294e0a3dd78d2561031f4154557038f5
         */
 
     }
