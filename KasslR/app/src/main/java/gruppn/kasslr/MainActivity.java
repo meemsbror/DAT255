@@ -210,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
         app.increaseScore(ProfileInformation.CompletedAction.CREATE_VOCABULARY);

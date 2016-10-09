@@ -2,6 +2,9 @@ package gruppn.kasslr;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -135,6 +138,23 @@ public class ProfilePageFragment extends Fragment{
                 app.setUserName(name.getText().toString());
             }
         });
+    }
+
+    public void changeBackgroundPicture(Uri uri){
+        final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
+        Picasso.with(getContext())
+                .load(uri)
+                .fit()
+                .into(imageView);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == PICK_IMAGE){
+            if(data != null)
+            {
+                changeBackgroundPicture(data.getData());
+            }
+        }
     }
 
     private void showKeyboard(){
