@@ -1,48 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/details_vocabulary"
-    android:layout_width="match_parent"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detailed_vocabulary"
+    android:layout_gravity="center"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:transitionName="@string/transition_vocabulary">
+    app:cardPreventCornerOverlap="false"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="10dp"
+    android:clickable="true"
+    android:transitionName="@string/transition_vocabulary"
+    cardCornerRadius="4dp"
+    app:cardBackgroundColor="@color/cardview_dark_background">
 
-    <RelativeLayout
-        android:id="@+id/details_background_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="220dp"
+        android:weightSum="3">
 
         <ImageView
-            android:id="@+id/details_background"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@color/colorPrimary"/>
+            android:id="@+id/vocabulary_image1"
+            android:layout_gravity="center"
+            android:src="@mipmap/hund"
+            android:scaleType="centerCrop"/>
 
-    </RelativeLayout>
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/vocabulary_image2"
+            android:layout_gravity="right|center_vertical"
+            android:src="@mipmap/dog"
+            android:scaleType="centerCrop"/>
 
-    <RelativeLayout
-        android:id="@+id/info_layout"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:id="@+id/vocabulary_image3"
+            android:layout_gravity="left|center_vertical"
+            android:src="@mipmap/stol"
+            android:scaleType="centerCrop"/>
+
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/details_background_layout"
-        android:gravity="center">
+        android:layout_height="match_parent">
+
 
         <TextView
-            android:id="@+id/details_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textSize="13sp" />
+            android:layout_height="44dp"
+            android:id="@+id/vocabulary_name"
+            android:layout_gravity="left|top"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="24sp"
+            android:padding="6dp"
+            android:background="@drawable/cardgradient"
+            android:text="Vocabulary name"/>
 
-        <TextView
-            android:id="@+id/details_owner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/details_title"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textSize="13sp"
-            android:text="dassid" />
+        <ImageView
+            android:layout_width="132dp"
+            android:layout_height="132dp"
+            app:srcCompat="@drawable/white_play"
+            android:id="@+id/play_button"
+            android:layout_gravity="center|center"
+            android:src="@drawable/white_play" />
 
-    </RelativeLayout>
-
-</RelativeLayout>
+    </FrameLayout>
+</android.support.v7.widget.CardView>

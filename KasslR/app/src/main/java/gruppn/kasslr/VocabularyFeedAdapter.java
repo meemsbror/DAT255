@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     private Activity activity;
     private Kasslr app;
     private Context mContext;
+    private int mExpandedPosition = -1;
 
     public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies){
         this.vocabularies = vocabularies;
@@ -48,19 +50,28 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     }
 
     @Override
-    public void onBindViewHolder(VocabularyFeedViewHolder holder, int position){
+    public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position){
+        final boolean isExpanded = position == mExpandedPosition;
+        holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
+        holder.cardView.setActivated(isExpanded);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExpandedPosition = isExpanded ? -1 : position;
+                TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                notifyDataSetChanged();
+            }
+        });
+
         updateView(holder, position);
     }
 
     private void updateView(VocabularyFeedViewHolder holder, int position){
-
         Vocabulary v = vocabularies.get(position);
         List<VocabularyItem> items = v.getItems();
-
         setPictures(holder, items);
         holder.setVocabulary(v);
-
-
     }
 
     private void setPictures(VocabularyFeedViewHolder holder, final List<VocabularyItem> items){

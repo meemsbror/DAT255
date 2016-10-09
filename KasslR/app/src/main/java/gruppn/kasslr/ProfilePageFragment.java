@@ -6,12 +6,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -40,7 +43,7 @@ public class ProfilePageFragment extends Fragment{
 
         recyclerView.setHasFixedSize(true);
 
-        GridLayoutManager recyclerLayoutManager = new GridLayoutManager(getActivity(), 3);
+        LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
@@ -51,16 +54,17 @@ public class ProfilePageFragment extends Fragment{
         //points.setText("" + app.getCurrentScore());
 
         //Change profile background
-
+        /*
         ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
-                .load(R.drawable.tempbackground)
+                .load(R.mipmap.ic_launcher)
                 .centerCrop()
                 .fit()
                 .into(imageView);
 
+
         //Score
-        /*
+
         TextView points = (TextView)getView().findViewById(R.id.points);
         points.setText("" + Player.getScore());
         */
@@ -74,7 +78,6 @@ public class ProfilePageFragment extends Fragment{
                         .setAction("Vad ska stå här då", null).show();
             }
         });
-
 
     }
 
