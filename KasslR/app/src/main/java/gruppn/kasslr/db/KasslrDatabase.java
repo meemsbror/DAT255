@@ -111,7 +111,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         }
     }
 
-    public List<Vocabulary> getVocabularies() throws SQLiteException {
+    public List<Vocabulary> getVocabularies(List<VocabularyItem> allItems) throws SQLiteException {
         List<Vocabulary> vocabularies = new ArrayList<>();
 
         SQLiteDatabase db = null;
@@ -126,12 +126,18 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 List<VocabularyItem> items = new ArrayList<>();
                 Cursor cItems = null;
                 try {
-                    cItems = db.rawQuery("SELECT id, name, image FROM items WHERE id IN "
-                            + "(SELECT item_id FROM vocabulary_content WHERE vocabulary_id = ?)",
+                    cItems = db.rawQuery("SELECT item_id FROM vocabulary_content WHERE vocabulary_id = ?",
                             new String[] { vocabulary.getId() + "" });
 
                     while (cItems.moveToNext()) {
-                        items.add(new VocabularyItem(cItems.getString(1), cItems.getString(2), cItems.getInt(0)));
+                        int id = cItems.getInt(0);
+
+                        for (VocabularyItem item : allItems) {
+                            if (item.getId() == id) {
+                                items.add(item);
+                                break;
+                            }
+                        }
                     }
                     vocabulary.setItems(items);
                 } finally {

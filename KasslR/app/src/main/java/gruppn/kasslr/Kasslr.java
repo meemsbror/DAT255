@@ -256,22 +256,19 @@ public class Kasslr extends Application {
 
             ShelfResult result = new ShelfResult();
             result.shelf = shelfs[0];
+            result.items = new ArrayList<>();
 
             KasslrDatabase db = null;
             try {
                 db = new KasslrDatabase(getApplicationContext());
-                result.items = db.getItems();
-                result.vocabularies = db.getVocabularies();
-            } catch (SQLiteException e) {
+                result.items.addAll(db.getItems());
+                result.vocabularies = db.getVocabularies(result.items);
+            } catch (SQLiteException | NullPointerException e) {
                 Log.e(DEBUG_TAG, "Failed to load shelf", e);
             } finally {
                 if (db != null) {
                     db.close();
                 }
-            }
-
-            if (result.items == null) {
-                result.items = new ArrayList<>();
             }
 
             addItemsWithoutNames(result.items);
