@@ -178,7 +178,7 @@ public class Kasslr extends Application {
 
         Web.getInstance(context).addToRequestQueue(strRequest);
     }
-    
+
     public void uploadMultipart(String imagePath, String word, String user, int vocabularyId) {
 
         //Uploading code

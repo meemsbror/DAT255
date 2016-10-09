@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
+import android.widget.Toast;
 
 
 import com.roughike.bottombar.BottomBar;
@@ -260,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /*
     public void createVocabulary(View view) {
         System.out.println("creating vocabulary");
         app.increaseScore(ProfileInformation.CompletedAction.CREATE_VOCABULARY);
@@ -276,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
         slideToFragment(new FeedFragment(), Direction.UP, false);
     }
-    */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
