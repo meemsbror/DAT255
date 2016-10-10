@@ -2,14 +2,15 @@ package gruppn.kasslr;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -168,6 +169,7 @@ public class GalleryFragment extends Fragment {
         private CardView card;
         private TextView name;
         private ImageView image;
+        private ImageView gradient;
         private ImageView checkbox;
 
         private boolean mSelectMode;
@@ -177,10 +179,14 @@ public class GalleryFragment extends Fragment {
             card = (CardView) view;
             name = (TextView) view.findViewById(R.id.txtItem);
             image = (ImageView) view.findViewById(R.id.imgItem);
+            gradient = (ImageView) view.findViewById(R.id.vocabulary_item_gradient);
             checkbox = (ImageView) view.findViewById(R.id.imgCheckbox);
             mSelectMode = selectMode;
             if (!selectMode) {
+                card.removeView(gradient);
                 card.removeView(checkbox);
+            } else {
+                gradient.setImageResource(R.drawable.cardgradient);
             }
         }
 
@@ -252,7 +258,18 @@ public class GalleryFragment extends Fragment {
         private void setSelected(VocabularyItem item, boolean selected) {
             Picasso.with(getContext())
                     .load(selected ? R.drawable.ic_check_box_checked : R.drawable.ic_check_box_unchecked)
-                    .into(checkbox);
+                    .into(checkbox, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Drawable drawable = DrawableCompat.wrap(checkbox.getDrawable());
+                            DrawableCompat.setTint(drawable, getResources().getColor(R.color.colorAccent));
+                        }
+
+                        @Override
+                        public void onError() {
+                            // Ignored
+                        }
+                    });
 
             if (selected) {
                 if (!getSelectedItems().contains(item)) {
