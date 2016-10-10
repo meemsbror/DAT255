@@ -15,9 +15,10 @@ public class VocabularyItem {
         this.image = imageName;
     }
 
-    public VocabularyItem(String name, String imageName, int id) {
+    public VocabularyItem(String name, String imageName, int id, boolean mine) {
         this(name, imageName);
         this.id = id;
+        this.mine = mine;
     }
 
     public int getId() {
