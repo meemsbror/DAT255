@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -209,6 +210,62 @@ public class Kasslr extends Application {
         }
     }
 
+    public void loadFeedItems(Context context, final VocabularyFeedAdapter va){
+
+        String url = Web.baseUrl+"?action=feed";
+
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            va.addVocabularies(parseFeedJson(response.getJSONArray("feed")));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            va.addVocabularies(getShelf().getVocabularies());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        va.addVocabularies(getShelf().getVocabularies());
+                    }
+                });
+
+        Web.getInstance(context).addToRequestQueue(jsObjRequest);
+
+
+
+    }
+
+    private List<Vocabulary> parseFeedJson(JSONArray feed) throws JSONException {
+        ArrayList<Vocabulary> response = new ArrayList<Vocabulary>();
+
+        for (int i = 0 ; i < feed.length(); i++) {
+            JSONObject obj = feed.getJSONObject(i);
+            String owner = obj.getString("owner");
+            String title = obj.getString("title");
+            int universalId = obj.getInt("id");
+            Vocabulary voc = new Vocabulary(owner, title);
+            voc.setUniversalId(universalId);
+
+            ArrayList<VocabularyItem> items = new ArrayList<VocabularyItem>();
+            JSONArray itemsArr = obj.getJSONArray("items");
+
+            for(int j = 0; j < itemsArr.length(); j++){
+                JSONArray itemValues = itemsArr.getJSONArray(j);
+                VocabularyItem item = new VocabularyItem(itemValues.getString(0), itemValues.getString(1));
+                item.setMine(false);
+                items.add(item);
+            }
+            voc.setItems(items);
+            response.add(voc);
+        }
+        return response;
+    }
+
     public void increaseScore(Player.CompletedAction completedAction){
         profileInformation.incScore(completedAction);
     }
@@ -228,13 +285,20 @@ public class Kasslr extends Application {
         return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Kasslr");
     }
 
+    private File getCachedImageDirectory() {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "Cachelr");
+    }
+
     public File[] getImageFiles() {
         File[] images = getImageDirectory().listFiles(IMAGE_FILTER);
         return images == null ? new File[] {} : images;
     }
 
     public File getImageFile(VocabularyItem item) {
-        return new File(getImageDirectory(), item.getImageName() + ".jpg");
+        if(item.isMine())
+            return new File(getImageDirectory(), item.getImageName() + ".jpg");
+
+        return new File(getCachedImageDirectory(), item.getImageName() + ".jpg");
     }
 
     public Bitmap getSharedBitmap() {

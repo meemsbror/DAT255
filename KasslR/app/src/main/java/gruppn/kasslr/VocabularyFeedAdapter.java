@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
@@ -31,6 +33,11 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         this.vocabularies = vocabularies;
         this.activity = activity;
         app = (Kasslr) activity.getApplication();
+    }
+
+    public void addVocabularies(List<Vocabulary> vocabularies){
+        this.vocabularies = vocabularies;
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -84,13 +91,23 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
         for(int i = 0; i < maxImages; i++) {
             final ImageView img = holder.getImageView(i+1);
-            final File imageFile = app.getImageFile(items.get(i));
-            img.post(new Runnable() {
-                @Override
-                public void run() {
-                    Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
-                }
-            });
+            if(items.get(i).isMine()) {
+                final File imageFile = app.getImageFile(items.get(i));
+                img.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
+                    }
+                });
+            }else{
+                final String url = items.get(i).getImageName();
+                img.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Picasso.with(mContext).load(url).centerCrop().fit().into(img);
+                    }
+                });
+            }
         }
     }
 
