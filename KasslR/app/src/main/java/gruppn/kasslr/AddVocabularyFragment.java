@@ -51,7 +51,7 @@ public class AddVocabularyFragment extends Fragment {
 
         galleryFragment = new GalleryFragment();
         Bundle args = new Bundle();
-        args.putBoolean(GalleryFragment.EXTRA_SELECTABLE, true);
+        args.putBoolean(GalleryFragment.EXTRA_SELECT_MODE, true);
         galleryFragment.setArguments(args);
 
         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_vocabulary_items, galleryFragment).commit();

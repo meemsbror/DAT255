@@ -2,6 +2,7 @@ package gruppn.kasslr;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,26 +24,19 @@ import android.widget.TextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import gruppn.kasslr.model.VocabularyItem;
 
 public class GalleryFragment extends Fragment {
     public static final int REQUEST_EDIT_ITEM = 1;
-    public static final String EXTRA_SELECTABLE = "selectable";
+    public static final String EXTRA_SELECT_MODE = "selectMode";
 
     private static final String DEBUG_TAG = "GalleryFragment";
-    private static final FileFilter FILTER = new FileFilter() {
-        @Override
-        public boolean accept(File file) {
-            return file.getName().toLowerCase().endsWith(".jpg");
-        }
-    };
 
     private Kasslr app;
 
@@ -50,7 +45,7 @@ public class GalleryFragment extends Fragment {
     private ItemAdapter adapter;
     private int itemCount = 0;
 
-    private boolean selectable = false;
+    private boolean selectMode = false;
     private List<VocabularyItem> selectedItems = new ArrayList<>();
 
     @Override
@@ -65,7 +60,7 @@ public class GalleryFragment extends Fragment {
         app = (Kasslr) getActivity().getApplication();
 
         if (getArguments() != null) {
-            selectable = getArguments().getBoolean(EXTRA_SELECTABLE, false);
+            selectMode = getArguments().getBoolean(EXTRA_SELECT_MODE, false);
         }
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view_gallery);
@@ -79,7 +74,7 @@ public class GalleryFragment extends Fragment {
         });
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), selectable);
+        adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), selectMode);
         recyclerView.setAdapter(adapter);
     }
 
@@ -117,23 +112,34 @@ public class GalleryFragment extends Fragment {
 
     private class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         private List<VocabularyItem> mItems;
-        private boolean mSelectable;
+        private boolean mSelectMode;
 
-        public ItemAdapter(List<VocabularyItem> items, boolean selectable) {
-            mItems = items;
-            mSelectable = selectable;
+        public ItemAdapter(List<VocabularyItem> items, boolean selectMode) {
+            setItems(items);
+            mSelectMode = selectMode;
         }
 
         public void setItems(List<VocabularyItem> items) {
             mItems = items;
-            notifyDataSetChanged();
+            if (mSelectMode) {
+                removeUnnamedItems();
+            }
+        }
+
+        private void removeUnnamedItems() {
+            for (Iterator<VocabularyItem> it = mItems.iterator(); it.hasNext(); ) {
+                VocabularyItem item = it.next();
+                if (item.getName().isEmpty()) {
+                    it.remove();
+                }
+            }
         }
 
         @Override
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view =  LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.vocabulary_item, parent, false);
-            return new ItemViewHolder(view, mSelectable);
+            return new ItemViewHolder(view, mSelectMode);
         }
 
         @Override
@@ -159,57 +165,28 @@ public class GalleryFragment extends Fragment {
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
+        private CardView card;
         private TextView name;
         private ImageView image;
         private ImageView checkbox;
 
-        private boolean mSelectable;
+        private boolean mSelectMode;
 
-        public ItemViewHolder(final View view, boolean selectable) {
+        public ItemViewHolder(final View view, boolean selectMode) {
             super(view);
+            card = (CardView) view;
             name = (TextView) view.findViewById(R.id.txtItem);
             image = (ImageView) view.findViewById(R.id.imgItem);
             checkbox = (ImageView) view.findViewById(R.id.imgCheckbox);
-            mSelectable = selectable;
-            if (selectable) {
-                Picasso.with(view.getContext())
-                        .load(R.drawable.ic_check_box_outline_blank_black_24dp)
-                        .into(checkbox);
-            } else {
-                checkbox.setVisibility(View.GONE);
+            mSelectMode = selectMode;
+            if (!selectMode) {
+                card.removeView(checkbox);
             }
         }
 
         public void setItem(final VocabularyItem item) {
-            View.OnClickListener editItemListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    app.setSharedBitmap(((BitmapDrawable) image.getDrawable()).getBitmap());
-
-                    Intent intent = new Intent(getActivity(), EditItemActivity.class);
-                    intent.putExtra(EditItemActivity.EXTRA_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
-
-                    Pair<View, String>[] transitions;
-                    if (item.getName().isEmpty()) {
-                        transitions = new Pair[] {
-                                Pair.create((View) image, getString(R.string.transition_edit_item_image)) };
-                    } else {
-                        transitions = new Pair[] {
-                                Pair.create((View) image, getString(R.string.transition_edit_item_image)),
-                                Pair.create((View) name, getString(R.string.transition_edit_item_name)) };
-                    }
-
-                    ActivityOptionsCompat options = ActivityOptionsCompat
-                            .makeSceneTransitionAnimation(getActivity(), transitions);
-
-                    ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_EDIT_ITEM, options.toBundle());
-                }
-            };
-            name.setOnClickListener(editItemListener);
-            image.setOnClickListener(editItemListener);
-
-            if (mSelectable) {
-                checkbox.setOnClickListener(new View.OnClickListener() {
+            if (mSelectMode) {
+                card.setOnClickListener(new CardView.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (!item.getName().isEmpty()) {
@@ -217,10 +194,32 @@ public class GalleryFragment extends Fragment {
                         }
                     }
                 });
-            }
+            } else {
+                card.setOnClickListener(new CardView.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        app.setSharedBitmap(((BitmapDrawable) image.getDrawable()).getBitmap());
 
-            name.setVisibility(View.GONE);
-            checkbox.setVisibility(View.INVISIBLE);
+                        Intent intent = new Intent(getActivity(), EditItemActivity.class);
+                        intent.putExtra(EditItemActivity.EXTRA_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
+
+                        Pair<View, String>[] transitions;
+                        if (item.getName().isEmpty()) {
+                            transitions = new Pair[] {
+                                    Pair.create((View) image, getString(R.string.transition_edit_item_image)) };
+                        } else {
+                            transitions = new Pair[] {
+                                    Pair.create((View) image, getString(R.string.transition_edit_item_image)),
+                                    Pair.create((View) name, getString(R.string.transition_edit_item_name)) };
+                        }
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat
+                                .makeSceneTransitionAnimation(getActivity(), transitions);
+
+                        ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_EDIT_ITEM, options.toBundle());
+                    }
+                });
+            }
 
             image.post(new Runnable() {
                 @Override
@@ -231,16 +230,14 @@ public class GalleryFragment extends Fragment {
                             .into(image, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    if (!item.getName().isEmpty()) {
-                                        name.setText(item.getName());
-                                        name.setVisibility(View.VISIBLE);
+                                    name.setText(item.getName());
+                                    name.setVisibility(item.getName().isEmpty() ? View.GONE : View.VISIBLE);
 
-                                        if (mSelectable) {
-                                            checkbox.setVisibility(View.VISIBLE);
-                                        }
-                                    } else {
-                                        setSelected(item, false);
+                                    if (mSelectMode) {
+                                        setSelected(item, getSelectedItems().contains(item) && !item.getName().isEmpty());
                                     }
+
+                                    card.setVisibility(View.VISIBLE);
                                 }
 
                                 @Override
@@ -253,14 +250,15 @@ public class GalleryFragment extends Fragment {
         }
 
         private void setSelected(VocabularyItem item, boolean selected) {
-            if (selected) {
-                Picasso.with(getContext()).load(R.drawable.ic_check_box_black_24dp).into(checkbox);
+            Picasso.with(getContext())
+                    .load(selected ? R.drawable.ic_check_box_checked : R.drawable.ic_check_box_unchecked)
+                    .into(checkbox);
 
+            if (selected) {
                 if (!getSelectedItems().contains(item)) {
                     getSelectedItems().add(item);
                 }
             } else {
-                Picasso.with(getContext()).load(R.drawable.ic_check_box_outline_blank_black_24dp).into(checkbox);
                 getSelectedItems().remove(item);
             }
         }
@@ -298,6 +296,7 @@ public class GalleryFragment extends Fragment {
         protected void onPostExecute(List<VocabularyItem> items) {
             if (items != null) {
                 adapter.setItems(items);
+                adapter.notifyDataSetChanged();
                 itemCount = items.size();
             }
         }
