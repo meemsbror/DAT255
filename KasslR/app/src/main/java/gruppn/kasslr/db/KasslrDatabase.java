@@ -275,4 +275,40 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             }
         }
     }
+
+    public void remove(VocabularyItem item) throws SQLiteException {
+        SQLiteDatabase db = null;
+
+        try {
+            db = getWritableDatabase();
+
+            // Delete item
+            db.execSQL("DELETE FROM items WHERE id = ?", new Object[] { item.getId() });
+
+            // Delete connections
+            db.execSQL("DELETE FROM vocabulary_content WHERE item_id = ?", new Object[] { item.getId() });
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
+
+    public void remove(Vocabulary vocabulary) throws SQLiteException {
+        SQLiteDatabase db = null;
+
+        try {
+            db = getWritableDatabase();
+
+            // Delete vocabulary
+            db.execSQL("DELETE FROM vocabularies WHERE id = ?", new Object[] { vocabulary.getId() });
+
+            // Delete connections
+            db.execSQL("DELETE FROM vocabulary_content WHERE vocabulary_id = ?", new Object[] { vocabulary.getId() });
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+    }
 }

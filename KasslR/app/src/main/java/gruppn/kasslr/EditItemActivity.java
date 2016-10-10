@@ -98,9 +98,7 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void saveItem(View view) {
         item.setName(txtWord.getText().toString().trim());
-        if (!item.getName().isEmpty()) {
-            new SaveItemsTask().execute(item);
-        }
+        new SaveItemsTask().execute(item);
 
         Intent result = new Intent();
         result.putExtra(RESULT_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
@@ -124,7 +122,11 @@ public class EditItemActivity extends AppCompatActivity {
                 db = new KasslrDatabase(getApplicationContext());
 
                 for (VocabularyItem item : items) {
-                    db.save(item);
+                    if (item.getName().isEmpty()) {
+                        db.remove(item);
+                    } else {
+                        db.save(item);
+                    }
                 }
                 Log.d(DEBUG_TAG, "Successfully saved " + items.length + " item(s)");
             } catch (SQLiteException e) {
