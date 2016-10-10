@@ -50,6 +50,7 @@ public class Kasslr extends Application {
     private Shelf shelf;
     private Player profileInformation = new Player();
     private Bitmap sharedBitmap;
+    private Vocabulary activeVocabulary;
 
     @Override
     public void onCreate() {
@@ -279,6 +280,14 @@ public class Kasslr extends Application {
 
     public String getUserId() {
         return profileInformation.getUserId();
+    }
+
+    public Vocabulary getActiveVocabulary() {
+        return activeVocabulary;
+    }
+
+    public void setActiveVocabulary(Vocabulary activeVocabulary) {
+        this.activeVocabulary = activeVocabulary;
     }
 
     public File getImageDirectory() {

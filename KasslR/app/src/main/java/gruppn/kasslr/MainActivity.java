@@ -120,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeToGame(View view, Vocabulary vocabulary){
         System.out.println("Starting game for vocabulary " + vocabulary.getTitle());
-        Intent myIntent = new Intent(this,LaneGame.class);
-        startActivity(myIntent);
+        app.setActiveVocabulary(vocabulary);
+        Intent intent = new Intent(this,LaneGame.class);
+        startActivity(intent);
     }
 
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;

@@ -1,5 +1,7 @@
 package gruppn.kasslr.game;
 
+import gruppn.kasslr.model.VocabularyItem;
+
 /**
  * Created by Adam on 2016-10-03.
  */
@@ -8,11 +10,13 @@ public class Target {
     private float x;
     private float y;
     private boolean benign;
+    private VocabularyItem vocabularyItem;
 
-    public Target(float x, float y, boolean benign){
+    public Target(float x, float y, boolean benign, VocabularyItem vocabularyItem){
         this.x = x;
         this.y = y;
         this.benign = benign;
+        this.vocabularyItem = vocabularyItem;
     }
 
     public void tick(float velocity){
@@ -34,4 +38,6 @@ public class Target {
     public boolean isBenign() {
         return benign;
     }
+
+    public VocabularyItem getVocabularyItem(){ return vocabularyItem; }
 }

@@ -25,17 +25,19 @@ import android.view.Window;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
+import gruppn.kasslr.Kasslr;
+import gruppn.kasslr.model.Vocabulary;
+import gruppn.kasslr.model.VocabularyItem;
 
 /**
  * Created by Adam on 2016-09-29.
  */
 
 public class LaneGame extends Activity {
-
-
-    final String DEBUG_TAG = "GaME";
 
     private GestureDetectorCompat mDetector;
     private GameView view;
@@ -44,7 +46,7 @@ public class LaneGame extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        view = new GameView(this);
+        view = new GameView(this, ((Kasslr)getApplication()).getActiveVocabulary());
         setContentView(view);
         mDetector = new GestureDetectorCompat(this, new GameGestureListener());
     }
@@ -111,21 +113,28 @@ class GameView extends SurfaceView implements Runnable {
     private float playerDeltaX = 2;
     private int playerTarget = 0;
 
+    private Vocabulary vocabulary;
+    private List<VocabularyItem> completedWords = new ArrayList<VocabularyItem>();
+
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
     private int score = 0;
+    private long gameFinished = 0;
 
     private Background background;
     private float backgroundPosition = 0;
 
     private int tickCount = 0;
 
-    public GameView(Context context) {
-        super(context);
+    private LaneGame gameActivity;
+
+    public GameView(LaneGame gameActivity, Vocabulary vocabulary) {
+        super(gameActivity);
         ourHolder = getHolder();
         paint = new Paint();
         playing = true;
-
+        this.gameActivity = gameActivity;
+        this.vocabulary = vocabulary;
     }
 
     @Override
@@ -200,11 +209,25 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText("spd: " + getTargetSpeed(), 20, 160, paint);
         canvas.drawText("particles: " + particles.size(), 20, 200, paint);
         canvas.drawText(background.getStats(), 20, 240, paint);
+        canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
         canvas.drawText(score+"", gameWidth-100, 100, paint);
+
+        drawFinishScreen();
+
         ourHolder.unlockCanvasAndPost(canvas);
+    }
+
+    private void drawFinishScreen() {
+        if(gameFinished == 0)
+            return;
+
+        paint.setColor(Color.WHITE);
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(70f + ((System.currentTimeMillis()-gameFinished)/3000.0f)*40.0f );
+        canvas.drawText("YOU WIN!", gameWidth/2, gameHeight/2, paint);
     }
 
     private void drawBackground(){
@@ -231,11 +254,16 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawTargets(){
+
+        paint.setTextSize(34);
+        paint.setTextAlign(Paint.Align.CENTER);
+
         for(Target target : liveTargets){
             paint.setColor(Color.RED);
             if(target.isBenign())
                 paint.setColor(Color.GREEN);
-            canvas.drawCircle(target.getX(), target.getY(), 20, paint);
+            //canvas.drawCircle(target.getX(), target.getY(), 20, paint);
+            canvas.drawText(target.getVocabularyItem().getName().toUpperCase(), target.getX(), target.getY(), paint);
         }
     }
 
@@ -272,6 +300,8 @@ class GameView extends SurfaceView implements Runnable {
     public void tick() {
         tickCount++;
 
+        attemptToEndSelf();
+
         if(playerY+100 > gameHeight || playerY < 0)
             playerDeltaY = -playerDeltaY;
 
@@ -298,6 +328,15 @@ class GameView extends SurfaceView implements Runnable {
         }
 
         backgroundPosition += Math.sqrt(getTargetSpeed())/4;
+    }
+
+    private void attemptToEndSelf() {
+        if(gameFinished == 0)
+            return;
+
+        if(gameFinished + 3*1000 < System.currentTimeMillis()){
+            ((Activity)getContext()).finish();
+        }
     }
 
     private int laneToX(int lane){
@@ -348,16 +387,59 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnTargets(){
-        if(tickCount%200 != 0)
+        if(liveTargets.size() > 0)
             return;
 
         Random rand = new Random();
+
+        VocabularyItem theItemWeWant = getUnusedVocabularyItem();
+        if(theItemWeWant == null) {
+            finishGame();
+            return;
+        }
+
         int benignTargetNum = rand.nextInt(NUM_LANES);
+
+        ArrayList<VocabularyItem> spawnedItems = new ArrayList<VocabularyItem>();
+
         for(int i=0; i < NUM_LANES; i++){
             int x = laneToX(i-1);
             int y = -rand.nextInt(gameHeight/3);
-            Target target = new Target(x, y, benignTargetNum == i);
+            VocabularyItem item = getRandomVocabularyItem(theItemWeWant, spawnedItems);
+            if(benignTargetNum == i)
+                item = theItemWeWant;
+            else
+                spawnedItems.add(item);
+            Target target = new Target(x, y, benignTargetNum == i, item);
             liveTargets.add(target);
+        }
+    }
+
+    private VocabularyItem getUnusedVocabularyItem(){
+
+        if(vocabulary.getItems().size() <= completedWords.size())
+            return null;
+
+        Random rand = new Random();
+
+        while(true) {
+            System.out.println("getting unused vocabulary item hehe");
+            VocabularyItem item = vocabulary.getItems().get(rand.nextInt(vocabulary.getItems().size()));
+            if(!completedWords.contains(item))
+                return item;
+        }
+    }
+
+    private VocabularyItem getRandomVocabularyItem(VocabularyItem notThisItemThough, ArrayList<VocabularyItem> notTheseEither){
+        Random rand = new Random();
+        int attempts = 0; //this thing is stupid but yeh mvp
+        while(true) {
+            VocabularyItem item = vocabulary.getItems().get(rand.nextInt(vocabulary.getItems().size()));
+            System.out.println("getRandomVocabularyItem hehe got " + item.getName());
+            System.out.println("getRandomVocabularyItem hehe has " + notThisItemThough.getName());
+            if(item != notThisItemThough && !notTheseEither.contains(item) || attempts > 20)
+                return item;
+            attempts++;
         }
     }
 
@@ -368,9 +450,10 @@ class GameView extends SurfaceView implements Runnable {
             target.tick(getTargetSpeed());
 
             if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 50){
-                if(target.isBenign())
+                if(target.isBenign()) {
                     score++;
-                else
+                    completedWords.add(target.getVocabularyItem());
+                }else
                     score -= 5;
                 iterator.remove();
                 continue;
@@ -380,6 +463,12 @@ class GameView extends SurfaceView implements Runnable {
                 iterator.remove();
         }
 
+    }
+
+    private void finishGame() {
+        if(gameFinished > 0)
+            return;
+        gameFinished = System.currentTimeMillis();
     }
 
     private int getTargetSpeed(){
