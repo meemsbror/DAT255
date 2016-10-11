@@ -32,6 +32,67 @@
 
             </android.support.v7.widget.Toolbar>
 
+            <ImageButton
+                android:id="@+id/settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/settings"
+                android:adjustViewBounds="true"
+                android:layout_gravity="right"
+                android:maxWidth="42dp"
+                android:maxHeight="42dp"
+                android:scaleType="fitCenter"
+                android:background="@null"
+                android:onClick="openSettings"
+                app:layout_collapseMode="parallax"
+                android:layout_weight="1" />
+
+            <EditText
+                android:id="@+id/user_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="false"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="42dp"
+                android:layout_marginLeft="16dp"
+                android:text="Namn"
+                android:textColor="#000"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:inputType="textPersonName"
+                android:cursorVisible="false"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:background="@android:color/transparent"
+                android:imeOptions="actionDone"
+                app:layout_collapseMode="parallax"/>
+            <TextView
+                android:text="0"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:id="@+id/score"
+                app:layout_collapseMode="parallax"/>
+
+            <ImageView
+                android:adjustViewBounds="true"
+                android:maxWidth="128dp"
+                android:maxHeight="128dp"
+                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_action_profile"
+                android:layout_alignBottom="@+id/user_profile_name"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/profile_picture" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
