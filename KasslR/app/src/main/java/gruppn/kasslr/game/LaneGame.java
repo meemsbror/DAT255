@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -99,8 +100,6 @@ class GameView extends SurfaceView implements Runnable {
     final String DEBUG_TAG = "GAMELOGIC";
     final int NUM_LANES = 3;
     final int BACKGROUND_COLOR = Color.parseColor("#000000");
-    final int ITEM_IMAGE_WIDTH = 300;
-    final int ITEM_IMAGE_HEIGHT = ITEM_IMAGE_WIDTH * 4 / 3;
 
     private float frameRate = 80;
     private float frameTime = 1000 / frameRate;
@@ -410,7 +409,12 @@ class GameView extends SurfaceView implements Runnable {
 
         InputStream is = null;
         try {
-            is = new URL(theItemWeWant.getImageName()).openStream();
+            if (theItemWeWant.getImageName().startsWith("http")) {
+                is = new URL(theItemWeWant.getImageName()).openStream();
+            } else {
+                is = new FileInputStream(app.getImageFile(theItemWeWant));
+            }
+            
             Bitmap bitmap = BitmapFactory.decodeStream(is);
             targetImage = new TargetImage(bitmap, frameRate, gameWidth, gameHeight);
         } catch (IOException e) {
