@@ -33,6 +33,7 @@ public class FeedFragment extends Fragment {
         this.app = (Kasslr) getActivity().getApplication();
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_feed);
+        recyclerView.setItemAnimator(null);
 
         VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), new ArrayList<Vocabulary>());
 

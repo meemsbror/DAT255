@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment {
         vocabularyList.clear();
         recyclerViewFeed_search.removeAllViews();
         String string = searchView_search.getQuery().toString();
-        
+
         if (!string.isEmpty()) {
 
             for (Vocabulary vocabulary : app.getOnlineShelf()) {

@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
@@ -78,9 +76,19 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
+                    /*
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
                     notifyDataSetChanged();
+                    */
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
+                    }
+                    notifyItemChanged(position);
+                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                        notifyItemChanged(mExpandedPosition);
+                    }
+                    mExpandedPosition = isExpanded ? -1 : position;
                 }
             });
 
@@ -90,13 +98,38 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                 @Override
                 public void onClick(View v) {
+                    /*
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
                     notifyDataSetChanged();
+                    */
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                    }
+                    notifyItemChanged(position);
+                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                        notifyItemChanged(mExpandedPosition);
+                    }
+                    mExpandedPosition = isExpanded ? -1 : position;
                 }
             });
 
         }
+       /*
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                }
+                notifyItemChanged(position);
+                if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                    notifyItemChanged(mExpandedPosition);
+                }
+                mExpandedPosition = isExpanded ? -1 : position;
+            }
+        });
+        */
 
         updateView(holder, position);
     }

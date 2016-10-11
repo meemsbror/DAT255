@@ -79,6 +79,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView.addCallback(mCallback);
         mCameraView.setFlash(CameraView.FLASH_OFF); // please
 
+
         ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override

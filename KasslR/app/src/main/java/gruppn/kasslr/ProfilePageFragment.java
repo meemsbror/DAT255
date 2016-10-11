@@ -49,7 +49,6 @@ public class ProfilePageFragment extends Fragment{
 
     private ImageButton settings;
 
-
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
@@ -73,7 +72,6 @@ public class ProfilePageFragment extends Fragment{
         final TextView points = (TextView) getView().findViewById(R.id.score);
         points.setText("" + app.getScore());
 
-
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
         recyclerView.setHasFixedSize(true);
@@ -82,7 +80,7 @@ public class ProfilePageFragment extends Fragment{
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-        VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
         //Change profile background
@@ -98,6 +96,10 @@ public class ProfilePageFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.slideToFragment(new GalleryFragment(), MainActivity.Direction.DOWN, true);
+
                 Snackbar.make(view, "hehe", Snackbar.LENGTH_SHORT)
                         .setAction("Vad ska stå här då", null).show();
             }
@@ -157,6 +159,7 @@ public class ProfilePageFragment extends Fragment{
             }
         });
     }
+
 
     public void changeProfilePicture(Uri uri){
         app.setProfilePicture(uri);
