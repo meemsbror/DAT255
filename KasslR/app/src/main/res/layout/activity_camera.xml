@@ -24,13 +24,22 @@
         app:facing="back"
         app:flash="auto"/>
 
-    <ImageButton
-        app:srcCompat="@drawable/ic_action_takepicture"
-        android:background="@null"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/snap" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/camera">
+
+        <ImageButton
+            app:srcCompat="@drawable/ic_action_takepicture"
+            android:scaleType="centerCrop"
+            android:background="@null"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/snap" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>
