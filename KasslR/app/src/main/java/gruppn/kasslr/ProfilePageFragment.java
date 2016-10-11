@@ -82,7 +82,7 @@ public class ProfilePageFragment extends Fragment{
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-        VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
 
         //Change profile background
@@ -157,6 +157,7 @@ public class ProfilePageFragment extends Fragment{
             }
         });
     }
+
 
     public void changeProfilePicture(Uri uri){
         app.setProfilePicture(uri);
