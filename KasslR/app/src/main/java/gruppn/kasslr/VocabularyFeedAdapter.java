@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
