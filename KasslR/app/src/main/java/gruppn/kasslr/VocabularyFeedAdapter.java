@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -66,9 +67,14 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                }
+                notifyItemChanged(position);
+                if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                    notifyItemChanged(mExpandedPosition);
+                }
                 mExpandedPosition = isExpanded ? -1 : position;
-                TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
-                notifyDataSetChanged();
             }
         });
 
