@@ -8,15 +8,17 @@ public class VocabularyItem {
     private String name;
     private String image;
     private long lastModified;
+    private boolean mine = true;
 
     public VocabularyItem(String name, String imageName) {
         this.name = name;
         this.image = imageName;
     }
 
-    public VocabularyItem(String name, String imageName, int id) {
+    public VocabularyItem(String name, String imageName, int id, boolean mine) {
         this(name, imageName);
         this.id = id;
+        this.mine = mine;
     }
 
     public int getId() {
@@ -52,6 +54,14 @@ public class VocabularyItem {
 
     public void setLastModified(long lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public boolean isMine() {
+        return mine;
+    }
+
+    public void setMine(boolean mine) {
+        this.mine = mine;
     }
 
     public JSONObject toJSON() throws JSONException {

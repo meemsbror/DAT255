@@ -75,6 +75,7 @@ public class CameraActivity extends AppCompatActivity {
         app = (Kasslr) getApplication();
         mCameraView = (CameraView) findViewById(R.id.camera);
         mCameraView.addCallback(mCallback);
+        mCameraView.setFlash(CameraView.FLASH_OFF); // please
 
         Button takePicture = (Button) findViewById(R.id.snap);
         takePicture.setOnClickListener(new View.OnClickListener() {

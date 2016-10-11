@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/vocabulary_item_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
+    android:visibility="invisible"
     app:cardElevation="10dp"
     app:cardCornerRadius="4dp">
 
@@ -13,12 +16,11 @@
             android:id="@+id/imgItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
+            android:scaleType="centerCrop"
             android:transitionName="@string/transition_edit_item_image" />
 
         <TextView
             android:id="@+id/txtItem"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/colorPrimaryTransparent"
@@ -29,13 +31,20 @@
             android:transitionName="@string/transition_edit_item_name" />
 
         <ImageView
+            android:id="@+id/vocabulary_item_gradient"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true" />
+
+        <ImageView
             android:id="@+id/imgCheckbox"
-            android:visibility="invisible"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:scaleType="center"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" />
+
+
 
     </RelativeLayout>
 

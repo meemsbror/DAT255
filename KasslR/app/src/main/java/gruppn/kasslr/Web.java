@@ -24,7 +24,7 @@ import static java.security.AccessController.getContext;
 
 public class Web {
 
-    final static String baseUrl = "http://192.168.0.147/kasslr/skalman.php";
+    final static String baseUrl = "http://huestew.com/kasslr/skalman.php";
 
     private static Web mInstance;
     private RequestQueue mRequestQueue;

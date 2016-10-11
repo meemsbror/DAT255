@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gruppn.kasslr.model.Shelf;
@@ -33,7 +34,7 @@ public class FeedFragment extends Fragment {
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_feed);
 
-        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), new ArrayList<Vocabulary>());
 
         recyclerView.setAdapter(va);
 
@@ -41,5 +42,8 @@ public class FeedFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-        }
+        app.loadFeedItems(getContext(), va);
+
+    }
+
 }
