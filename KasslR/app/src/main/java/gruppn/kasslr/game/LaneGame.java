@@ -403,11 +403,11 @@ class GameView extends SurfaceView implements Runnable {
 
         VocabularyItem theItemWeWant = getUnusedVocabularyItem();
         if(theItemWeWant == null) {
+            targetImage = null;
             finishGame();
             return;
         }
 
-        Log.d(DEBUG_TAG, "Loading image for " + theItemWeWant.getImageName());
         InputStream is = null;
         try {
             is = new URL(theItemWeWant.getImageName()).openStream();
