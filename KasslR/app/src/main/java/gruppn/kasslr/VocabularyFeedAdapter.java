@@ -93,20 +93,10 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             final ImageView img = holder.getImageView(i+1);
             if(items.get(i).isMine()) {
                 final File imageFile = app.getImageFile(items.get(i));
-                img.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
-                    }
-                });
+                Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
             }else{
                 final String url = items.get(i).getImageName();
-                img.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Picasso.with(mContext).load(url).centerCrop().fit().into(img);
-                    }
-                });
+                Picasso.with(mContext).load(url).centerCrop().fit().into(img);
             }
         }
     }
