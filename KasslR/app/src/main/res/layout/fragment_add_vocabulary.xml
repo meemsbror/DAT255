@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
-        android:text="So this is where you add new vocabularies"
+        android:text="@string/add_vocabulary_title"
+        android:textSize="20dp"
+        android:layout_marginLeft="4dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView" />
@@ -21,17 +22,34 @@
         android:hint="@string/add_vocabulary_name_description" />
 
     <Button
-        android:text="Done"
+        android:text="@string/add_vocabulary_create"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/submitVoc"
         style="@style/Widget.AppCompat.Button.Colored" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginLeft="4dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@id/submitVoc"
+        android:text="@string/add_vocabulary_public" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/submitVoc" />
+
     <FrameLayout
         android:id="@+id/frame_vocabulary_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/newVocName"
-        android:layout_above="@id/submitVoc" />
+        android:layout_above="@id/switch_upload" />
 </RelativeLayout>

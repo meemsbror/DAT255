@@ -14,7 +14,10 @@
     <string name="transition_vocabulary">Vocabulary Transition</string>
     <string name="transition_edit_item_image">Edit Word Image Transition</string>
     <string name="transition_edit_item_name">Edit Word Name Transition</string>
+    <string name="add_vocabulary_title">Skapa en glosbok</string>
     <string name="add_vocabulary_name_description">Exempel: Matbutiken, militär...</string>
+    <string name="add_vocabulary_public">Ladda upp till feed</string>
+    <string name="add_vocabulary_create">Skapa</string>
     <string name="vocabulary_missing_title">Du måste välja ett namn på glosboken</string>
     <string name="vocabulary_missing_items">Du måste välja minst 3 glosor</string>
 

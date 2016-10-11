@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ public class AddVocabularyFragment extends Fragment {
 
     private EditText txtTitle;
     private GalleryFragment galleryFragment;
+    private SwitchCompat switchUpload;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,6 +43,8 @@ public class AddVocabularyFragment extends Fragment {
         app = (Kasslr) getActivity().getApplication();
 
         txtTitle = (EditText) getActivity().findViewById(R.id.newVocName);
+        switchUpload = (SwitchCompat) getActivity().findViewById(R.id.switch_upload);
+
         Button btnSave = (Button) getActivity().findViewById(R.id.submitVoc);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +78,11 @@ public class AddVocabularyFragment extends Fragment {
         vocabulary.setItems(items);
 
         app.getShelf().addVocabulary(vocabulary);
-        app.uploadVocabulary(getContext(), vocabulary);
+
+        if (switchUpload.isChecked()) {
+            app.uploadVocabulary(getContext(), vocabulary);
+        }
+
         new SaveVocabulariesTask().execute(vocabulary);
 
         getActivity().getSupportFragmentManager().popBackStack();
