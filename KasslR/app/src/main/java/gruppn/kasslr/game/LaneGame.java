@@ -1,18 +1,12 @@
 package gruppn.kasslr.game;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.icu.text.MessagePattern;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -22,6 +16,9 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -102,6 +99,8 @@ class GameView extends SurfaceView implements Runnable {
     final String DEBUG_TAG = "GAMELOGIC";
     final int NUM_LANES = 3;
     final int BACKGROUND_COLOR = Color.parseColor("#000000");
+    final int ITEM_IMAGE_WIDTH = 300;
+    final int ITEM_IMAGE_HEIGHT = ITEM_IMAGE_WIDTH * 4 / 3;
 
     private float frameRate = 80;
     private float frameTime = 1000 / frameRate;
@@ -115,6 +114,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private Vocabulary vocabulary;
     private List<VocabularyItem> completedWords = new ArrayList<VocabularyItem>();
+    private TargetImage targetImage = null;
 
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
@@ -126,6 +126,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private int tickCount = 0;
 
+    private Kasslr app;
     private LaneGame gameActivity;
 
     public GameView(LaneGame gameActivity, Vocabulary vocabulary) {
@@ -134,6 +135,7 @@ class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
         playing = true;
         this.gameActivity = gameActivity;
+        app = (Kasslr) gameActivity.getApplication();
         this.vocabulary = vocabulary;
     }
 
@@ -184,6 +186,7 @@ class GameView extends SurfaceView implements Runnable {
 
         drawBackground();
         drawParticles();
+        drawCurrentImage();
         drawTargets();
 
         paint.setColor(Color.WHITE);
@@ -257,14 +260,19 @@ class GameView extends SurfaceView implements Runnable {
 
         paint.setTextSize(34);
         paint.setTextAlign(Paint.Align.CENTER);
+        paint.setColor(Color.WHITE);
 
         for(Target target : liveTargets){
-            paint.setColor(Color.RED);
-            if(target.isBenign())
-                paint.setColor(Color.GREEN);
             //canvas.drawCircle(target.getX(), target.getY(), 20, paint);
             canvas.drawText(target.getVocabularyItem().getName().toUpperCase(), target.getX(), target.getY(), paint);
         }
+    }
+
+    private void drawCurrentImage() {
+        if (targetImage == null)
+            return;
+
+        canvas.drawBitmap(targetImage.getBitmap(), null, targetImage.getRect(), null);
     }
 
     public void updateInput(float velocityX, float velocityY){
@@ -325,6 +333,7 @@ class GameView extends SurfaceView implements Runnable {
             spawnTargets();
             updateTargets();
 
+            updateCurrentImage();
         }
 
         backgroundPosition += Math.sqrt(getTargetSpeed())/4;
@@ -398,6 +407,24 @@ class GameView extends SurfaceView implements Runnable {
             return;
         }
 
+        Log.d(DEBUG_TAG, "Loading image for " + theItemWeWant.getImageName());
+        InputStream is = null;
+        try {
+            is = new URL(theItemWeWant.getImageName()).openStream();
+            Bitmap bitmap = BitmapFactory.decodeStream(is);
+            targetImage = new TargetImage(bitmap, frameRate, gameWidth, gameHeight);
+        } catch (IOException e) {
+            Log.e(DEBUG_TAG, "Failed to load image", e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
+        }
+
         int benignTargetNum = rand.nextInt(NUM_LANES);
 
         ArrayList<VocabularyItem> spawnedItems = new ArrayList<VocabularyItem>();
@@ -463,6 +490,13 @@ class GameView extends SurfaceView implements Runnable {
                 iterator.remove();
         }
 
+    }
+
+    private void updateCurrentImage() {
+        if (targetImage == null)
+            return;
+
+        targetImage.tick();
     }
 
     private void finishGame() {
