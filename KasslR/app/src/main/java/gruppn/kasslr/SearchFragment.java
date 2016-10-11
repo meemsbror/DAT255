@@ -24,9 +24,9 @@ import static gruppn.kasslr.R.layout.fragment_search;
 public class SearchFragment extends Fragment {
 
     private Kasslr app;
-    private RecyclerView recyclerView_search;
+    private RecyclerView recyclerViewFeed_search;
     private SearchView searchView_search;
-    private VocabularyAdapter va;
+    private VocabularyFeedAdapter va;
     private List<Vocabulary> vocabularyList = new ArrayList<>();
 
     @Override
@@ -41,17 +41,22 @@ public class SearchFragment extends Fragment {
 
         this.app = (Kasslr) getActivity().getApplication();
 
-        recyclerView_search = (RecyclerView) getView().findViewById(R.id.recyclerView_search);
+        recyclerViewFeed_search = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_search);
         searchView_search = (SearchView) getView().findViewById(R.id.searchView_search);
-        va = new VocabularyAdapter(getActivity(), vocabularyList);
+        va = new VocabularyFeedAdapter(getActivity(), vocabularyList);
+        va.setSearchAdapter(true);
+        recyclerViewFeed_search.setAdapter(va);
 
-        recyclerView_search.setAdapter(va);
 
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerViewFeed_search.setLayoutManager(llm);
+
+        /*
         GridLayoutManager GLM = new GridLayoutManager(getActivity(), 3);
         
         recyclerView_search.setLayoutManager(GLM);
-
-
+        */
         searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -68,35 +73,37 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
     }
 
 
     public void updateSearch(){
         vocabularyList.clear();
-        recyclerView_search.removeAllViews();
+        recyclerViewFeed_search.removeAllViews();
         String string = searchView_search.getQuery().toString();
+        
+        if (!string.isEmpty()) {
 
-        for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {
+            for (Vocabulary vocabulary : app.getOnlineShelf()) {
 
-            if (!vocabularyList.contains(vocabulary)) {
+                if (!vocabularyList.contains(vocabulary)) {
 
-                if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)){
+                    if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)) {
+                        vocabularyList.add(vocabulary);
 
-                    vocabularyList.add(vocabulary);
+                    } else {
+                        for (VocabularyItem vocabularyItem : vocabulary.getItems()) {
+                            if (!vocabularyList.contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
+                                vocabularyList.add(vocabulary);
 
-                } else {
-                    for (VocabularyItem vocabularyItem : vocabulary.getItems()) {
-                        if (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string)) {
-
-                            vocabularyList.add(vocabulary);
-
+                            }
                         }
                     }
                 }
             }
         }
         //va = new VocabularyAdapter(getActivity(), vocabularyList);
-        va.updateVocabularyList(vocabularyList);
+        va.setVocabularyList(vocabularyList);
 
     }
 }

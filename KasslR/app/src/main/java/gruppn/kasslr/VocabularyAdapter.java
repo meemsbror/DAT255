@@ -29,7 +29,7 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyAdapter.Vo
 
     }
 
-    public void updateVocabularyList(List<Vocabulary> vocabularyList){
+    public void setVocabularyList(List<Vocabulary> vocabularyList){
         this.vocabularyList = vocabularyList;
     }
 

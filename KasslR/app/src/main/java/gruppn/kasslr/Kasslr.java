@@ -52,6 +52,7 @@ public class Kasslr extends Application {
     private ProfileInformation profileInformation = new ProfileInformation();
     private Bitmap sharedBitmap;
     private Vocabulary activeVocabulary;
+    private List<Vocabulary> onlineShelf = new ArrayList();
 
     @Override
     public void onCreate() {
@@ -224,6 +225,14 @@ public class Kasslr extends Application {
                     public void onResponse(JSONObject response) {
                         try {
                             va.addVocabularies(parseFeedJson(response.getJSONArray("feed")));
+
+                            for (Vocabulary vocabulary : parseFeedJson(response.getJSONArray("feed"))) {
+                                if (!onlineShelf.equals(vocabulary)){
+                                    onlineShelf.add(vocabulary);
+                                }
+
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                             va.addVocabularies(getShelf().getVocabularies());
@@ -404,5 +413,9 @@ public class Kasslr extends Application {
         private Shelf shelf;
         private List<VocabularyItem> items;
         private List<Vocabulary> vocabularies;
+    }
+
+    public List<Vocabulary> getOnlineShelf(){
+        return onlineShelf;
     }
 }

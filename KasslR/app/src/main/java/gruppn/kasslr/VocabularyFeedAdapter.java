@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -56,6 +58,13 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         return new VocabularyFeedViewHolder(itemView);
     }
 
+
+    private boolean searchAdapter = false;
+
+    public void setSearchAdapter(boolean a){
+        searchAdapter = a;
+    }
+
     @Override
     public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position){
         final boolean isExpanded = position == mExpandedPosition;
@@ -63,14 +72,31 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExpandedPosition = isExpanded ? -1 : position;
-                TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
-                notifyDataSetChanged();
-            }
-        });
+        if (searchAdapter) {
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onClick(View v) {
+                    mExpandedPosition = isExpanded ? -1 : position;
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
+                    notifyDataSetChanged();
+                }
+            });
+
+        } else {
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onClick(View v) {
+                    mExpandedPosition = isExpanded ? -1 : position;
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                    notifyDataSetChanged();
+                }
+            });
+
+        }
 
         updateView(holder, position);
     }
@@ -111,5 +137,9 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img)
         */
         holder.owner.setText(v.getOwner());
+    }
+
+    public void setVocabularyList(List<Vocabulary> vocabulaies) {
+        this.vocabularies = vocabulaies;
     }
 }
