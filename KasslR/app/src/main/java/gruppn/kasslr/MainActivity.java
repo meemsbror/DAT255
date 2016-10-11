@@ -214,9 +214,7 @@ public class MainActivity extends AppCompatActivity {
         bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_feed) {
-                    getSupportFragmentManager().popBackStack();
-                }
+                getSupportFragmentManager().popBackStack();
             }
         });
         for (int i = 0; i < bottomBar.getTabCount(); i++) {
