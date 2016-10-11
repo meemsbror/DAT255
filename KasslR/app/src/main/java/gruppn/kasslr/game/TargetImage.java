@@ -53,20 +53,4 @@ public class TargetImage {
     public RectF getRect() {
         return new RectF(x, y, x + width, y + height);
     }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
 }
