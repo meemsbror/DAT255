@@ -49,7 +49,6 @@ public class ProfilePageFragment extends Fragment{
 
     private ImageButton settings;
 
-
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
@@ -72,7 +71,6 @@ public class ProfilePageFragment extends Fragment{
 
         final TextView points = (TextView) getView().findViewById(R.id.score);
         points.setText("" + app.getScore());
-
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
@@ -98,6 +96,10 @@ public class ProfilePageFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.slideToFragment(new GalleryFragment(), MainActivity.Direction.DOWN, true);
+
                 Snackbar.make(view, "hehe", Snackbar.LENGTH_SHORT)
                         .setAction("Vad ska stå här då", null).show();
             }

@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomBar bottomBar;
     private int selectedTab = -1;
-    private enum Direction {
+    public enum Direction {
         DOWN(R.anim.enter_from_top, R.anim.exit_to_bottom),
         LEFT(R.anim.enter_from_right, R.anim.exit_to_left),
         UP(R.anim.enter_from_bottom, R.anim.exit_to_top),
