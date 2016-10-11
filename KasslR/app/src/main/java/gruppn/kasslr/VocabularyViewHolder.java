@@ -13,7 +13,7 @@ import android.widget.TextView;
 import gruppn.kasslr.model.Vocabulary;
 
 
-public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
+public class VocabularyViewHolder extends RecyclerView.ViewHolder{
 
     protected TextView name, owner, playText;
     protected ImageView image1, image2, image3, playButton, ownerPicture;
@@ -26,7 +26,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     protected ImageView favoriteButton;
 
 
-    public VocabularyFeedViewHolder(View v){
+    public VocabularyViewHolder(View v){
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
         owner = (TextView) v.findViewById(R.id.owner_name);

@@ -3,12 +3,15 @@ package gruppn.kasslr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+
+import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
@@ -131,6 +136,13 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         });
         */
 
+        holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                app.getShelf().addVocabulary(vocabularies.get(position));
+            }
+        });
+
         updateView(holder, position);
     }
 
@@ -171,6 +183,35 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         */
         holder.owner.setText(v.getOwner());
     }
+
+    /* TODO
+    private class SaveVocabularyTask extends AsyncTask<Vocabulary, Void, Void> {
+        @Override
+        protected Void doInBackground(Vocabulary... vocabularies) {
+            KasslrDatabase db = null;
+            try {
+                db = new KasslrDatabase(activity.getApplicationContext());
+
+                for (Vocabulary vocabulary : vocabularies) {
+                    if (vocabulary.getTitle().isEmpty()) {
+                        db.remove(vocabulary);
+                   } else {
+                        db.save(vocabulary);
+                    }
+                }
+                Log.d(DEBUG_TAG, "Successfully saved " + vocabularies.length + " vocabulary");
+            } catch (SQLiteException e) {
+                Log.e(DEBUG_TAG, "Failed to save vocabulary)", e);
+            } finally {
+                if (db != null) {
+                    db.close();
+                }
+            }
+
+            return null;
+        }
+    }
+    */
 
     public void setVocabularyList(List<Vocabulary> vocabulaies) {
         this.vocabularies = vocabulaies;

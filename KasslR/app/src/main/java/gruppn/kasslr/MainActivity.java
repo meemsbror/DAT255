@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
         showFragment(new SearchFragment());
     }
 
+    public void showFavorite() {
+        showFragment(new FavoriteFragment());
+    }
+
     public void showProfile() {
         showFragment(new ProfilePageFragment());
     }
@@ -202,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (tabId == R.id.tab_favorite) {
                     // TODO Show the saved vocabularies
                     // This is temporary until we decide how to reach the gallery
-                    slideToFragment(new GalleryFragment(), directions, false);
+                    slideToFragment(new FavoriteFragment(), directions, false);
                 } else if (tabId == R.id.tab_profile) {
                     slideToFragment(new ProfilePageFragment(), directions, false);
                 } else {

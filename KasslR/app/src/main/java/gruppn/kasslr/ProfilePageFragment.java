@@ -72,6 +72,8 @@ public class ProfilePageFragment extends Fragment{
         final TextView points = (TextView) getView().findViewById(R.id.score);
         points.setText("" + app.getScore());
 
+        /*
+
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
         recyclerView.setHasFixedSize(true);
@@ -82,6 +84,8 @@ public class ProfilePageFragment extends Fragment{
 
         VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
         recyclerView.setAdapter(va);
+
+        */
 
         //Change profile background
         final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
@@ -104,7 +108,6 @@ public class ProfilePageFragment extends Fragment{
                         .setAction("Vad ska stå här då", null).show();
             }
         });
-
 
         //Change profile picture
         changeProfilePicture(app.getProfilePicture());
@@ -146,8 +149,6 @@ public class ProfilePageFragment extends Fragment{
             }
         }); //closing the setOnClickListener method
 
-
-
         name.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) { }
@@ -159,7 +160,6 @@ public class ProfilePageFragment extends Fragment{
             }
         });
     }
-
 
     public void changeProfilePicture(Uri uri){
         app.setProfilePicture(uri);
