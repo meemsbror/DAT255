@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorPrimaryTransparent">#CC3F51B5</color>
     <color name="colorAccent">#ff4081</color>
+    <color name="colorCameraBackround">#33312c</color>
 </resources>

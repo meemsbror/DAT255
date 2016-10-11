@@ -23,7 +23,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -77,13 +79,14 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView.addCallback(mCallback);
         mCameraView.setFlash(CameraView.FLASH_OFF); // please
 
-        Button takePicture = (Button) findViewById(R.id.snap);
+        ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mCameraView.takePicture();
             }
         });
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
