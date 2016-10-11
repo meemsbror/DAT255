@@ -108,6 +108,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_profile"
+        android:src="@drawable/ic_photo_library_black_24dp"
+        android:tint="#FFFFFF"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         app:layout_anchor="@id/profile_layout"
