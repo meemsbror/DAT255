@@ -1,6 +1,7 @@
 package gruppn.kasslr.game;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -203,6 +205,7 @@ class GameView extends SurfaceView implements Runnable {
 
 
         paint.setColor(Color.WHITE);
+        /*
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("FPS: " + fps, 20, 40, paint);
@@ -212,7 +215,7 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText("particles: " + particles.size(), 20, 200, paint);
         canvas.drawText(background.getStats(), 20, 240, paint);
         canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
-
+*/
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
         canvas.drawText(score+"", gameWidth-100, 100, paint);
@@ -484,6 +487,8 @@ class GameView extends SurfaceView implements Runnable {
                 if(target.isBenign()) {
                     score++;
                     completedWords.add(target.getVocabularyItem());
+                    Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(300);
                 }else
                     score -= 5;
                 iterator.remove();
