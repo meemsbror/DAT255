@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openAddVocabulary(View view) {
-        slideToFragment(new AddVocabularyFragment(), Direction.DOWN, true);
+        slideToFragment(new AddVocabularyWizardFragmentOne(), Direction.DOWN, true);
     }
 
     public void showFeed() {
