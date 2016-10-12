@@ -4,9 +4,12 @@ import com.google.android.cameraview.CameraView;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -78,7 +81,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView = (CameraView) findViewById(R.id.camera);
         mCameraView.addCallback(mCallback);
         mCameraView.setFlash(CameraView.FLASH_OFF); // please
-
+        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
         takePicture.setOnClickListener(new View.OnClickListener() {

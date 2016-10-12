@@ -1,17 +1,14 @@
-package gruppn.kasslr;
+package gruppn.kasslr.model;
 
 import android.net.Uri;
 import android.widget.Switch;
 
-/**
- * Created by admin on 2016-10-01.
- */
-
 public class ProfileInformation {
 
-    public int score = 0;
+    private int score = 0;
+    private User user;
     public String name = "Namn";
-    public String userId = "dassid";
+    private String userId = "dassid";
 
 
     public Uri profilePicture;

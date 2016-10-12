@@ -23,6 +23,7 @@ import com.roughike.bottombar.OnTabReselectListener;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import gruppn.kasslr.game.LaneGame;
+import gruppn.kasslr.model.ProfileInformation;
 import gruppn.kasslr.model.Vocabulary;
 
 

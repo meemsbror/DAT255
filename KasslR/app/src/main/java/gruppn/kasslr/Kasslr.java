@@ -26,7 +26,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +33,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import gruppn.kasslr.db.KasslrDatabase;
+import gruppn.kasslr.model.ProfileInformation;
 import gruppn.kasslr.model.Shelf;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;

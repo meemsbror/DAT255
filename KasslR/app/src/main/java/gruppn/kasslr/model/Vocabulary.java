@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Vocabulary {
+    private User user;
     private int id;
     private String owner;
     private String title;
