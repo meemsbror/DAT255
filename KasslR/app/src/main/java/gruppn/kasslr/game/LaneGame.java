@@ -103,7 +103,7 @@ class GameView extends SurfaceView implements Runnable {
     final int NUM_LANES = 3;
     final int BACKGROUND_COLOR = Color.parseColor("#000000");
 
-    private float frameRate = 80;
+    private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
     private double fps = 0;
 
@@ -126,6 +126,7 @@ class GameView extends SurfaceView implements Runnable {
     private float backgroundPosition = 0;
 
     private int tickCount = 0;
+    private float tickLength = 0;
 
     private Kasslr app;
     private LaneGame gameActivity;
@@ -154,6 +155,7 @@ class GameView extends SurfaceView implements Runnable {
 
             long endTime = System.currentTimeMillis();
             long deltaTime = (long) (frameTime - (endTime - startTime));
+            tickLength = (endTime - startTime)*1.0f / frameTime;
             fps = 1000.0 / (endTime - startTime)*1.0;
             try {
                 if(deltaTime < 0)
@@ -205,17 +207,17 @@ class GameView extends SurfaceView implements Runnable {
 
 
         paint.setColor(Color.WHITE);
-        /*
+
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("FPS: " + fps, 20, 40, paint);
-        canvas.drawText("trgt: " + playerTarget, 20, 80, paint);
+        canvas.drawText("trgt: " + playerTarget + " / tk: " + tickLength, 20, 80, paint);
         canvas.drawText("run: " + tickCount, 20, 120, paint);
         canvas.drawText("spd: " + getTargetSpeed(), 20, 160, paint);
         canvas.drawText("particles: " + particles.size(), 20, 200, paint);
         canvas.drawText(background.getStats(), 20, 240, paint);
         canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
-*/
+
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
         canvas.drawText(score+"", gameWidth-100, 100, paint);
@@ -321,9 +323,9 @@ class GameView extends SurfaceView implements Runnable {
         }
 
 
-        playerX += playerDeltaX;
+        playerX += playerDeltaX*tickLength;
 
-        playerY += playerDeltaY;
+        playerY += playerDeltaY*tickLength;
 
         playerDeltaY *= 0.995;
 
@@ -376,7 +378,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private void spawnStars(int y){
         Random rand = new Random();
-        if(rand.nextFloat() < 0.1) {
+        if(rand.nextFloat() < 0.08) {
             float x = rand.nextInt(gameWidth);
             int depth = rand.nextInt(3) + 1;
             float deltaY = depth*depth*getTargetSpeed()/30f;
@@ -487,10 +489,11 @@ class GameView extends SurfaceView implements Runnable {
                 if(target.isBenign()) {
                     score++;
                     completedWords.add(target.getVocabularyItem());
+                }else {
+                    score -= 5;
                     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
-                }else
-                    score -= 5;
+                }
                 iterator.remove();
                 continue;
             }
@@ -514,8 +517,8 @@ class GameView extends SurfaceView implements Runnable {
         gameFinished = System.currentTimeMillis();
     }
 
-    private int getTargetSpeed(){
-        return (int)(4 + Math.sqrt(tickCount*0.4)* 0.3);
+    private float getTargetSpeed(){
+        return 4f*tickLength;
     }
 
     public void pause() {
