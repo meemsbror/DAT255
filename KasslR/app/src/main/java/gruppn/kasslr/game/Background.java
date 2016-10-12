@@ -42,7 +42,7 @@ public class Background {
 
         colors = new int[]{Color.parseColor("#150024"), Color.parseColor("#2F004F"), Color.parseColor("#780096")};
 
-        for(int i=80;i>=0;i--){
+        for(int i=90;i>=-80;i--){
             generateChunk(i);
         }
     }

@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +32,7 @@ import java.util.Random;
 import java.util.Set;
 
 import gruppn.kasslr.Kasslr;
+import gruppn.kasslr.R;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
@@ -83,6 +86,7 @@ public class LaneGame extends Activity {
     @Override
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
+        view.sendTouchEvent(event);
         return super.onTouchEvent(event);
     }
 
@@ -131,6 +135,10 @@ class GameView extends SurfaceView implements Runnable {
     private Kasslr app;
     private LaneGame gameActivity;
 
+    Bitmap swipeInstruction;
+    private boolean tutorialSkipped = false;
+    private HashMap<VocabularyItem, Bitmap> itemImageMap;
+
     public GameView(LaneGame gameActivity, Vocabulary vocabulary) {
         super(gameActivity);
         ourHolder = getHolder();
@@ -139,6 +147,9 @@ class GameView extends SurfaceView implements Runnable {
         this.gameActivity = gameActivity;
         app = (Kasslr) gameActivity.getApplication();
         this.vocabulary = vocabulary;
+
+        swipeInstruction = BitmapFactory.decodeResource(getResources(), R.drawable.swipe);
+        loadImages(vocabulary);
     }
 
     @Override
@@ -164,6 +175,43 @@ class GameView extends SurfaceView implements Runnable {
             } catch (InterruptedException e) {
             }
         }
+    }
+
+    private void loadImages(Vocabulary vocabulary){
+        itemImageMap = new HashMap<VocabularyItem, Bitmap>();
+        for(VocabularyItem item : vocabulary.getItems()){
+            itemImageMap.put(item, loadImage(item));
+        }
+    }
+
+    private Bitmap loadImage(VocabularyItem item){
+
+        InputStream is = null;
+        try {
+            if (item.getImageName().startsWith("http")) {
+                is = new URL(item.getImageName()).openStream();
+            } else {
+                is = new FileInputStream(app.getImageFile(item));
+            }
+
+            return BitmapFactory.decodeStream(is);
+        } catch (IOException e) {
+            Log.e(DEBUG_TAG, "Failed to load image", e);
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private Bitmap getItemImage(VocabularyItem item) {
+        return itemImageMap.get(item);
     }
 
     private void updateGameDimensions(){
@@ -222,9 +270,30 @@ class GameView extends SurfaceView implements Runnable {
         paint.setTextSize(80);
         canvas.drawText(score+"", gameWidth-100, 100, paint);
 
-        drawFinishScreen();
+        drawOverlay();
 
         ourHolder.unlockCanvasAndPost(canvas);
+    }
+
+    private void drawOverlay() {
+        if(gameFinished > 0){
+            drawFinishScreen();
+            return;
+        }
+
+        if(tutorialIsOpen()) {
+            Paint alphaPaint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setAlpha(100);
+            if(tickCount > 80) {
+                int alpha = 255 - (int) (((tickCount - 80) / 20.0) * 255);
+                alphaPaint.setAlpha(alpha);
+            }
+            canvas.drawRect(0, 0, gameWidth, gameHeight, paint);
+            float scaleFactor = gameWidth/swipeInstruction.getWidth();
+            canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2, gameWidth, gameHeight / 2 + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
+            paint.setAlpha(255);
+        }
     }
 
     private void drawFinishScreen() {
@@ -400,6 +469,8 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnTargets(){
+        if(tutorialIsOpen())
+            return;
         if(liveTargets.size() > 0)
             return;
 
@@ -412,35 +483,15 @@ class GameView extends SurfaceView implements Runnable {
             return;
         }
 
-        InputStream is = null;
-        try {
-            if (theItemWeWant.getImageName().startsWith("http")) {
-                is = new URL(theItemWeWant.getImageName()).openStream();
-            } else {
-                is = new FileInputStream(app.getImageFile(theItemWeWant));
-            }
-            
-            Bitmap bitmap = BitmapFactory.decodeStream(is);
-            targetImage = new TargetImage(bitmap, frameRate, gameWidth, gameHeight);
-        } catch (IOException e) {
-            Log.e(DEBUG_TAG, "Failed to load image", e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
-        }
-
+        targetImage = new TargetImage(getItemImage(theItemWeWant), frameRate, gameWidth, gameHeight);
+        
         int benignTargetNum = rand.nextInt(NUM_LANES);
 
         ArrayList<VocabularyItem> spawnedItems = new ArrayList<VocabularyItem>();
 
         for(int i=0; i < NUM_LANES; i++){
             int x = laneToX(i-1);
-            int y = -rand.nextInt(gameHeight/3);
+            int y = -rand.nextInt(gameHeight/4) - gameHeight/4;
             VocabularyItem item = getRandomVocabularyItem(theItemWeWant, spawnedItems);
             if(benignTargetNum == i)
                 item = theItemWeWant;
@@ -449,6 +500,10 @@ class GameView extends SurfaceView implements Runnable {
             Target target = new Target(x, y, benignTargetNum == i, item);
             liveTargets.add(target);
         }
+    }
+
+    private boolean tutorialIsOpen() {
+        return (!tutorialSkipped && tickCount < 100);
     }
 
     private VocabularyItem getUnusedVocabularyItem(){
@@ -537,4 +592,8 @@ class GameView extends SurfaceView implements Runnable {
         gameThread.start();
     }
 
+    public void sendTouchEvent(MotionEvent event) {
+        if(tutorialIsOpen())
+            tutorialSkipped = true;
+    }
 }
