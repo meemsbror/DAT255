@@ -21,6 +21,10 @@ public class ProfileInformation {
         return userId;
     }
 
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
+
     public enum CompletedAction{
         COMPLETE_VOCABULARY, CREATE_VOCABULARY, ACHIEVEMENT
     }

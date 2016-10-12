@@ -103,6 +103,8 @@ public class Kasslr extends Application {
 
         System.out.println("logged in with user id " + newId);
 
+        profileInformation.setUserId(newId);
+
     }
 
     private void requestNewUser(Context context) {
@@ -195,8 +197,10 @@ public class Kasslr extends Application {
                     .addParameter("user", user)
                     .addParameter("vocabularyId", String.valueOf(vocabularyId))
                     .setNotificationConfig(new UploadNotificationConfig())
-                    .setMaxRetries(2)
+                    .setMaxRetries(3)
                     .startUpload(); //Starting the upload
+
+            System.out.println("uploaded dat picture");
 
         } catch (Exception exc) {
             System.out.println(exc.toString());
@@ -207,7 +211,7 @@ public class Kasslr extends Application {
         for(VocabularyItem item : vocabulary.getItems()){
             String imagePath = getImageFile(item).getPath();
             String word = item.getName();
-            uploadMultipart(imagePath, word, getUserId(), vocabulary.getUniversalId());
+            uploadMultipart(imagePath, word, profileInformation.getUserId(), vocabulary.getUniversalId());
         }
     }
 
@@ -283,7 +287,7 @@ public class Kasslr extends Application {
     }
 
     public String getUserId() {
-        return getString(R.string.key_user_id);
+        return profileInformation.getUserId();
     }
     public String getUserName() {
         return profileInformation.getName();
