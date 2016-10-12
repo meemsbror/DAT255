@@ -3,20 +3,19 @@ package gruppn.kasslr.model;
 
 public class User {
 
-    private int ID;
-    private String name, profilePicURL;
+    private String id, name, profilePicURL;
 
     public User(String name){
         this.name = name;
     }
 
-    public User(String name, int ID){
+    public User(String name, String id){
         this(name);
-        this.ID = ID;
+        this.id = id;
     }
 
-    public User(String name,int ID, String profilePicURL){
-        this(name,ID);
+    public User(String name, String id, String profilePicURL){
+        this(name, id);
         this.profilePicURL = profilePicURL;
     }
 
@@ -29,8 +28,8 @@ public class User {
         this.name = name;
     }
 
-    public int getID(){
-        return this.ID;
+    public String getId(){
+        return this.id;
     }
 
     public void setProfilePic(String profilePicURL){

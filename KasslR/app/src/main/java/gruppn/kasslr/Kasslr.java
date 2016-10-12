@@ -35,6 +35,7 @@ import java.util.UUID;
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.ProfileInformation;
 import gruppn.kasslr.model.Shelf;
+import gruppn.kasslr.model.User;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
@@ -261,7 +262,10 @@ public class Kasslr extends Application {
 
         for (int i = 0 ; i < feed.length(); i++) {
             JSONObject obj = feed.getJSONObject(i);
-            String owner = obj.getString("owner");
+
+            JSONObject ownerObj = obj.getJSONObject("owner");
+            User owner = new User(ownerObj.getString("name"), ownerObj.getString("id"), ownerObj.getString("image"));
+
             String title = obj.getString("title");
             int universalId = obj.getInt("id");
             Vocabulary voc = new Vocabulary(owner, title);

@@ -173,15 +173,18 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     }
 
     private void setOwner(VocabularyFeedViewHolder holder, Vocabulary v){
-        /*
+
         final ImageView img = holder.getImageView(4);
-        final File imageFile = app.getImageFile(v.getOwner.getProfilePicture);
-        img.post(new Runnable){
+        final String image = v.getOwner().getProfilePic();
+        img.post(new Runnable() {
             @Override
             public void run(){
-            Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img)
-        */
-        holder.owner.setText(v.getOwner());
+                Picasso.with(mContext).load(image).centerCrop().fit().into(img);
+
+            }
+        });
+
+        holder.owner.setText(v.getOwner().getName());
     }
 
     /* TODO

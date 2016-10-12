@@ -52,12 +52,8 @@ public class Vocabulary {
         this.universalId = universalId;
     }
 
-    public String getOwner() {
-        return user.getName();
-    }
-
-    public void setOwner(String owner) {
-        user.setName(owner.trim());
+    public User getOwner() {
+        return user;
     }
 
     public String getTitle() {

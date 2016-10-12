@@ -230,7 +230,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
     }
 
     public void save(Vocabulary vocabulary) throws SQLiteException {
-        if (vocabulary.getOwner().isEmpty()) {
+        if (vocabulary.getOwner() == null) {
             throw new IllegalArgumentException("A vocabulary must have an owner");
         }
         if (vocabulary.getTitle().isEmpty()) {
