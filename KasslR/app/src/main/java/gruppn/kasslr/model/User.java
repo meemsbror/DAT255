@@ -3,14 +3,20 @@ package gruppn.kasslr.model;
 
 public class User {
 
-    private final int ID;
+    private int ID;
     private String name, profilePicURL;
 
-    
+    public User(String name){
+        this.name = name;
+    }
+
+    public User(String name, int ID){
+        this(name);
+        this.ID = ID;
+    }
 
     public User(String name,int ID, String profilePicURL){
-        this.name = name;
-        this.ID = ID;
+        this(name,ID);
         this.profilePicURL = profilePicURL;
     }
 

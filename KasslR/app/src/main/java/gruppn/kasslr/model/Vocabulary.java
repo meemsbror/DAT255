@@ -9,19 +9,29 @@ import java.util.List;
 public class Vocabulary {
     private User user;
     private int id;
-    private String owner;
     private String title;
     private List<VocabularyItem> items;
     private int universalId = 0;
 
+    public Vocabulary(User user, String title){
+        this.user = user;
+        this.title = title;
+    }
+
     public Vocabulary(String owner, String title) {
-        this.owner = owner;
+        user = new User(owner);
         this.title = title;
         items = new ArrayList<>();
     }
 
     public Vocabulary(String owner, String title, int id, int universalId) {
         this(owner, title);
+        this.id = id;
+        this.universalId = universalId;
+    }
+
+    public Vocabulary(User user, String title, int id, int universalId){
+        this(user,title);
         this.id = id;
         this.universalId = universalId;
     }
@@ -43,11 +53,11 @@ public class Vocabulary {
     }
 
     public String getOwner() {
-        return owner;
+        return user.getName();
     }
 
     public void setOwner(String owner) {
-        this.owner = owner.trim();
+        user.setName(owner.trim());
     }
 
     public String getTitle() {
@@ -77,7 +87,7 @@ public class Vocabulary {
     @Override
     public String toString() {
         return "Vocabulary{" +
-                "owner='" + owner + '\'' +
+                "owner='" + user.getName() + '\'' +
                 ", title='" + title + '\'' +
                 ", items=" + items +
                 '}';
