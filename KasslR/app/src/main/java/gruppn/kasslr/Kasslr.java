@@ -3,8 +3,10 @@ package gruppn.kasslr;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
@@ -30,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.ProfileInformation;
 import gruppn.kasslr.model.Shelf;
 import gruppn.kasslr.model.User;
@@ -51,7 +54,7 @@ public class Kasslr extends Application {
     private ProfileInformation profileInformation = new ProfileInformation();
     private Bitmap sharedBitmap;
     private Vocabulary activeVocabulary;
-    private List<Vocabulary> onlineShelf = new ArrayList();
+    private Shelf webShelf = new Shelf();
 
     @Override
     public void onCreate() {
@@ -230,8 +233,8 @@ public class Kasslr extends Application {
                             va.addVocabularies(parseFeedJson(response.getJSONArray("feed")));
 
                             for (Vocabulary vocabulary : parseFeedJson(response.getJSONArray("feed"))) {
-                                if (!onlineShelf.equals(vocabulary)){
-                                    onlineShelf.add(vocabulary);
+                                if (webShelf.getVocabularies().isEmpty() || !webShelf.getVocabularies().contains(vocabulary)){
+                                    webShelf.addVocabulary(vocabulary);
                                 }
 
                             }
@@ -345,7 +348,83 @@ public class Kasslr extends Application {
         sharedBitmap = bitmap;
     }
 
-    public List<Vocabulary> getOnlineShelf(){
-        return onlineShelf;
+    private class LoadShelfTask extends AsyncTask<Shelf, Void, ShelfResult> {
+        @Override
+        protected ShelfResult doInBackground(Shelf... shelfs) {
+            if (shelfs.length == 0) {
+                throw new IllegalArgumentException();
+            }
+
+            ShelfResult result = new ShelfResult();
+            result.shelf = shelfs[0];
+            result.items = new ArrayList<>();
+
+            KasslrDatabase db = null;
+            try {
+                db = new KasslrDatabase(getApplicationContext());
+                result.items.addAll(db.getItems());
+                result.vocabularies = db.getVocabularies(result.items);
+            } catch (SQLiteException | NullPointerException e) {
+                Log.e(DEBUG_TAG, "Failed to load shelf", e);
+            } finally {
+                if (db != null) {
+                    db.close();
+                }
+            }
+
+            addItemsWithoutNames(result.items);
+
+            return result;
+        }
+
+        private void addItemsWithoutNames(List<VocabularyItem> items) {
+            List<VocabularyItem> itemsWithoutName = new ArrayList<>();
+
+            for (File file : getImageFiles()) {
+                String imageName = file.getName();
+                imageName = imageName.substring(0, imageName.indexOf(".jpg"));
+
+                if (!imageNameExists(items, imageName)) {
+                    itemsWithoutName.add(new VocabularyItem("", imageName));
+                }
+            }
+
+            items.addAll(itemsWithoutName);
+        }
+
+        private boolean imageNameExists(List<VocabularyItem> items, String name) {
+            boolean exists = false;
+            for (VocabularyItem item : items) {
+                if (name.equals(item.getImageName())) {
+                    exists = true;
+                    break;
+                }
+            }
+            return exists;
+        }
+
+        @Override
+        protected void onPostExecute(ShelfResult result) {
+            if (result.items != null) {
+                Log.d(DEBUG_TAG, "Loaded " + result.items.size() + " items into shelf");
+                result.shelf.getItems().clear();
+                result.shelf.addItems(result.items);
+            }
+            if (result.vocabularies != null) {
+                Log.d(DEBUG_TAG, "Loaded " + result.vocabularies.size() + " vocabularies into shelf");
+                result.shelf.getVocabularies().clear();
+                result.shelf.addVocabularies(result.vocabularies);
+            }
+        }
+    }
+
+    private class ShelfResult {
+        private Shelf shelf;
+        private List<VocabularyItem> items;
+        private List<Vocabulary> vocabularies;
+    }
+
+    public Shelf getWebShelf(){
+        return webShelf;
     }
 }

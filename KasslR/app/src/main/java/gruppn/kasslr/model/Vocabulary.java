@@ -12,6 +12,7 @@ public class Vocabulary {
     private String title;
     private List<VocabularyItem> items;
     private int universalId = 0;
+    private boolean favourite = false;
 
     public Vocabulary(User user, String title){
         this.user = user;
@@ -78,6 +79,14 @@ public class Vocabulary {
             vocabulary.put(item.toJSON());
         }
         return vocabulary;
+    }
+
+    public boolean isFavourite(){
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     @Override

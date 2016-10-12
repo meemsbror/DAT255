@@ -70,18 +70,74 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     }
 
 
-    private boolean searchAdapter = false;
+    private String adapterSwitch = "";
 
+<<<<<<< HEAD
     public void setSearchAdapter(boolean a) {
         searchAdapter = a;
+=======
+    public void setAdapterSwitch(String adapterSwitch){
+        this.adapterSwitch = adapterSwitch;
+>>>>>>> start of favourit fragment
     }
 
     @Override
     public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position) {
         final boolean isExpanded = position == mExpandedPosition;
+<<<<<<< HEAD
         final int view;
         if (searchAdapter) {
             view = R.id.recyclerViewFeed_search;
+=======
+        holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
+        holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
+        holder.cardView.setActivated(isExpanded);
+        if (adapterSwitch.equals("SEARCH")) {
+
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                @Override
+                public void onClick(View v) {
+                    /*
+                    mExpandedPosition = isExpanded ? -1 : position;
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
+                    notifyDataSetChanged();
+                    */
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(R.id.recyclerViewFeed_search));
+                    }
+                    notifyItemChanged(position);
+                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                        notifyItemChanged(mExpandedPosition);
+                    }
+                    mExpandedPosition = isExpanded ? -1 : position;
+                }
+            });
+        } else if (adapterSwitch.equals("FAVOURITE")) {
+
+                holder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onClick(View v) {
+                    /*
+                    mExpandedPosition = isExpanded ? -1 : position;
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
+                    notifyDataSetChanged();
+                    */
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_favourite));
+                        }
+                        notifyItemChanged(position);
+                        if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                            notifyItemChanged(mExpandedPosition);
+                        }
+                        mExpandedPosition = isExpanded ? -1 : position;
+                    }
+                });
+
+
+>>>>>>> start of favourit fragment
         } else {
             view = R.id.recycler_view_feed;
         }

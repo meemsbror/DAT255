@@ -43,8 +43,9 @@ public class SearchFragment extends Fragment {
 
         recyclerViewFeed_search = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_search);
         searchView_search = (SearchView) getView().findViewById(R.id.searchView_search);
+
         va = new VocabularyFeedAdapter(getActivity(), vocabularyList);
-        va.setSearchAdapter(true);
+        va.setAdapterSwitch("SEARCH");
         recyclerViewFeed_search.setAdapter(va);
 
 
@@ -86,7 +87,7 @@ public class SearchFragment extends Fragment {
 
         if (!string.isEmpty()) {
 
-            for (Vocabulary vocabulary : app.getOnlineShelf()) {
+            for (Vocabulary vocabulary : app.getWebShelf().getVocabularies()) {
 
                 if (!vocabularyList.contains(vocabulary)) {
 

@@ -23,10 +23,13 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     protected CardView cardView;
     protected ImageView fakePlayButton;
     protected ImageView realPlayButton;
-    protected ImageView favoriteButton;
     protected ImageView thumbsDownButton;
+<<<<<<< HEAD
     protected ImageView closeButton;
     protected LinearLayout playContainer;
+=======
+    protected ImageView favouriteButton;
+>>>>>>> start of favourit fragment
 
 
     public VocabularyFeedViewHolder(View v){
@@ -41,11 +44,14 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
         detailed = (LinearLayout) v.findViewById(R.id.expand_area);
         cardView = (CardView) v.findViewById(R.id.card_view_feed);
-        favoriteButton = (ImageView)  v.findViewById(R.id.favorite_button);
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
+<<<<<<< HEAD
         closeButton = (ImageView) v.findViewById(R.id.close_button);
+=======
+        favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
+>>>>>>> start of favourit fragment
 
         realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
@@ -53,6 +59,20 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
                 if(baseContext instanceof MainActivity) {
                     MainActivity mainActivity = (MainActivity) baseContext;
                     mainActivity.changeToGame(v, vocabulary);
+                }
+            }
+        });
+
+        favouriteButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                System.out.println("du klickar på fav");
+                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
+                if (vocabulary.isFavourite()){
+                    System.out.println("den va fav-markerad");
+                    vocabulary.setFavourite(false);
+                } else {
+                    System.out.println("den va iten fav-markerad");
+                    vocabulary.setFavourite(true);
                 }
             }
         });
