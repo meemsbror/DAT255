@@ -121,7 +121,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         try {
             db = getReadableDatabase();
 
-            cVoc = db.rawQuery("SELECT id, name, owner, universal_id FROM vocabularies", null);
+            cVoc = db.rawQuery("SELECT id, name, owner, universal_id FROM vocabularies ORDER BY id DESC", null);
             while (cVoc.moveToNext()) {
                 Vocabulary vocabulary = new Vocabulary(cVoc.getString(2), cVoc.getString(1), cVoc.getInt(0), cVoc.getInt(3));
 

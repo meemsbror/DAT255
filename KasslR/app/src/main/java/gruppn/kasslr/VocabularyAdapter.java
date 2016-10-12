@@ -92,9 +92,6 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyViewHolder
     }
 
     private void updateView(VocabularyViewHolder holder, int position){
-
-        position = (vocabularies.size() - 1) - position;
-
         Vocabulary v = vocabularies.get(position);
         List<VocabularyItem> items = v.getItems();
         setPictures(holder, items);

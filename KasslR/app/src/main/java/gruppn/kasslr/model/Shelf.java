@@ -33,11 +33,11 @@ public class Shelf {
     }
 
     public void addVocabulary(Vocabulary voc){
-        vocabularies.add(voc);
+        vocabularies.add(0, voc);
     }
 
     public void addVocabularies(List<Vocabulary> vocabularies) {
-        this.vocabularies.addAll(vocabularies);
+        this.vocabularies.addAll(0, vocabularies);
     }
 
     @Override
