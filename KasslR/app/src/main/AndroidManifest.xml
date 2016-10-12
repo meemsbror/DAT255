@@ -41,7 +41,8 @@
             android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".EditItemActivity"
             android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"/>
+            android:configChanges="orientation|keyboardHidden"
+            android:windowSoftInputMode="adjustResize|stateAlwaysVisible" />
         <activity android:name=".game.LaneGame"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>

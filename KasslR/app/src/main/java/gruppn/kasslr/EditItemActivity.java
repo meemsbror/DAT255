@@ -1,21 +1,29 @@
 package gruppn.kasslr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import gruppn.kasslr.db.KasslrDatabase;
+import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
 public class EditItemActivity extends AppCompatActivity {
@@ -23,6 +31,9 @@ public class EditItemActivity extends AppCompatActivity {
     public static final String EXTRA_ITEM_INDEX = "item_index";
     public static final String EXTRA_EXIT_TRANSITION = "exit_transition";
     public static final String RESULT_ITEM_INDEX = "item_index";
+    public static final String RESULT_ACTION = "action";
+    public static final int ACTION_EDIT = 1;
+    public static final int ACTION_REMOVE = 2;
 
     private static final String DEBUG_TAG = "EditItemActivity";
 
@@ -30,7 +41,27 @@ public class EditItemActivity extends AppCompatActivity {
     private VocabularyItem item;
     private boolean exitTransition;
 
-    private TextView txtWord;
+    private EditText txtWord;
+
+    private InputMethodManager imm;
+
+    private RelativeLayout layout;
+    // Ugly solution since there is no "keyboard closed" listener
+    private ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        int previousHeight = Integer.MAX_VALUE;
+
+        @Override
+        public void onGlobalLayout() {
+            int height = layout.getHeight();
+
+            if (height > previousHeight) {
+                // Keyboard was probably closed; close activity
+                close();
+            }
+
+            previousHeight = height;
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,12 +69,17 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
         app = (Kasslr) getApplication();
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        txtWord = (TextView) findViewById(R.id.txtWord);
+        layout = (RelativeLayout) findViewById(R.id.edit_item_layout);
+        layout.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
+
+        txtWord = (EditText) findViewById(R.id.txtWord);
         ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
 
         Uri image = (Uri) getIntent().getExtras().get(EXTRA_IMAGE_URI);
         int itemIndex = getIntent().getExtras().getInt(EXTRA_ITEM_INDEX, -1);
+        exitTransition = getIntent().getExtras().getBoolean(EXTRA_EXIT_TRANSITION, true);
 
         if (image != null) {
             // Create item from image
@@ -63,7 +99,10 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView textView, int action, KeyEvent keyEvent) {
                 if (action == EditorInfo.IME_ACTION_DONE) {
-                    saveItem(textView);
+                    saveItem();
+
+                    // Hide keyboard
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     return true;
                 }
                 return false;
@@ -71,7 +110,7 @@ public class EditItemActivity extends AppCompatActivity {
         });
 
         // Set item name
-        txtWord.setText(item.getName());
+        txtWord.append(item.getName());
 
         // Set item image
         Bitmap bitmap = app.getSharedBitmap();
@@ -79,8 +118,14 @@ public class EditItemActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
         }
         imgWord.setImageBitmap(Bitmap.createScaledBitmap(bitmap, getImageWidth(), getImageHeight(), false));
+    }
 
-        exitTransition = getIntent().getExtras().getBoolean(EXTRA_EXIT_TRANSITION, true);
+    @Override
+    protected void onDestroy() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            layout.getViewTreeObserver().removeOnGlobalLayoutListener(layoutListener);
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -96,25 +141,60 @@ public class EditItemActivity extends AppCompatActivity {
         }
     }
 
-    public void saveItem(View view) {
-        item.setName(txtWord.getText().toString().trim());
-        new SaveItemsTask().execute(item);
+    public void removeItem(View view) {
+        if (item.getId() != 0 && existsInVocabulary(item)) {
+            // Item already exists in a vocabulary; can't remove
+            Toast.makeText(this, getString(R.string.error_remove_item_in_vocabulary), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        new RemoveItemTask().execute(item);
+
+        int index = app.getShelf().getItems().indexOf(item);
+        app.getShelf().removeItem(item);
 
         Intent result = new Intent();
-        result.putExtra(RESULT_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
+        result.putExtra(RESULT_ITEM_INDEX, index);
+        result.putExtra(RESULT_ACTION, ACTION_REMOVE);
         setResult(RESULT_OK, result);
         close();
     }
 
+    public void saveItem() {
+        String name = txtWord.getText().toString().trim();
+        if (name.isEmpty() && item.getId() != 0 && existsInVocabulary(item)) {
+            // Item already exists in a vocabulary; can't remove name
+            Toast.makeText(this, getString(R.string.error_empty_item_name), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        item.setName(name);
+        new SaveItemTask().execute(item);
+
+        Intent result = new Intent();
+        result.putExtra(RESULT_ITEM_INDEX, app.getShelf().getItems().indexOf(item));
+        result.putExtra(RESULT_ACTION, ACTION_EDIT);
+        setResult(RESULT_OK, result);
+    }
+
+    private boolean existsInVocabulary(VocabularyItem theItem) {
+        for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {
+            if (vocabulary.getItems().contains(theItem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private int getImageWidth() {
         return getResources().getDisplayMetrics().widthPixels * 3 / 4;
-}
+    }
 
     private int getImageHeight() {
         return getResources().getDisplayMetrics().widthPixels;
     }
 
-    private class SaveItemsTask extends AsyncTask<VocabularyItem, Void, Void> {
+    private class SaveItemTask extends AsyncTask<VocabularyItem, Void, Void> {
         @Override
         protected Void doInBackground(VocabularyItem... items) {
             KasslrDatabase db = null;
@@ -135,6 +215,37 @@ public class EditItemActivity extends AppCompatActivity {
                 if (db != null) {
                     db.close();
                 }
+            }
+
+            return null;
+        }
+    }
+
+    private class RemoveItemTask extends AsyncTask<VocabularyItem, Void, Void> {
+        @Override
+        protected Void doInBackground(VocabularyItem... items) {
+            // Remove database entries
+            KasslrDatabase db = null;
+            try {
+                db = new KasslrDatabase(getApplicationContext());
+
+                for (VocabularyItem item : items) {
+                    if (item.getId() != 0) {
+                        db.remove(item);
+                    }
+                }
+                Log.d(DEBUG_TAG, "Successfully removed " + items.length + " item(s)");
+            } catch (SQLiteException e) {
+                Log.e(DEBUG_TAG, "Failed to remove item(s)", e);
+            } finally {
+                if (db != null) {
+                    db.close();
+                }
+            }
+
+            // Remove image files
+            for (VocabularyItem item : items) {
+                app.getImageFile(item).delete();
             }
 
             return null;

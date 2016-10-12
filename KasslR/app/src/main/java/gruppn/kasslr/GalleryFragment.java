@@ -101,11 +101,18 @@ public class GalleryFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_EDIT_ITEM && resultCode == Activity.RESULT_OK) {
             int index = data.getIntExtra(EditItemActivity.RESULT_ITEM_INDEX, -1);
+            int action = data.getIntExtra(EditItemActivity.RESULT_ACTION, EditItemActivity.ACTION_EDIT);
 
             if (index >= 0 && index < itemCount) {
                 // Get item
                 VocabularyItem item = app.getShelf().getItems().get(index);
-                adapter.notifyItemChanged(item);
+
+                int position = adapter.getPosition(item);
+                if (action == EditItemActivity.ACTION_REMOVE) {
+                    adapter.notifyItemRemoved(position);
+                } else {
+                    adapter.notifyItemChanged(position);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -153,15 +160,8 @@ public class GalleryFragment extends Fragment {
             return mItems.size();
         }
 
-        public VocabularyItem getItem(int position) {
-            return mItems.get(position);
-        }
-
-        public void notifyItemChanged(VocabularyItem item) {
-            int position = mItems.indexOf(item);
-            if (position >= 0 && position < mItems.size()) {
-                notifyItemChanged(position);
-            }
+        public int getPosition(VocabularyItem item) {
+            return mItems.indexOf(item);
         }
     }
 

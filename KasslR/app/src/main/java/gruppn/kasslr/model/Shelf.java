@@ -24,6 +24,10 @@ public class Shelf {
         this.items.addAll(items);
     }
 
+    public void removeItem(VocabularyItem item) {
+        items.remove(item);
+    }
+
     public List<Vocabulary> getVocabularies() {
         return vocabularies;
     }
