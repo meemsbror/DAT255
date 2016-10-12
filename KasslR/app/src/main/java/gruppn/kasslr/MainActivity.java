@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.StrictMode;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
@@ -71,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         requestCameraPermission();
         initiateBottomBar();
+
+        // we need this for image loading apparently
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
     }
 
     @Override
