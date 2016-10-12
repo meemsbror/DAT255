@@ -52,7 +52,7 @@ public class ProfilePageFragment extends Fragment{
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
-    public final int PICK_IMAGE = 1;
+    public final int PICK_IMAGE = 5;
 
 
     @Override
