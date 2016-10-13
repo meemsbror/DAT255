@@ -197,7 +197,12 @@ class GameView extends SurfaceView implements Runnable {
                 is = new FileInputStream(app.getImageFile(item));
             }
 
-            return BitmapFactory.decodeStream(is);
+            Bitmap bitmap = BitmapFactory.decodeStream(is);
+            if (bitmap.getWidth() > 720) {
+                return Bitmap.createScaledBitmap(bitmap, 720, 960, false);
+            } else {
+                return bitmap;
+            }
         } catch (IOException e) {
             Log.e(DEBUG_TAG, "Failed to load image", e);
         } finally {
