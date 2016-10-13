@@ -71,15 +71,15 @@ public class EditItemActivity extends AppCompatActivity {
         app = (Kasslr) getApplication();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        layout = (RelativeLayout) findViewById(R.id.edit_item_layout);
-        layout.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
-
         txtWord = (EditText) findViewById(R.id.txtWord);
         ImageView imgWord = (ImageView) findViewById(R.id.imgWord);
 
         Uri image = (Uri) getIntent().getExtras().get(EXTRA_IMAGE_URI);
         int itemIndex = getIntent().getExtras().getInt(EXTRA_ITEM_INDEX, -1);
         exitTransition = getIntent().getExtras().getBoolean(EXTRA_EXIT_TRANSITION, true);
+
+        layout = (RelativeLayout) findViewById(R.id.edit_item_layout);
+        layout.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
         if (image != null) {
             // Create item from image
