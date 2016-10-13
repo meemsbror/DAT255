@@ -61,9 +61,7 @@
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:inputType="textPersonName"
-                android:cursorVisible="false"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:background="@android:color/transparent"
                 android:imeOptions="actionDone"
                 app:layout_collapseMode="parallax"/>
