@@ -68,7 +68,7 @@ public class AddVocabularyWizardFragmentOne extends Fragment {
         fragobj.setArguments(bundle);
 
         MainActivity Mac = (MainActivity)getActivity();
-        Mac.slideToFragment(fragobj, MainActivity.Direction.LEFT, Boolean.TRUE);
+        Mac.slideToFragment(fragobj, MainActivity.Direction.LEFT, true);
     }
 
 

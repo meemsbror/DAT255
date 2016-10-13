@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -68,10 +69,7 @@ public class AddVocabularyWizardFragmentTwo extends Fragment {
     }
 
     private void openPreviousPage() {
-        AddVocabularyWizardFragmentOne fragobj = new AddVocabularyWizardFragmentOne();
-
-        MainActivity Mac = (MainActivity)getActivity();
-        Mac.slideToFragment(fragobj, MainActivity.Direction.RIGHT, Boolean.FALSE);
+        getActivity().getSupportFragmentManager().popBackStack();
     }
 
     private void createVocabulary() {
@@ -97,7 +95,8 @@ public class AddVocabularyWizardFragmentTwo extends Fragment {
 
         new SaveVocabulariesTask().execute(vocabulary);
 
-        getActivity().getSupportFragmentManager().popBackStack();
+        // Clear entire backstack
+        getActivity().getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     private class SaveVocabulariesTask extends AsyncTask<Vocabulary, Void, Void> {

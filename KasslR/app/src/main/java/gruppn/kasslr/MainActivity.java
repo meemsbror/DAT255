@@ -8,6 +8,7 @@ import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -121,14 +122,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, fragment).commit();
     }
 
-    public void slideToFragment(Fragment fragment, Direction direction, boolean backStack) {
-        getSupportFragmentManager().popBackStack();
-
+    public void slideToFragment(Fragment fragment, Direction direction, boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         Direction opposite = direction.getOpposite();
         transaction.setCustomAnimations(direction.getEnter(), direction.getExit(), opposite.getEnter(), opposite.getExit());
         transaction.replace(R.id.main_frame, fragment);
-        if (backStack) {
+        if (addToBackStack) {
             transaction.addToBackStack(null);
         }
         transaction.commit();
@@ -190,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
+                // Clear entire backstack
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
                 int previous = selectedTab;
                 if (tabId != R.id.tab_camera) {
                     selectedTab = tabId;
@@ -227,7 +229,8 @@ public class MainActivity extends AppCompatActivity {
         bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
             @Override
             public void onTabReSelected(@IdRes int tabId) {
-                getSupportFragmentManager().popBackStack();
+                // Clear entire backstack
+                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         });
         for (int i = 0; i < bottomBar.getTabCount(); i++) {
