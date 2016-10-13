@@ -83,8 +83,8 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyViewHolder
         holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-                app.getShelf().addVocabulary(vocabularies.get(position));
+                // TODO remove vocabulary
+                //app.getShelf().addVocabulary(vocabularies.get(position));
             }
         });
 
@@ -107,7 +107,7 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyViewHolder
 
         for(int i = 0; i < maxImages; i++) {
             final ImageView img = holder.getImageView(i+1);
-            if(items.get(i).isMine()) {
+            if(!items.get(i).getImageName().startsWith("http")) {
                 final File imageFile = app.getImageFile(items.get(i));
                 Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
             }else{

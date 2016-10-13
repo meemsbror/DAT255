@@ -25,6 +25,7 @@ import java.util.List;
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
+import gruppn.kasslr.task.DownloadVocabularyTask;
 
 public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedViewHolder>{
 
@@ -139,7 +140,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                app.getShelf().addVocabulary(vocabularies.get(position));
+                new DownloadVocabularyTask(app).execute(vocabularies.get(position));
             }
         });
 
@@ -162,7 +163,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
         for(int i = 0; i < maxImages; i++) {
             final ImageView img = holder.getImageView(i+1);
-            if(items.get(i).isMine()) {
+            if(!items.get(i).getImageName().startsWith("http")) {
                 final File imageFile = app.getImageFile(items.get(i));
                 Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
             }else{

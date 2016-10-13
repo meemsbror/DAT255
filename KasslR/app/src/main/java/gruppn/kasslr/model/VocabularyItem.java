@@ -77,6 +77,7 @@ public class VocabularyItem {
         return "VocabularyItem{"
                 + "name=" + name
                 + ",image=" + image
+                + ",mine=" + mine
                 + "}";
     }
 }
