@@ -140,6 +140,7 @@ class GameView extends SurfaceView implements Runnable {
     private boolean isBeingTouched = false;
     private int touchingTime = 0;
     private HashMap<VocabularyItem, Bitmap> itemImageMap;
+    private FeedbackOverlay feedback;
 
     public GameView(LaneGame gameActivity, Vocabulary vocabulary) {
         super(gameActivity);
@@ -269,16 +270,17 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
         canvas.drawText("touched: " + isBeingTouched + " for " + touchingTime, 20, 320, paint);
 
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(80);
-        canvas.drawText(score+"", gameWidth-100, 100, paint);
-
         drawOverlay();
 
         ourHolder.unlockCanvasAndPost(canvas);
     }
 
     private void drawOverlay() {
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(80);
+        canvas.drawText(score+"", gameWidth-100, 100, paint);
+
         if(gameFinished > 0){
             drawFinishScreen();
             return;
@@ -297,6 +299,28 @@ class GameView extends SurfaceView implements Runnable {
             canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2, gameWidth, gameHeight / 2 + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
             paint.setAlpha(255);
         }
+
+        drawFeedback();
+    }
+
+    private void drawFeedback(){
+
+        if(feedback == null)
+            return;
+
+        if(feedback.getSpawnTime() + feedback.getLifeTime() < tickCount){
+            feedback = null;
+            return;
+        }
+
+        float progress = 1.0f- ((tickCount-feedback.getSpawnTime())*1.0f / feedback.getLifeTime()*1.0f);
+
+        Paint fPaint = new Paint();
+        fPaint.setStyle(Paint.Style.STROKE);
+        fPaint.setColor(feedback.getColor());
+        fPaint.setAlpha((int)(120 - 80*progress));
+        fPaint.setStrokeWidth((float)Math.sin(progress*Math.PI/2.0)*gameWidth/8);
+        canvas.drawRect(0, 0, gameWidth, gameHeight, fPaint);
     }
 
     private void drawFinishScreen() {
@@ -582,10 +606,12 @@ class GameView extends SurfaceView implements Runnable {
                 if(target.isBenign()) {
                     score++;
                     completedWords.add(target.getVocabularyItem());
+                    feedback = new FeedbackOverlay(tickCount, Color.GREEN, 4);
                 }else {
                     score -= 5;
                     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
+                    feedback = new FeedbackOverlay(tickCount, Color.RED, 16);
                 }
                 iterator.remove();
                 continue;
