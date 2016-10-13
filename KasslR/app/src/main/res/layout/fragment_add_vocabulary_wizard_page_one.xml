@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <TextView
-        android:text="@string/add_vocabulary_title"
-        android:textSize="20dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/titleText" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackround">
 
     <TextView
         android:text="@string/add_vocabulary_choose_pictures"
         android:textSize="20dp"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="4dp"
-        android:layout_below="@+id/titleText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/descriptionText" />
 
-    <Button
-        android:text="@string/add_vocabulary_next_step"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:id="@+id/nextButton"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:id="@+id/bottomBar"
+        android:elevation="4dp"
+        android:background="@color/white">
+        <Button
+            android:text="@string/add_vocabulary_next_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/nextButton"
+            android:background="@null"/>
+    </RelativeLayout>
+
 
     <FrameLayout
         android:id="@+id/frame_vocabulary_items"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/descriptionText"
-        android:layout_above="@id/nextButton"/>
+        android:layout_above="@id/bottomBar"/>
 
 
 

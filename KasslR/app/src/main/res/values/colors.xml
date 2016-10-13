@@ -6,4 +6,5 @@
     <color name="colorAccent">#ff4081</color>
     <color name="colorCameraBackround">#33312c</color>
     <color name="colorMainBackround">#e6e6e6</color>
+    <color name="white">#ffffff</color>
 </resources>
