@@ -21,7 +21,7 @@ import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
-public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, Void> {
+public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, List<Vocabulary>> {
     private static final String DEBUG_TAG = "DownloadVocabularyTask";
 
     private Kasslr app;
@@ -31,7 +31,9 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, Void> {
     }
 
     @Override
-    protected Void doInBackground(Vocabulary... vocabularies) {
+    protected List<Vocabulary> doInBackground(Vocabulary... vocabularies) {
+        List<Vocabulary> result = new ArrayList<>();
+
         for (Vocabulary fromVocabulary : vocabularies) {
             Vocabulary vocabulary = new Vocabulary(fromVocabulary.getOwner(), fromVocabulary.getTitle());
 
@@ -52,28 +54,34 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, Void> {
             }
             vocabulary.setItems(items);
 
-            // Add to shelf
-            app.getShelf().addVocabulary(vocabulary);
-
             // Save to database
             KasslrDatabase db = null;
             try {
                 db = new KasslrDatabase(app);
                 db.save(vocabulary);
 
-                Log.d(DEBUG_TAG, "Successfully saved vocabulary " + vocabulary.getTitle());
+                Log.d(DEBUG_TAG, "Successfully saved vocabulary " + vocabulary);
             } catch (SQLiteException | IllegalArgumentException e) {
-                Log.e(DEBUG_TAG, "Failed to save vocabulary " + vocabulary.getTitle(), e);
+                Log.e(DEBUG_TAG, "Failed to save vocabulary " + vocabulary, e);
             } finally {
                 if (db != null) {
                     db.close();
                 }
             }
+
+            result.add(vocabulary);
         }
-        return null;
+        return result;
+    }
+
+    @Override
+    protected void onPostExecute(List<Vocabulary> vocabularies) {
+        app.getShelf().addVocabularies(vocabularies);
     }
 
     private void downloadImageToFile(String url, File file) throws IOException {
+        file.getParentFile().mkdirs();
+
         InputStream is = null;
         OutputStream os = null;
         try {
@@ -98,13 +106,5 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, Void> {
                 }
             }
         }
-    }
-
-    private File getImageFile(String imageName) {
-        if (!app.getImageDirectory().exists()) {
-            app.getImageDirectory().mkdir();
-        }
-
-        return new File(app.getImageDirectory(), imageName + ".jpg");
     }
 }

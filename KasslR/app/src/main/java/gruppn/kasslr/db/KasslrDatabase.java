@@ -265,6 +265,11 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             }
 
             for (VocabularyItem item : vocabulary.getItems()) {
+                if (item.getId() == 0) {
+                    // Save item
+                    save(item, db);
+                }
+
                 // Save connection between item and vocabulary
                 db.execSQL("INSERT INTO vocabulary_content (vocabulary_id, item_id) VALUES (?, ?)",
                         new Object[] { vocabulary.getId(), item.getId() });
