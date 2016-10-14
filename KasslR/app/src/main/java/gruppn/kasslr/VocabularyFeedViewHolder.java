@@ -17,7 +17,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
     protected TextView name, owner, playText;
     protected ImageView image1, image2, image3, playButton, ownerPicture;
-    private Vocabulary vocabulary;
+    protected Vocabulary vocabulary;
     protected LinearLayout detailed;
     protected CardView cardView;
     protected RecyclerView recyclerView;

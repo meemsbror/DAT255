@@ -75,55 +75,32 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     @Override
     public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position){
         final boolean isExpanded = position == mExpandedPosition;
-        holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
-        holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
-        holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
-        holder.cardView.setActivated(isExpanded);
+        final int view;
         if (searchAdapter) {
-
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                @Override
-                public void onClick(View v) {
-                    /*
-                    mExpandedPosition = isExpanded ? -1 : position;
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
-                    notifyDataSetChanged();
-                    */
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
-                    }
-                    notifyItemChanged(position);
-                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                        notifyItemChanged(mExpandedPosition);
-                    }
-                    mExpandedPosition = isExpanded ? -1 : position;
-                }
-            });
-
+            view = R.id.recyclerViewFeed_search;
         } else {
+            view = R.id.recycler_view_feed;
+        }
 
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                @Override
-                public void onClick(View v) {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
                     /*
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
                     notifyDataSetChanged();
                     */
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
-                    }
-                    notifyItemChanged(position);
-                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                        notifyItemChanged(mExpandedPosition);
-                    }
-                    mExpandedPosition = isExpanded ? -1 : position;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(view));
                 }
-            });
-
-        }
+                notifyItemChanged(position);
+                if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                    notifyItemChanged(mExpandedPosition);
+                }
+                mExpandedPosition = isExpanded ? -1 : position;
+            }
+        });
        /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +116,16 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             }
         });
         */
+
+        holder.fakePlayButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
+                if(baseContext instanceof MainActivity) {
+                    MainActivity mainActivity = (MainActivity) baseContext;
+                    mainActivity.changeToGame(v, holder.vocabulary);
+                }
+            }
+        });
 
         holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
             @Override
