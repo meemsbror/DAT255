@@ -90,7 +90,7 @@ public class ProfilePageFragment extends Fragment{
         //Change profile background
         final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
         Picasso.with(getContext())
-                .load(R.mipmap.ic_launcher)
+                .load(R.drawable.background)
                 .centerCrop()
                 .fit()
                 .into(imageView);

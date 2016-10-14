@@ -18,10 +18,8 @@
 
             <ImageView
                 android:id="@+id/profile_layout_background"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@mipmap/ic_launcher"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
@@ -41,8 +39,9 @@
                 android:layout_gravity="right"
                 android:maxWidth="42dp"
                 android:maxHeight="42dp"
+                android:layout_margin="16dp"
                 android:scaleType="fitCenter"
-                android:background="@null"
+                android:background="@drawable/rounded_corner_icon"
                 android:onClick="openSettings"
                 app:layout_collapseMode="parallax"
                 android:layout_weight="1" />
@@ -57,14 +56,14 @@
                 android:layout_marginBottom="42dp"
                 android:layout_marginLeft="16dp"
                 android:text="Namn"
-                android:textColor="#000"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:inputType="textPersonName"
                 android:focusable="true"
-                android:background="@android:color/transparent"
+                android:background="@drawable/rounded_corner"
                 android:imeOptions="actionDone"
                 app:layout_collapseMode="parallax"/>
+
             <TextView
                 android:text="0"
                 android:textSize="30sp"
@@ -76,6 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:id="@+id/score"
+                android:background="@drawable/rounded_corner"
                 app:layout_collapseMode="parallax"/>
 
             <ImageView
