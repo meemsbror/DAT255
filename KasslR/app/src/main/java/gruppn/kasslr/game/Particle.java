@@ -30,10 +30,16 @@ public class Particle {
         this.hasGravity = hasGravity;
     }
 
-    public void tick(int yBoundary){
+    public void tick(int yBoundary, boolean hyperSpeed){
         age++;
+        int modifier = 1;
+
+        if(hyperSpeed)
+            modifier = 14;
+
         x += deltaX;
-        y += deltaY;
+        y += deltaY*modifier;
+
 
         if(hasGravity)
             y += 8;

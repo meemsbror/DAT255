@@ -137,7 +137,10 @@ class GameView extends SurfaceView implements Runnable {
 
     Bitmap swipeInstruction;
     private boolean tutorialSkipped = false;
+    private boolean isBeingTouched = false;
+    private int touchingTime = 0;
     private HashMap<VocabularyItem, Bitmap> itemImageMap;
+    private FeedbackOverlay feedback;
 
     public GameView(LaneGame gameActivity, Vocabulary vocabulary) {
         super(gameActivity);
@@ -194,7 +197,12 @@ class GameView extends SurfaceView implements Runnable {
                 is = new FileInputStream(app.getImageFile(item));
             }
 
-            return BitmapFactory.decodeStream(is);
+            Bitmap bitmap = BitmapFactory.decodeStream(is);
+            if (bitmap.getWidth() > 720) {
+                return Bitmap.createScaledBitmap(bitmap, 720, 960, false);
+            } else {
+                return bitmap;
+            }
         } catch (IOException e) {
             Log.e(DEBUG_TAG, "Failed to load image", e);
         } finally {
@@ -265,10 +273,7 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText("particles: " + particles.size(), 20, 200, paint);
         canvas.drawText(background.getStats(), 20, 240, paint);
         canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
-
-        paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(80);
-        canvas.drawText(score+"", gameWidth-100, 100, paint);
+        canvas.drawText("touched: " + isBeingTouched + " for " + touchingTime, 20, 320, paint);
 
         drawOverlay();
 
@@ -276,6 +281,11 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawOverlay() {
+
+        paint.setTextAlign(Paint.Align.CENTER);
+        paint.setTextSize(80);
+        canvas.drawText(score+"", gameWidth-100, 100, paint);
+
         if(gameFinished > 0){
             drawFinishScreen();
             return;
@@ -294,6 +304,28 @@ class GameView extends SurfaceView implements Runnable {
             canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2, gameWidth, gameHeight / 2 + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
             paint.setAlpha(255);
         }
+
+        drawFeedback();
+    }
+
+    private void drawFeedback(){
+
+        if(feedback == null)
+            return;
+
+        if(feedback.getSpawnTime() + feedback.getLifeTime() < tickCount){
+            feedback = null;
+            return;
+        }
+
+        float progress = 1.0f- ((tickCount-feedback.getSpawnTime())*1.0f / feedback.getLifeTime()*1.0f);
+
+        Paint fPaint = new Paint();
+        fPaint.setStyle(Paint.Style.STROKE);
+        fPaint.setColor(feedback.getColor());
+        fPaint.setAlpha((int)(120 - 80*progress));
+        fPaint.setStrokeWidth((float)Math.sin(progress*Math.PI/2.0)*gameWidth/8);
+        canvas.drawRect(0, 0, gameWidth, gameHeight, fPaint);
     }
 
     private void drawFinishScreen() {
@@ -396,7 +428,19 @@ class GameView extends SurfaceView implements Runnable {
 
         playerY += playerDeltaY*tickLength;
 
-        playerDeltaY *= 0.995;
+        playerDeltaY *= 0.8;
+
+        if( touchingTime == 0 && playerY < gameHeight-260)
+            playerDeltaY = 4;
+
+        if(playerY > gameHeight-260) {
+            playerDeltaY = 0;
+            playerY = gameHeight-260;
+        }
+
+        if(playerY < 2*gameHeight/3){
+            playerY = 2*gameHeight/3;
+        }
 
         if(gameWidth > 0) {
 
@@ -410,6 +454,19 @@ class GameView extends SurfaceView implements Runnable {
         }
 
         backgroundPosition += Math.sqrt(getTargetSpeed())/4;
+
+        updatetouchingTime();
+    }
+
+    private void updatetouchingTime() {
+        if(isBeingTouched)
+            touchingTime++;
+        else
+            touchingTime = 0;
+
+        if(touchingTime == 10)
+            playerDeltaY = -10;
+
     }
 
     private void attemptToEndSelf() {
@@ -434,9 +491,12 @@ class GameView extends SurfaceView implements Runnable {
             float x = playerX-40+rand.nextInt(80);
             float y = playerY+80;
             float deltaX = -playerDeltaX * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
-            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 1.0F);
+            float deltaY = -playerDeltaY * (rand.nextFloat()*0.08F) + (rand.nextFloat()*2.0F - 0.2F);
             int lifespan = rand.nextInt(200);
-            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, rand.nextInt(255), 20, true);
+            int temperature = rand.nextInt(255);
+            if(isHyperspeedActive())
+                temperature = 128 + rand.nextInt(127);
+            Particle particle = new Particle(x, y, deltaX, deltaY, lifespan, temperature, 20, true);
             particles.add(particle);
         }
 
@@ -447,7 +507,10 @@ class GameView extends SurfaceView implements Runnable {
 
     private void spawnStars(int y){
         Random rand = new Random();
-        if(rand.nextFloat() < 0.08) {
+        double limit = 0.14;
+        if(isHyperspeedActive())
+            limit = 0.4;
+        if(rand.nextFloat() < limit) {
             float x = rand.nextInt(gameWidth);
             int depth = rand.nextInt(3) + 1;
             float deltaY = depth*depth*getTargetSpeed()/30f;
@@ -460,7 +523,7 @@ class GameView extends SurfaceView implements Runnable {
         Iterator<Particle> iterator = particles.iterator();
         while (iterator.hasNext()) {
             Particle particle = iterator.next();
-            particle.tick(gameHeight);
+            particle.tick(gameHeight, isHyperspeedActive());
 
             if(particle.isDead())
                 iterator.remove();
@@ -502,6 +565,10 @@ class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    private boolean isHyperspeedActive(){
+        return touchingTime > 10;
+    }
+
     private boolean tutorialIsOpen() {
         return (!tutorialSkipped && tickCount < 100);
     }
@@ -540,14 +607,16 @@ class GameView extends SurfaceView implements Runnable {
             Target target = iterator.next();
             target.tick(getTargetSpeed());
 
-            if(target.getY() > playerY-5 && target.getDistance(playerX, target.getY()) < 50){
+            if(target.getY() > playerY-50 && target.getY() < playerY+50 && Math.abs(target.getX() - playerX) < 70 ){
                 if(target.isBenign()) {
                     score++;
                     completedWords.add(target.getVocabularyItem());
+                    feedback = new FeedbackOverlay(tickCount, Color.GREEN, 4);
                 }else {
                     score -= 5;
                     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
+                    feedback = new FeedbackOverlay(tickCount, Color.RED, 16);
                 }
                 iterator.remove();
                 continue;
@@ -573,6 +642,8 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private float getTargetSpeed(){
+        if(isHyperspeedActive())
+            return 24f*tickLength;
         return 4f*tickLength;
     }
 
@@ -593,7 +664,13 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     public void sendTouchEvent(MotionEvent event) {
-        if(tutorialIsOpen())
-            tutorialSkipped = true;
+        System.out.println("motion event : " + event.getAction());
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            if(tutorialIsOpen())
+                tutorialSkipped = true;
+            isBeingTouched = true;
+        }else if(event.getAction() == MotionEvent.ACTION_UP){
+            isBeingTouched = false;
+        }
     }
 }
