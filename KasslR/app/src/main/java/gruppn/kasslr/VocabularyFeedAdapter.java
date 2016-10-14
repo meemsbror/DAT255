@@ -3,6 +3,7 @@ package gruppn.kasslr;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -143,6 +145,14 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             public void onClick(View v) {
                 holder.favoriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 new DownloadVocabularyTask(app).execute(vocabularies.get(position));
+            }
+        });
+
+        holder.thumbsDownButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                holder.thumbsDownButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
+                //Todo downvote stuff
             }
         });
 

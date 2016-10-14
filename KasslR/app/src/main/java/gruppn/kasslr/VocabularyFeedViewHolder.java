@@ -24,6 +24,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     protected ImageView fakePlayButton;
     protected ImageView realPlayButton;
     protected ImageView favoriteButton;
+    protected ImageView thumbsDownButton;
 
 
     public VocabularyFeedViewHolder(View v){
@@ -41,6 +42,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         favoriteButton = (ImageView)  v.findViewById(R.id.favorite_button);
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
+        thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
 
         realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {

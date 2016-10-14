@@ -139,7 +139,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:src="@drawable/ic_thumb_down_white_24dp" />
+                android:src="@drawable/ic_thumb_down_white_24dp"
+                android:id="@+id/thumbs_down_button" />
 
             <ImageView
                 android:id="@+id/real_play_button"
