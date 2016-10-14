@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -140,6 +141,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                holder.favoriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 new DownloadVocabularyTask(app).execute(vocabularies.get(position));
             }
         });
