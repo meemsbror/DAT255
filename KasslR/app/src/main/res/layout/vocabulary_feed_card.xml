@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardBackgroundColor="@color/cardview_dark_background"
     card_view:cardCornerRadius="4dp"
     card_view:cardUseCompatPadding="true">
 
@@ -15,7 +14,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
-        android:background="@color/cardview_dark_background"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -60,6 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+<<<<<<< HEAD
                 <FrameLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -76,6 +75,30 @@
                         android:textColor="@color/cardview_light_background"
                         android:layout_gravity="start|top"
                         android:textSize="24sp" />
+=======
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/owner_picture"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        card_view:srcCompat="@mipmap/profilepicture" />
+
+                    <TextView
+                        android:id="@+id/owner_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="6dp"
+                        android:text="Owner"
+                        android:textColor="@color/cardview_light_background"
+                        android:textSize="18sp" />
+                </LinearLayout>
+>>>>>>> background color and stuff
 
                     <ImageView
                         android:layout_width="30dp"
@@ -88,10 +111,10 @@
                 </FrameLayout>
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|center">
+                    android:layout_gravity="center|center"
+                    android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/fake_play_button"
@@ -101,15 +124,15 @@
                         app:srcCompat="@drawable/white_play" />
 
                     <TextView
-                        android:text="Spela"
+                        android:id="@+id/play_text"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:padding="6dp"
                         android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:padding="6dp"
+                        android:text="Spela"
                         android:textColor="@color/cardview_light_background"
-                        android:textSize="18sp"
-                        android:id="@+id/play_text"
-                        android:layout_weight="1" />
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -149,6 +172,7 @@
             android:weightSum="3">
 
             <ImageView
+                android:id="@+id/thumbs_down_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -156,7 +180,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
                 android:src="@drawable/ic_thumb_down_white_24dp"
-                android:id="@+id/thumbs_down_button" />
+                android:tint="#999999" />
 
             <ImageView
                 android:id="@+id/real_play_button"
@@ -166,7 +190,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:src="@android:drawable/ic_dialog_info" />
+                android:src="@drawable/ic_info_white_24dp"
+                android:tint="#999999" />
 
             <ImageView
                 android:id="@+id/favorite_button"
@@ -176,7 +201,8 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:src="@drawable/ic_favorite_white_24dp" />
+                android:src="@drawable/ic_favorite_white_24dp"
+                android:tint="#999999" />
 
         </LinearLayout>
 
