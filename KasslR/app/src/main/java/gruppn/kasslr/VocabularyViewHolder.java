@@ -10,6 +10,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import gruppn.kasslr.model.Vocabulary;
 
 
@@ -23,11 +26,11 @@ public class VocabularyViewHolder extends RecyclerView.ViewHolder{
     protected RecyclerView recyclerView;
     protected ImageView fakePlayButton;
     protected ImageView realPlayButton;
-    protected ImageView favoriteButton;
+    protected ImageView favouriteButton;
     protected ImageView thumbsDownButton;
 
 
-    public VocabularyViewHolder(View v){
+    public VocabularyViewHolder(List<Vocabulary> vocabularyList, View v){
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
         owner = (TextView) v.findViewById(R.id.owner_name);
@@ -39,7 +42,7 @@ public class VocabularyViewHolder extends RecyclerView.ViewHolder{
 
         detailed = (LinearLayout) v.findViewById(R.id.expand_area);
         cardView = (CardView) v.findViewById(R.id.card_view_feed);
-        favoriteButton = (ImageView)  v.findViewById(R.id.favorite_button);
+        favouriteButton = (ImageView)  v.findViewById(R.id.favourite_button);
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
@@ -53,6 +56,28 @@ public class VocabularyViewHolder extends RecyclerView.ViewHolder{
                 }
             }
         });
+
+        for (Vocabulary vocabulary : vocabularyList) {
+            if (vocabulary.isFavourite()) {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+            } else {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+            }
+        }
+
+        favouriteButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
+                if (vocabulary.isFavourite()){
+                    vocabulary.setFavourite(false);
+                    favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                } else {
+                    vocabulary.setFavourite(true);
+                    favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                }
+            }
+        });
+
     }
 
     public ImageView getImageView(int i){

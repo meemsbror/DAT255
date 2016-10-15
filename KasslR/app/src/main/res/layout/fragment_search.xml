@@ -12,8 +12,11 @@
 <<<<<<< HEAD
 =======
         android:id="@+id/searchView_search"
+<<<<<<< HEAD
         android:title="Sök efter Glosor"
 >>>>>>> changes made to search and favourit now works
+=======
+>>>>>>> rebased in master to favouriteFeature
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/colorMainBackround"

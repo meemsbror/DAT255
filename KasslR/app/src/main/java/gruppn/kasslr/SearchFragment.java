@@ -61,17 +61,9 @@ public class SearchFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewFeed_search.setLayoutManager(llm);
 
-<<<<<<< HEAD
-        /*
-        GridLayoutManager GLM = new GridLayoutManager(getActivity(), 3);
-        
-        recyclerView_search.setLayoutManager(GLM);
-        */
         searchView_search.setQueryHint("Sök efter glosböcker");
         searchView_search.setIconified(false);
-=======
 
->>>>>>> changes made to search and favourit now works
         searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override

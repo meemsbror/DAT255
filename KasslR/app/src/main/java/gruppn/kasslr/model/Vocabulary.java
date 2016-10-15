@@ -32,12 +32,12 @@ public class Vocabulary {
         this.universalId = universalId;
     }
 
-<<<<<<< HEAD
-    public Vocabulary(User user, String title, int id, int universalId){
-        this(user,title);
+    public Vocabulary(User user, String title, int id, int universalId) {
+        this(user, title);
         this.id = id;
         this.universalId = universalId;
-=======
+    }
+
     @Override
     public boolean equals(Object obj){
         if (obj == null){
@@ -45,7 +45,6 @@ public class Vocabulary {
         } else {
             return  this.getUniversalId() == ((Vocabulary) obj).getUniversalId();
         }
->>>>>>> changes made to search and favourit now works
     }
 
     public int getId() {

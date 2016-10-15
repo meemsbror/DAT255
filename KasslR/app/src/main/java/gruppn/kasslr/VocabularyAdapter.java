@@ -53,7 +53,7 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyViewHolder
 
         this.mContext = parent.getContext();
 
-        return new VocabularyViewHolder(itemView);
+        return new VocabularyViewHolder(vocabularies, itemView);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class VocabularyAdapter extends RecyclerView.Adapter<VocabularyViewHolder
         });
 
 
-        holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
+        holder.favouriteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 // TODO remove vocabulary

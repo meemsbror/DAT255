@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFavorite() {
-        showFragment(new FavoriteFragment());
+        showFragment(new FavouriteFragment());
     }
 
     public void showProfile() {
@@ -217,14 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     // Show the camera
                     showCamera();
                 } else if (tabId == R.id.tab_favorite) {
-                    // TODO Show the saved vocabularies
-                    // This is temporary until we decide how to reach the gallery
-<<<<<<< HEAD
-                    slideToFragment(new FavoriteFragment(), directions, false);
-=======
-                    //slideToFragment(new GalleryFragment(), directions, false);
                     slideToFragment(new FavouriteFragment(), directions, false);
->>>>>>> start of favourit fragment
                 } else if (tabId == R.id.tab_profile) {
                     slideToFragment(new ProfilePageFragment(), directions, false);
                 } else {

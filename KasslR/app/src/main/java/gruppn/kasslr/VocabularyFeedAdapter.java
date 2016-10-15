@@ -94,15 +94,12 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     @Override
     public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position) {
         final boolean isExpanded = position == mExpandedPosition;
-<<<<<<< HEAD
-        final int view;
-        if (searchAdapter) {
-            view = R.id.recyclerViewFeed_search;
-=======
+
         holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
+<<<<<<< HEAD
 <<<<<<< HEAD
         if (adapterSwitch.equals("SEARCH")) {
 
@@ -153,10 +150,14 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             view = R.id.recycler_view_feed;
         }
         /*
+=======
+
+>>>>>>> rebased in master to favouriteFeature
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+<<<<<<< HEAD
 
                     /*
                     mExpandedPosition = isExpanded ? -1 : position;
@@ -184,6 +185,8 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+=======
+>>>>>>> rebased in master to favouriteFeature
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(adapterSwitch));
                 }
@@ -205,11 +208,24 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             }
         });
 
+<<<<<<< HEAD
         holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
+=======
+        holder.favouriteButton.setOnClickListener(new View.OnClickListener(){
+>>>>>>> rebased in master to favouriteFeature
             @Override
             public void onClick(View v) {
-                holder.favoriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
+                holder.favouriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 new DownloadVocabularyTask(app).execute(vocabularies.get(position));
+                if (holder.vocabulary.isFavourite()){
+                    System.out.println("här");
+                    holder.vocabulary.setFavourite(false);
+                    holder.favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                } else {
+                    System.out.println("och här");
+                    holder.vocabulary.setFavourite(true);
+                    holder.favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                }
             }
         });
 

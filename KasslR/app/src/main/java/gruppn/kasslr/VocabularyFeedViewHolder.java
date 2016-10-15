@@ -56,13 +56,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
 >>>>>>> start of favourit fragment
 
-        for (Vocabulary vocabulary : vocabularyList) {
-            if (vocabulary.isFavourite()) {
-                favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-            } else {
-                favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-            }
-        }
+
 
         realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
@@ -74,15 +68,23 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        
+        for (Vocabulary vocabulary : vocabularyList) {
+            if (vocabulary.isFavourite()) {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+            } else {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+            }
+        }
 
         favouriteButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
                 if (vocabulary.isFavourite()){
+                    System.out.println("här");
                     vocabulary.setFavourite(false);
                     favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                 } else {
+                    System.out.println("och här");
                     vocabulary.setFavourite(true);
                     favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
                 }

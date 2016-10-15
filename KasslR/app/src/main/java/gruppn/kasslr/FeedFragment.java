@@ -52,7 +52,10 @@ public class FeedFragment extends Fragment {
         }
         feedShelf.addVocabularies(app.getBigShelf().getVocabularies());
         va.setVocabularyList(feedShelf.getVocabularies());
+<<<<<<< HEAD
         System.out.println(app.getBigShelf().getVocabularies().size());
 >>>>>>> changes made to search and favourit now works
+=======
+>>>>>>> rebased in master to favouriteFeature
     }
 }
