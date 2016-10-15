@@ -18,9 +18,6 @@ import org.json.JSONObject;
 
 import static java.security.AccessController.getContext;
 
-/**
- * Created by Adam on 2016-10-06.
- */
 
 public class Web {
 

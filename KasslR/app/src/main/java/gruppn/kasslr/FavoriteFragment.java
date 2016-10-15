@@ -31,15 +31,13 @@ public class FavoriteFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_favorite);
         recyclerView.setItemAnimator(null);
 
-        VocabularyAdapter va = new VocabularyAdapter(getActivity(), app.getShelf().getVocabularies());
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
 
         recyclerView.setAdapter(va);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
-
-
     }
 
 }

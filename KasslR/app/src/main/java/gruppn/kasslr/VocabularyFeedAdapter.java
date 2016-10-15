@@ -61,7 +61,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 .inflate(R.layout.vocabulary_feed_card,parent,false);
 
         this.mContext = parent.getContext();
-
         return new VocabularyFeedViewHolder(itemView);
     }
 
@@ -81,26 +80,28 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         } else {
             view = R.id.recycler_view_feed;
         }
-
+         /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+
                     /*
                     mExpandedPosition = isExpanded ? -1 : position;
                     TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
                     notifyDataSetChanged();
-                    */
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(view));
-                }
-                notifyItemChanged(position);
-                if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                    notifyItemChanged(mExpandedPosition);
-                }
-                mExpandedPosition = isExpanded ? -1 : position;
+                    *//*
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(view));
+                    }
+                    notifyItemChanged(position);
+                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
+                        notifyItemChanged(mExpandedPosition);
+                    }
+                    mExpandedPosition = isExpanded ? -1 : position;
             }
         });
+        */
        /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +141,15 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             public void onClick(View v){
                 holder.thumbsDownButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 //Todo downvote stuff
+            }
+        });
+
+        holder.closeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                holder.closeButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
+                app.getShelf().getVocabularies().remove(holder.vocabulary);
+                notifyDataSetChanged();
             }
         });
 

@@ -39,6 +39,7 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
     compile 'com.android.support:gridlayout-v7:24.2.1'
     compile 'net.gotev:uploadservice:2.1'
+
 }
 repositories {
     maven {

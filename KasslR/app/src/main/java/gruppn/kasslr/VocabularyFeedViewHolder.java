@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import gruppn.kasslr.model.Vocabulary;
 
@@ -16,15 +17,16 @@ import gruppn.kasslr.model.Vocabulary;
 public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
     protected TextView name, owner, playText;
-    protected ImageView image1, image2, image3, playButton, ownerPicture;
+    private ImageView image1, image2, image3, ownerPicture;
     protected Vocabulary vocabulary;
-    protected LinearLayout detailed;
+    private LinearLayout detailed;
     protected CardView cardView;
-    protected RecyclerView recyclerView;
     protected ImageView fakePlayButton;
     protected ImageView realPlayButton;
     protected ImageView favoriteButton;
     protected ImageView thumbsDownButton;
+    protected ImageView closeButton;
+    protected LinearLayout playContainer;
 
 
     public VocabularyFeedViewHolder(View v){
@@ -43,6 +45,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
+        closeButton = (ImageView) v.findViewById(R.id.close_button);
 
         realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {

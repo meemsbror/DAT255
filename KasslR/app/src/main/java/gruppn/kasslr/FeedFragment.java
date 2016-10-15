@@ -44,7 +44,5 @@ public class FeedFragment extends Fragment {
         recyclerView.setLayoutManager(llm);
 
         app.loadFeedItems(getContext(), va);
-
     }
-
 }

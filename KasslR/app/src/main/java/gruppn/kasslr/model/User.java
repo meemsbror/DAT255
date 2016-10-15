@@ -39,4 +39,20 @@ public class User {
     public String getProfilePic(){
         return this.profilePicURL;
     }
+
+    public boolean equals(Object that){
+        if(that instanceof User){
+            User user = (User)that;
+
+            if(this==user){
+                return true;
+            }
+
+            //Returns true if user id is the same, since it is different for every user
+            return(this.id == user.id);
+
+        }else{
+            return false;
+        }
+    }
 }

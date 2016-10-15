@@ -30,12 +30,6 @@
         <activity android:name=".Game"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
-        <activity
-            android:screenOrientation="portrait"
-            android:configChanges="orientation|keyboardHidden"
-            android:name=".Navigateable"
-            android:label="@string/title_activity_navigateable"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CameraActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden"/>
