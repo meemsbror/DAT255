@@ -7,6 +7,10 @@ import android.content.ContextWrapper;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -30,7 +34,7 @@ import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 import gruppn.kasslr.task.DownloadVocabularyTask;
 
-public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedViewHolder>{
+public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedViewHolder> {
 
     private List<Vocabulary> vocabularies;
     private Activity activity;
@@ -38,27 +42,27 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     private Context mContext;
     private int mExpandedPosition = -1;
 
-    public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies){
+    public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
         this.activity = activity;
         app = (Kasslr) activity.getApplication();
     }
 
-    public void addVocabularies(List<Vocabulary> vocabularies){
+    public void addVocabularies(List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
         this.notifyDataSetChanged();
     }
 
     @Override
-    public int getItemCount(){
+    public int getItemCount() {
         return vocabularies.size();
     }
 
     @Override
-    public VocabularyFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public VocabularyFeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.vocabulary_feed_card,parent,false);
+                .inflate(R.layout.vocabulary_feed_card, parent, false);
 
         this.mContext = parent.getContext();
         return new VocabularyFeedViewHolder(itemView);
@@ -67,12 +71,12 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
     private boolean searchAdapter = false;
 
-    public void setSearchAdapter(boolean a){
+    public void setSearchAdapter(boolean a) {
         searchAdapter = a;
     }
 
     @Override
-    public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position){
+    public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position) {
         final boolean isExpanded = position == mExpandedPosition;
         final int view;
         if (searchAdapter) {
@@ -101,7 +105,9 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                     mExpandedPosition = isExpanded ? -1 : position;
             }
         });
+
         */
+
        /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,15 +126,15 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
         holder.fakePlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
-                if(baseContext instanceof MainActivity) {
+                Context baseContext = ((ContextWrapper) v.getContext()).getBaseContext();
+                if (baseContext instanceof MainActivity) {
                     MainActivity mainActivity = (MainActivity) baseContext;
                     mainActivity.changeToGame(v, holder.vocabulary);
                 }
             }
         });
 
-        holder.favoriteButton.setOnClickListener(new View.OnClickListener(){
+        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.favoriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
@@ -136,15 +142,15 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             }
         });
 
-        holder.thumbsDownButton.setOnClickListener(new View.OnClickListener(){
+        holder.thumbsDownButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 holder.thumbsDownButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 //Todo downvote stuff
             }
         });
 
-        holder.closeButton.setOnClickListener(new View.OnClickListener(){
+        holder.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.closeButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
@@ -154,41 +160,42 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         });
 
         updateView(holder, position);
+
     }
 
-    private void updateView(VocabularyFeedViewHolder holder, int position){
+    private void updateView(VocabularyFeedViewHolder holder, int position) {
         Vocabulary v = vocabularies.get(position);
         List<VocabularyItem> items = v.getItems();
         setPictures(holder, items);
-        setOwner(holder,v);
+        setOwner(holder, v);
         holder.setVocabulary(v);
     }
 
-    private void setPictures(VocabularyFeedViewHolder holder, final List<VocabularyItem> items){
+    private void setPictures(VocabularyFeedViewHolder holder, final List<VocabularyItem> items) {
 
         int maxImages = 3;
-        if(items.size() < 3)
+        if (items.size() < 3)
             maxImages = items.size();
 
-        for(int i = 0; i < maxImages; i++) {
-            final ImageView img = holder.getImageView(i+1);
-            if(!items.get(i).getImageName().startsWith("http")) {
+        for (int i = 0; i < maxImages; i++) {
+            final ImageView img = holder.getImageView(i + 1);
+            if (!items.get(i).getImageName().startsWith("http")) {
                 final File imageFile = app.getImageFile(items.get(i));
                 Picasso.with(mContext).load(imageFile).centerCrop().fit().into(img);
-            }else{
+            } else {
                 final String url = items.get(i).getImageName();
                 Picasso.with(mContext).load(url).centerCrop().fit().into(img);
             }
         }
     }
 
-    private void setOwner(VocabularyFeedViewHolder holder, Vocabulary v){
+    private void setOwner(VocabularyFeedViewHolder holder, Vocabulary v) {
 
         final ImageView img = holder.getImageView(4);
         final String image = v.getOwner().getProfilePic();
         img.post(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 Picasso.with(mContext).load(image).centerCrop().fit().into(img);
 
             }

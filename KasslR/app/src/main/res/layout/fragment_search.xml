@@ -2,21 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <SearchView
+        android:id="@+id/searchView_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/searchView_search"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:imeOptions="actionDone"/>
+        android:background="@color/colorMainBackround"
+        android:imeOptions="actionDone" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewFeed_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/searchView_search"
-        android:id="@+id/recyclerViewFeed_search" />
+        android:background="@color/colorMainBackround" />
 </RelativeLayout>
