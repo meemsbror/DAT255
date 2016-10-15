@@ -78,9 +78,9 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        card_view:srcCompat="@drawable/close"
                         android:id="@+id/close_button"
-                        android:layout_gravity="end|center" />
+                        android:layout_gravity="end|center"
+                        app:srcCompat="@drawable/ic_clear_white_24dp" />
 
 
                 </FrameLayout>
