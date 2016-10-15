@@ -80,7 +80,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         } else {
             view = R.id.recycler_view_feed;
         }
-         /*
+        /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -226,7 +226,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     }
     */
 
-    public void setVocabularyList(List<Vocabulary> vocabulaies) {
-        this.vocabularies = vocabulaies;
+    public void setVocabularyList(List<Vocabulary> vocabularies) {
+        this.vocabularies = vocabularies;
     }
 }
