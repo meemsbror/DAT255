@@ -34,7 +34,6 @@ public class FavouriteFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) { super.onActivityCreated(savedInstanceState); //add point
-        System.out.println("du är på favourite");
         this.app = (gruppn.kasslr.Kasslr) getActivity().getApplication();
 
         recyclerViewFeed_favourite = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_favourite);
@@ -42,7 +41,7 @@ public class FavouriteFragment extends Fragment {
 
         va = new VocabularyFeedAdapter(getActivity(), favouriteShelf.getVocabularies());
 
-        va.setAdapterSwitch("FAVOURITE");
+        va.setAdapterSwitch(R.id.recyclerViewFeed_favourite);
 
         recyclerViewFeed_favourite.setAdapter(va);
 
@@ -50,16 +49,12 @@ public class FavouriteFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewFeed_favourite.setLayoutManager(llm);
 
-        for (Vocabulary vocabulary : app.getWebShelf().getVocabularies()) {
-            System.out.println("du loppar igenom web och kollar efter fav-märkta");
+        for (Vocabulary vocabulary : app.getBigShelf().getVocabularies()) {
             if (vocabulary.isFavourite()) {
-                System.out.println("fav");
                 favouriteShelf.addVocabulary(vocabulary);
             }
         }
-        va.addVocabularies(favouriteShelf.getVocabularies());
-        //app.loadFeedItems(getContext(), va);
-
+        va.setVocabularyList(favouriteShelf.getVocabularies());
     }
 
 }

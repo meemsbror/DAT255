@@ -9,6 +9,11 @@
         android:id="@+id/searchView_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+        android:id="@+id/searchView_search"
+        android:title="Sök efter Glosor"
+>>>>>>> changes made to search and favourit now works
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@color/colorMainBackround"

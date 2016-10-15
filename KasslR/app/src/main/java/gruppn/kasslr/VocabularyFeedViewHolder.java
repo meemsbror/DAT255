@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import gruppn.kasslr.model.Vocabulary;
 
 
@@ -32,7 +35,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 >>>>>>> start of favourit fragment
 
 
-    public VocabularyFeedViewHolder(View v){
+    public VocabularyFeedViewHolder(List<Vocabulary> vocabularyList, View v){
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
         owner = (TextView) v.findViewById(R.id.owner_name);
@@ -53,6 +56,14 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
 >>>>>>> start of favourit fragment
 
+        for (Vocabulary vocabulary : vocabularyList) {
+            if (vocabulary.isFavourite()) {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+            } else {
+                favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+            }
+        }
+
         realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
@@ -63,16 +74,17 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
+        
+
         favouriteButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("du klickar på fav");
                 Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
                 if (vocabulary.isFavourite()){
-                    System.out.println("den va fav-markerad");
                     vocabulary.setFavourite(false);
+                    favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
                 } else {
-                    System.out.println("den va iten fav-markerad");
                     vocabulary.setFavourite(true);
+                    favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
                 }
             }
         });

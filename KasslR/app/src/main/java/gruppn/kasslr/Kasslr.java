@@ -28,7 +28,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,6 +41,8 @@ import gruppn.kasslr.model.User;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 import gruppn.kasslr.task.LoadShelfTask;
+
+import static android.R.id.list;
 
 public class Kasslr extends Application {
     private static final String DEBUG_TAG = "Kasslr";
@@ -54,7 +58,8 @@ public class Kasslr extends Application {
     private ProfileInformation profileInformation = new ProfileInformation();
     private Bitmap sharedBitmap;
     private Vocabulary activeVocabulary;
-    private Shelf webShelf = new Shelf();
+    private Shelf bigShelf = new Shelf();
+    private boolean onlyOnce = true;
 
     @Override
     public void onCreate() {
@@ -220,10 +225,10 @@ public class Kasslr extends Application {
     public void increaseScore(ProfileInformation.CompletedAction completedAction) {
         profileInformation.incScore(completedAction);
     }
+
+
     public void loadFeedItems(Context context, final VocabularyFeedAdapter va){
-
         String url = Web.baseUrl+"?action=feed";
-
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
@@ -231,17 +236,23 @@ public class Kasslr extends Application {
                     public void onResponse(JSONObject response) {
                         try {
                             va.addVocabularies(parseFeedJson(response.getJSONArray("feed")));
-
-                            for (Vocabulary vocabulary : parseFeedJson(response.getJSONArray("feed"))) {
-                                if (webShelf.getVocabularies().isEmpty() || !webShelf.getVocabularies().contains(vocabulary)){
-                                    webShelf.addVocabulary(vocabulary);
+                            for (Vocabulary vocabulary : va.getVocabularies()) {
+                                if (!bigShelf.getVocabularies().contains(vocabulary)) {
+                                    bigShelf.addVocabulary(vocabulary);
+                                    onlyOnce = false;
                                 }
-
                             }
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                             va.addVocabularies(getShelf().getVocabularies());
+                            for (Vocabulary vocabulary : getShelf().getVocabularies()) {
+                                if (!bigShelf.getVocabularies().contains(vocabulary)) {
+                                    bigShelf.addVocabulary(vocabulary);
+                                    onlyOnce = false;
+                                }
+                            }
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -249,14 +260,18 @@ public class Kasslr extends Application {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         va.addVocabularies(getShelf().getVocabularies());
+                        for (Vocabulary vocabulary : getShelf().getVocabularies()) {
+                            if (!bigShelf.getVocabularies().contains(vocabulary)) {
+                                bigShelf.addVocabulary(vocabulary);
+                                onlyOnce = false;
+                            }
+                        }
                     }
                 });
 
         Web.getInstance(context).addToRequestQueue(jsObjRequest);
-
-
-
     }
+
 
     private List<Vocabulary> parseFeedJson(JSONArray feed) throws JSONException {
         ArrayList<Vocabulary> response = new ArrayList<Vocabulary>();
@@ -424,7 +439,11 @@ public class Kasslr extends Application {
         private List<Vocabulary> vocabularies;
     }
 
-    public Shelf getWebShelf(){
-        return webShelf;
+    public Shelf getBigShelf(){
+        return bigShelf;
+    }
+
+    public boolean getOnlyOnce() {
+        return onlyOnce;
     }
 }

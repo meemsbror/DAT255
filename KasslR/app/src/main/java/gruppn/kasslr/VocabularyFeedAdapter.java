@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import gruppn.kasslr.db.KasslrDatabase;
@@ -37,11 +38,12 @@ import gruppn.kasslr.task.RemoveVocabularyTask;
 
 public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedViewHolder> {
 
-    private List<Vocabulary> vocabularies;
+    private List<Vocabulary> vocabularies = new ArrayList<>();
     private Activity activity;
     private Kasslr app;
     private Context mContext;
     private int mExpandedPosition = -1;
+    private int adapterSwitch = R.id.recycler_view_feed;
 
     public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
@@ -66,6 +68,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 .inflate(R.layout.vocabulary_feed_card, parent, false);
 
         this.mContext = parent.getContext();
+<<<<<<< HEAD
         return new VocabularyFeedViewHolder(itemView);
     }
 
@@ -77,6 +80,13 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         searchAdapter = a;
 =======
     public void setAdapterSwitch(String adapterSwitch){
+=======
+
+        return new VocabularyFeedViewHolder(vocabularies,itemView);
+    }
+
+    public void setAdapterSwitch(int adapterSwitch){
+>>>>>>> changes made to search and favourit now works
         this.adapterSwitch = adapterSwitch;
 >>>>>>> start of favourit fragment
     }
@@ -93,6 +103,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
+<<<<<<< HEAD
         if (adapterSwitch.equals("SEARCH")) {
 
             holder.cardView.setOnClickListener(new View.OnClickListener() {
@@ -166,11 +177,15 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         */
 
        /*
+=======
+
+>>>>>>> changes made to search and favourit now works
         holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
+                    TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(adapterSwitch));
                 }
                 notifyItemChanged(position);
                 if (mExpandedPosition != -1 && mExpandedPosition != position) {
@@ -179,7 +194,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 mExpandedPosition = isExpanded ? -1 : position;
             }
         });
-        */
 
         holder.fakePlayButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
@@ -293,5 +307,9 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
 
     public void setVocabularyList(List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
+    }
+
+    public List<Vocabulary> getVocabularies() {
+        return vocabularies;
     }
 }

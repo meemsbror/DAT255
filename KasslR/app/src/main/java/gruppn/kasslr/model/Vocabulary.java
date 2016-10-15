@@ -5,6 +5,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Vocabulary {
     private User user;
@@ -31,10 +32,20 @@ public class Vocabulary {
         this.universalId = universalId;
     }
 
+<<<<<<< HEAD
     public Vocabulary(User user, String title, int id, int universalId){
         this(user,title);
         this.id = id;
         this.universalId = universalId;
+=======
+    @Override
+    public boolean equals(Object obj){
+        if (obj == null){
+            return false;
+        } else {
+            return  this.getUniversalId() == ((Vocabulary) obj).getUniversalId();
+        }
+>>>>>>> changes made to search and favourit now works
     }
 
     public int getId() {
@@ -86,6 +97,7 @@ public class Vocabulary {
     }
 
     public void setFavourite(boolean favourite) {
+
         this.favourite = favourite;
     }
 

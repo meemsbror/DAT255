@@ -1,7 +1,9 @@
 package gruppn.kasslr;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ public class SearchFragment extends Fragment {
     private SearchView searchView_search;
     private VocabularyFeedAdapter va;
     private List<Vocabulary> vocabularyList = new ArrayList<>();
+    private Shelf searchShelf = new Shelf();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -35,6 +38,7 @@ public class SearchFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState); //add point
@@ -43,9 +47,13 @@ public class SearchFragment extends Fragment {
 
         recyclerViewFeed_search = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_search);
         searchView_search = (SearchView) getView().findViewById(R.id.searchView_search);
+        searchView_search.setIconifiedByDefault(false);
+        searchView_search.requestFocus();
+        searchView_search.onActionViewExpanded();
 
-        va = new VocabularyFeedAdapter(getActivity(), vocabularyList);
-        va.setAdapterSwitch("SEARCH");
+
+        va = new VocabularyFeedAdapter(getActivity(), searchShelf.getVocabularies());
+        va.setAdapterSwitch(R.id.recyclerViewFeed_search);
         recyclerViewFeed_search.setAdapter(va);
 
 
@@ -53,6 +61,7 @@ public class SearchFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewFeed_search.setLayoutManager(llm);
 
+<<<<<<< HEAD
         /*
         GridLayoutManager GLM = new GridLayoutManager(getActivity(), 3);
         
@@ -60,22 +69,32 @@ public class SearchFragment extends Fragment {
         */
         searchView_search.setQueryHint("Sök efter glosböcker");
         searchView_search.setIconified(false);
+=======
+
+>>>>>>> changes made to search and favourit now works
         searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override
             public boolean onQueryTextSubmit(String s) {
                 updateSearch();
-                //System.out.println("submit");
+                /*if (recyclerViewFeed_search.callOnClick()) {
+                    searchView_search.onActionViewCollapsed();
+                    System.out.println("wtf");
+                }*/
                 return false;
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1)
             @Override
             public boolean onQueryTextChange(String s) {
                 updateSearch();
-                //System.out.println("change");
+                /*if (recyclerViewFeed_search.getLayoutManager().) {
+                    searchView_search.onActionViewCollapsed();
+                    System.out.println("wtf");
+                }*/
                 return false;
             }
         });
-
 
     }
 
@@ -87,17 +106,21 @@ public class SearchFragment extends Fragment {
 
         if (!string.isEmpty()) {
 
-            for (Vocabulary vocabulary : app.getWebShelf().getVocabularies()) {
+            for (Vocabulary vocabulary : app.getBigShelf().getVocabularies()) {
 
-                if (!vocabularyList.contains(vocabulary)) {
+                //if (!vocabularyList.contains(vocabulary)) {
+                if (!searchShelf.getVocabularies().contains(vocabulary)) {
 
                     if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)) {
-                        vocabularyList.add(vocabulary);
+                        //vocabularyList.add(vocabulary);
+                        searchShelf.addVocabulary(vocabulary);
 
                     } else {
                         for (VocabularyItem vocabularyItem : vocabulary.getItems()) {
-                            if (!vocabularyList.contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
-                                vocabularyList.add(vocabulary);
+                            //if (!vocabularyList.contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
+                            if (!searchShelf.getVocabularies().contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
+                                //vocabularyList.add(vocabulary);
+                                searchShelf.addVocabulary(vocabulary);
 
                             }
                         }
@@ -105,9 +128,14 @@ public class SearchFragment extends Fragment {
                 }
             }
         }
+<<<<<<< HEAD
         //va = new VocabularyAdapter(getActivity(), vocabularyList);
         va.setVocabularyList(vocabularyList);
         va.notifyDataSetChanged();
+=======
+        //searchShelf.addVocabularies(vocabularyList);
+        va.setVocabularyList(searchShelf.getVocabularies());
+>>>>>>> changes made to search and favourit now works
 
     }
 }
