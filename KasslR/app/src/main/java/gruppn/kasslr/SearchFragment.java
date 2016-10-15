@@ -57,6 +57,8 @@ public class SearchFragment extends Fragment {
         
         recyclerView_search.setLayoutManager(GLM);
         */
+        searchView_search.setQueryHint("Sök efter glosböcker");
+        searchView_search.setIconified(false);
         searchView_search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
