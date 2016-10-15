@@ -7,10 +7,6 @@ import android.content.ContextWrapper;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -105,11 +101,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                     mExpandedPosition = isExpanded ? -1 : position;
             }
         });
-<<<<<<< HEAD
         */
-=======
-
->>>>>>> background color and stuff
        /*
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +154,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         });
 
         updateView(holder, position);
-
     }
 
     private void updateView(VocabularyFeedViewHolder holder, int position){

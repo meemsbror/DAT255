@@ -2,27 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorMainBackround" />
+        android:id="@+id/recycler_view_feed" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addVocabularyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:clickable="true"
+        app:fabSize="normal"
         android:layout_gravity="bottom|end"
         android:layout_margin="14dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:id="@+id/addVocabularyButton"
         android:baselineAlignBottom="true"
-        android:clickable="true"
-        android:onClick="openAddVocabulary"
-        app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:onClick="openAddVocabulary" />
 
 </RelativeLayout>
