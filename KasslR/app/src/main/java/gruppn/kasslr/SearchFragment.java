@@ -106,6 +106,7 @@ public class SearchFragment extends Fragment {
         }
         //va = new VocabularyAdapter(getActivity(), vocabularyList);
         va.setVocabularyList(vocabularyList);
+        va.notifyDataSetChanged();
 
     }
 }
