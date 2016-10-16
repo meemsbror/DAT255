@@ -61,7 +61,8 @@ public class Kasslr extends Application {
 
     public void loadShelf() {
         Log.d(DEBUG_TAG, "Loading shelf");
-        new LoadShelfTask(this).execute(shelf);
+        //new LoadShelfTask(this).execute(shelf);
+        new LoadShelfTask().execute(shelf);
     }
 
     public void initUserData(Context context) {

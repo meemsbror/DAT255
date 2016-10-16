@@ -44,6 +44,8 @@ public class FeedFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
+
+
         if (app.getOnlyOnce()) {
             app.loadFeedItems(getContext(), va);
         }

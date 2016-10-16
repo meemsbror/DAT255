@@ -29,7 +29,6 @@ public class SearchFragment extends Fragment {
     private RecyclerView recyclerViewFeed_search;
     private SearchView searchView_search;
     private VocabularyFeedAdapter va;
-    private List<Vocabulary> vocabularyList = new ArrayList<>();
     private Shelf searchShelf = new Shelf();
 
     @Override
@@ -122,14 +121,8 @@ public class SearchFragment extends Fragment {
                 }
             }
         }
-<<<<<<< HEAD
-        //va = new VocabularyAdapter(getActivity(), vocabularyList);
-        va.setVocabularyList(vocabularyList);
         va.notifyDataSetChanged();
-=======
-        //searchShelf.addVocabularies(vocabularyList);
         va.setVocabularyList(searchShelf.getVocabularies());
->>>>>>> changes made to search and favourit now works
 
     }
 }
