@@ -35,41 +35,11 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, List<Voc
         List<Vocabulary> result = new ArrayList<>();
 
         for (Vocabulary fromVocabulary : vocabularies) {
-            Vocabulary vocabulary = new Vocabulary(fromVocabulary.getOwner(), fromVocabulary.getTitle());
+            Vocabulary vocabulary = downloadVocabulary(fromVocabulary);
 
-            // Download images
-            List<VocabularyItem> items = new ArrayList<>();
-            for (VocabularyItem fromItem : fromVocabulary.getItems()) {
-                String url = fromItem.getImageName();
-                String imageName = UUID.randomUUID().toString();
-
-                VocabularyItem item = new VocabularyItem(fromItem.getName(), imageName, fromItem.getId(), fromItem.isMine());
-
-                try {
-                    downloadImageToFile(url, app.getImageFile(item));
-                    items.add(item);
-                } catch (IOException e) {
-                    Log.e(DEBUG_TAG, "Failed to download image from " + url, e);
-                }
+            if (vocabulary != null) {
+                result.add(vocabulary);
             }
-            vocabulary.setItems(items);
-
-            // Save to database
-            KasslrDatabase db = null;
-            try {
-                db = new KasslrDatabase(app);
-                db.save(vocabulary);
-
-                Log.d(DEBUG_TAG, "Successfully saved vocabulary " + vocabulary);
-            } catch (SQLiteException | IllegalArgumentException e) {
-                Log.e(DEBUG_TAG, "Failed to save vocabulary " + vocabulary, e);
-            } finally {
-                if (db != null) {
-                    db.close();
-                }
-            }
-
-            result.add(vocabulary);
         }
         return result;
     }
@@ -77,6 +47,46 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, List<Voc
     @Override
     protected void onPostExecute(List<Vocabulary> vocabularies) {
         app.getShelf().addVocabularies(vocabularies);
+    }
+
+    private Vocabulary downloadVocabulary(Vocabulary fromVocabulary) {
+        Vocabulary vocabulary = new Vocabulary(fromVocabulary.getOwner(), fromVocabulary.getTitle());
+
+        // Download images
+        List<VocabularyItem> items = new ArrayList<>();
+        for (VocabularyItem fromItem : fromVocabulary.getItems()) {
+            String url = fromItem.getImageName();
+            String imageName = UUID.randomUUID().toString();
+
+            VocabularyItem item = new VocabularyItem(fromItem.getName(), imageName, fromItem.getId(), fromItem.isMine());
+
+            try {
+                downloadImageToFile(url, app.getImageFile(item));
+                items.add(item);
+            } catch (IOException e) {
+                Log.e(DEBUG_TAG, "Failed to download image from " + url, e);
+                return null;
+            }
+        }
+        vocabulary.setItems(items);
+
+        // Save to database
+        KasslrDatabase db = null;
+        try {
+            db = new KasslrDatabase(app);
+            db.save(vocabulary);
+
+            Log.d(DEBUG_TAG, "Successfully saved vocabulary " + vocabulary);
+        } catch (SQLiteException | IllegalArgumentException e) {
+            Log.e(DEBUG_TAG, "Failed to save vocabulary " + vocabulary, e);
+            return null;
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+
+        return vocabulary;
     }
 
     private void downloadImageToFile(String url, File file) throws IOException {
