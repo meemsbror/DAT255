@@ -44,7 +44,6 @@ public class GalleryFragment extends Fragment {
     //private GridView gridGallery;
     private RecyclerView recyclerView;
     private ItemAdapter adapter;
-    private int itemCount = 0;
 
     private boolean selectMode = false;
     private List<VocabularyItem> selectedItems = new ArrayList<>();
@@ -311,7 +310,7 @@ public class GalleryFragment extends Fragment {
             if (items != null) {
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
-                itemCount = items.size();
+                recyclerView.scrollToPosition(0);
             }
         }
     }
