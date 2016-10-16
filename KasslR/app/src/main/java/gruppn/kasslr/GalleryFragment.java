@@ -77,20 +77,8 @@ public class GalleryFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), selectMode);
         recyclerView.setAdapter(adapter);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // Populate gallery
-        loadItems();
-    }
-
-    private void loadItems() {
-        if (itemCount != app.getShelf().getItems().size()) {
-            new LoadItemsTask().execute(app.getShelf().getItems());
-        }
+        new LoadItemsTask().execute(app.getShelf().getItems());
     }
 
     public List<VocabularyItem> getSelectedItems() {
