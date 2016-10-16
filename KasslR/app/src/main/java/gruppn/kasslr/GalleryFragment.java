@@ -289,20 +289,28 @@ public class GalleryFragment extends Fragment {
                 return null;
             }
 
-            // Get last modified date for each item
             final List<VocabularyItem> items = new ArrayList<>(lists[0]);
-            for (VocabularyItem item : items) {
-                item.setLastModified(app.getImageFile(item).lastModified());
+
+            for (Iterator<VocabularyItem> it = items.iterator(); it.hasNext(); ) {
+                VocabularyItem item = it.next();
+
+                if (!item.isMine()) {
+                    // Filter out items from downloaded vocabularies
+                    it.remove();
+                } else {
+                    // Get last modified date
+                    item.setLastModified(app.getImageFile(item).lastModified());
+                }
             }
 
-            // Sort items by date
+            // Sort items by date, descending
             Collections.sort(items, new Comparator<VocabularyItem>() {
                 @Override
                 public int compare(VocabularyItem x, VocabularyItem y) {
                     long a = x.getLastModified();
                     long b = y.getLastModified();
 
-                    return a == b ? 0 : a > b ? 1 : -1;
+                    return a == b ? 0 : a < b ? 1 : -1;
                 }
             });
 
