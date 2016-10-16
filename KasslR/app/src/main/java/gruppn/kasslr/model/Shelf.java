@@ -47,4 +47,8 @@ public class Shelf {
                 ", vocabularies=" + vocabularies +
                 '}';
     }
+
+    public void clear() {
+        vocabularies.clear();
+    }
 }

@@ -176,8 +176,7 @@
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:padding="8dp"
-                android:src="@drawable/ic_favorite_white_24dp"
-                android:tint="#999999" />
+                android:src="@drawable/ic_favorite_grey_24dp" />
 
         </LinearLayout>
 

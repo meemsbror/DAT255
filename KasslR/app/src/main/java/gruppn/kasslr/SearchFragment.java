@@ -69,6 +69,9 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String s) {
                 updateSearch();
+                if (s.isEmpty()) {
+                    searchShelf.clear();
+                }
                 /*if (recyclerViewFeed_search.callOnClick()) {
                     searchView_search.onActionViewCollapsed();
                     System.out.println("wtf");
@@ -80,6 +83,9 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
                 updateSearch();
+                if (s.isEmpty()) {
+                    searchShelf.clear();
+                }
                 /*if (recyclerViewFeed_search.getLayoutManager().) {
                     searchView_search.onActionViewCollapsed();
                     System.out.println("wtf");
@@ -92,26 +98,22 @@ public class SearchFragment extends Fragment {
 
 
     public void updateSearch(){
-        vocabularyList.clear();
+        searchShelf.clear();
         recyclerViewFeed_search.removeAllViews();
-        String string = searchView_search.getQuery().toString();
+        String string = searchView_search.getQuery().toString().toLowerCase();
 
         if (!string.isEmpty()) {
 
             for (Vocabulary vocabulary : app.getBigShelf().getVocabularies()) {
 
-                //if (!vocabularyList.contains(vocabulary)) {
                 if (!searchShelf.getVocabularies().contains(vocabulary)) {
 
-                    if (vocabulary.getTitle().equals(string) || vocabulary.getTitle().contains(string)) {
-                        //vocabularyList.add(vocabulary);
+                    if (vocabulary.getTitle().toLowerCase().equals(string) || vocabulary.getTitle().toLowerCase().contains(string)) {
                         searchShelf.addVocabulary(vocabulary);
 
                     } else {
                         for (VocabularyItem vocabularyItem : vocabulary.getItems()) {
-                            //if (!vocabularyList.contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
-                            if (!searchShelf.getVocabularies().contains(vocabulary) && (vocabularyItem.getName().equals(string) || vocabularyItem.getName().contains(string))) {
-                                //vocabularyList.add(vocabulary);
+                            if (!searchShelf.getVocabularies().contains(vocabulary) && (vocabularyItem.getName().toLowerCase().equals(string) || vocabularyItem.getName().toLowerCase().contains(string))) {
                                 searchShelf.addVocabulary(vocabulary);
 
                             }

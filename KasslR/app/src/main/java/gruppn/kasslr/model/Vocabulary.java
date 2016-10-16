@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import gruppn.kasslr.R;
+import gruppn.kasslr.VocabularyFeedViewHolder;
+
 public class Vocabulary {
     private User user;
     private int id;
@@ -14,6 +17,7 @@ public class Vocabulary {
     private List<VocabularyItem> items;
     private int universalId = 0;
     private boolean favourite = false;
+
 
     public Vocabulary(User user, String title){
         this.user = user;

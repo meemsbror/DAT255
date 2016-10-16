@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -27,15 +28,12 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     protected ImageView fakePlayButton;
     protected ImageView realPlayButton;
     protected ImageView thumbsDownButton;
-<<<<<<< HEAD
     protected ImageView closeButton;
     protected LinearLayout playContainer;
-=======
     protected ImageView favouriteButton;
->>>>>>> start of favourit fragment
 
 
-    public VocabularyFeedViewHolder(List<Vocabulary> vocabularyList, View v){
+    public VocabularyFeedViewHolder(View v){
         super(v);
         name = (TextView) v.findViewById(R.id.vocabulary_name);
         owner = (TextView) v.findViewById(R.id.owner_name);
@@ -50,11 +48,8 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
-<<<<<<< HEAD
         closeButton = (ImageView) v.findViewById(R.id.close_button);
-=======
         favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
->>>>>>> start of favourit fragment
 
 
 
@@ -68,28 +63,6 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
             }
         });
 
-        for (Vocabulary vocabulary : vocabularyList) {
-            if (vocabulary.isFavourite()) {
-                favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-            } else {
-                favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-            }
-        }
-
-        favouriteButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
-                if (vocabulary.isFavourite()){
-                    System.out.println("här");
-                    vocabulary.setFavourite(false);
-                    favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
-                } else {
-                    System.out.println("och här");
-                    vocabulary.setFavourite(true);
-                    favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
-                }
-            }
-        });
     }
 
     public ImageView getImageView(int i){

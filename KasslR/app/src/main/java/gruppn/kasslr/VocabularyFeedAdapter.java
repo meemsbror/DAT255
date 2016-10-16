@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -44,6 +45,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     private Context mContext;
     private int mExpandedPosition = -1;
     private int adapterSwitch = R.id.recycler_view_feed;
+    private List<VocabularyFeedViewHolder> vfvhList = new ArrayList<>();
 
     public VocabularyFeedAdapter(Activity activity, List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
@@ -68,125 +70,31 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
                 .inflate(R.layout.vocabulary_feed_card, parent, false);
 
         this.mContext = parent.getContext();
-<<<<<<< HEAD
-        return new VocabularyFeedViewHolder(itemView);
-    }
 
 
-    private String adapterSwitch = "";
+        VocabularyFeedViewHolder vfvh = new VocabularyFeedViewHolder(itemView);
 
-<<<<<<< HEAD
-    public void setSearchAdapter(boolean a) {
-        searchAdapter = a;
-=======
-    public void setAdapterSwitch(String adapterSwitch){
-=======
-
-        return new VocabularyFeedViewHolder(vocabularies,itemView);
+        vfvhList.add(vfvh);
+        return vfvh;
     }
 
     public void setAdapterSwitch(int adapterSwitch){
->>>>>>> changes made to search and favourit now works
         this.adapterSwitch = adapterSwitch;
->>>>>>> start of favourit fragment
     }
 
     @Override
     public void onBindViewHolder(final VocabularyFeedViewHolder holder, final int position) {
         final boolean isExpanded = position == mExpandedPosition;
 
-        holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
+        //holder.detailed.setVisibility(isExpanded?View.VISIBLE:View.GONE);
         holder.fakePlayButton.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.playText.setVisibility(isExpanded?View.GONE:View.VISIBLE);
         holder.cardView.setActivated(isExpanded);
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if (adapterSwitch.equals("SEARCH")) {
 
-            holder.cardView.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                @Override
-                public void onClick(View v) {
-                    /*
-                    mExpandedPosition = isExpanded ? -1 : position;
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
-                    notifyDataSetChanged();
-                    */
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(R.id.recyclerViewFeed_search));
-                    }
-                    notifyItemChanged(position);
-                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                        notifyItemChanged(mExpandedPosition);
-                    }
-                    mExpandedPosition = isExpanded ? -1 : position;
-                }
-            });
-        } else if (adapterSwitch.equals("FAVOURITE")) {
-
-                holder.cardView.setOnClickListener(new View.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public void onClick(View v) {
-                    /*
-                    mExpandedPosition = isExpanded ? -1 : position;
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_search));
-                    notifyDataSetChanged();
-                    */
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                            TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recyclerViewFeed_favourite));
-                        }
-                        notifyItemChanged(position);
-                        if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                            notifyItemChanged(mExpandedPosition);
-                        }
-                        mExpandedPosition = isExpanded ? -1 : position;
-                    }
-                });
-
-
->>>>>>> start of favourit fragment
-        } else {
-            view = R.id.recycler_view_feed;
-        }
-        /*
-=======
-
->>>>>>> rebased in master to favouriteFeature
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-
-                    /*
-                    mExpandedPosition = isExpanded ? -1 : position;
-                    TransitionManager.beginDelayedTransition((ViewGroup)activity.findViewById(R.id.recycler_view_feed));
-                    notifyDataSetChanged();
-                    *//*
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(view));
-                    }
-                    notifyItemChanged(position);
-                    if (mExpandedPosition != -1 && mExpandedPosition != position) {
-                        notifyItemChanged(mExpandedPosition);
-                    }
-                    mExpandedPosition = isExpanded ? -1 : position;
-            }
-        });
-
-        */
-
-       /*
-=======
-
->>>>>>> changes made to search and favourit now works
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View v) {
-=======
->>>>>>> rebased in master to favouriteFeature
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     TransitionManager.beginDelayedTransition((ViewGroup) activity.findViewById(adapterSwitch));
                 }
@@ -208,21 +116,15 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             }
         });
 
-<<<<<<< HEAD
-        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
-=======
         holder.favouriteButton.setOnClickListener(new View.OnClickListener(){
->>>>>>> rebased in master to favouriteFeature
             @Override
             public void onClick(View v) {
                 holder.favouriteButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 new DownloadVocabularyTask(app).execute(vocabularies.get(position));
                 if (holder.vocabulary.isFavourite()){
-                    System.out.println("här");
                     holder.vocabulary.setFavourite(false);
-                    holder.favouriteButton.setImageResource(R.drawable.ic_favorite_white_24dp);
+                    holder.favouriteButton.setImageResource(R.drawable.ic_favorite_grey_24dp);
                 } else {
-                    System.out.println("och här");
                     holder.vocabulary.setFavourite(true);
                     holder.favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
                 }
@@ -257,6 +159,12 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         setPictures(holder, items);
         setOwner(holder, v);
         holder.setVocabulary(v);
+        if (v.isFavourite()) {
+            holder.favouriteButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+        } else {
+            holder.favouriteButton.setImageResource(R.drawable.ic_favorite_grey_24dp);
+        }
+
     }
 
     private void setPictures(VocabularyFeedViewHolder holder, final List<VocabularyItem> items) {

@@ -31,7 +31,7 @@ public class FeedFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) { super.onActivityCreated(savedInstanceState); //add point
-
+        feedShelf.clear();
         this.app = (Kasslr) getActivity().getApplication();
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_feed);
         recyclerView.setItemAnimator(null);
@@ -44,18 +44,11 @@ public class FeedFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
 
-<<<<<<< HEAD
-        app.loadFeedItems(getContext(), va);
-=======
         if (app.getOnlyOnce()) {
             app.loadFeedItems(getContext(), va);
         }
         feedShelf.addVocabularies(app.getBigShelf().getVocabularies());
         va.setVocabularyList(feedShelf.getVocabularies());
-<<<<<<< HEAD
-        System.out.println(app.getBigShelf().getVocabularies().size());
->>>>>>> changes made to search and favourit now works
-=======
->>>>>>> rebased in master to favouriteFeature
+
     }
 }

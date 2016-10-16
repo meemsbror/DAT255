@@ -36,6 +36,7 @@ public class FavouriteFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) { super.onActivityCreated(savedInstanceState); //add point
         this.app = (gruppn.kasslr.Kasslr) getActivity().getApplication();
 
+        favouriteShelf.clear();
         recyclerViewFeed_favourite = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_favourite);
         recyclerViewFeed_favourite.setItemAnimator(null);
 

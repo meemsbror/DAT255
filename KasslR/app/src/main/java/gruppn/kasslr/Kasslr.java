@@ -10,30 +10,23 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
-
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
-
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.ProfileInformation;
 import gruppn.kasslr.model.Shelf;
@@ -41,8 +34,6 @@ import gruppn.kasslr.model.User;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 import gruppn.kasslr.task.LoadShelfTask;
-
-import static android.R.id.list;
 
 public class Kasslr extends Application {
     private static final String DEBUG_TAG = "Kasslr";
