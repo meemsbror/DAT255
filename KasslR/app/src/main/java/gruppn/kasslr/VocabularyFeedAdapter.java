@@ -33,6 +33,7 @@ import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 import gruppn.kasslr.task.DownloadVocabularyTask;
+import gruppn.kasslr.task.RemoveVocabularyTask;
 
 public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedViewHolder> {
 
@@ -155,6 +156,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             public void onClick(View v) {
                 holder.closeButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
                 app.getShelf().getVocabularies().remove(holder.vocabulary);
+                new RemoveVocabularyTask(app).execute(holder.vocabulary);
                 notifyDataSetChanged();
             }
         });

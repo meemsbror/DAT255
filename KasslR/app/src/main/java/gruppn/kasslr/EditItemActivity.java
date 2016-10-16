@@ -25,6 +25,7 @@ import android.widget.Toast;
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
+import gruppn.kasslr.task.RemoveItemTask;
 
 public class EditItemActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE_URI = "image";
@@ -148,7 +149,7 @@ public class EditItemActivity extends AppCompatActivity {
             return;
         }
 
-        new RemoveItemTask().execute(item);
+        new RemoveItemTask(app).execute(item);
 
         int index = app.getShelf().getItems().indexOf(item);
         app.getShelf().removeItem(item);
@@ -215,37 +216,6 @@ public class EditItemActivity extends AppCompatActivity {
                 if (db != null) {
                     db.close();
                 }
-            }
-
-            return null;
-        }
-    }
-
-    private class RemoveItemTask extends AsyncTask<VocabularyItem, Void, Void> {
-        @Override
-        protected Void doInBackground(VocabularyItem... items) {
-            // Remove database entries
-            KasslrDatabase db = null;
-            try {
-                db = new KasslrDatabase(getApplicationContext());
-
-                for (VocabularyItem item : items) {
-                    if (item.getId() != 0) {
-                        db.remove(item);
-                    }
-                }
-                Log.d(DEBUG_TAG, "Successfully removed " + items.length + " item(s)");
-            } catch (SQLiteException e) {
-                Log.e(DEBUG_TAG, "Failed to remove item(s)", e);
-            } finally {
-                if (db != null) {
-                    db.close();
-                }
-            }
-
-            // Remove image files
-            for (VocabularyItem item : items) {
-                app.getImageFile(item).delete();
             }
 
             return null;

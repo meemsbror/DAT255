@@ -295,6 +295,9 @@ public class KasslrDatabase extends SQLiteOpenHelper {
 
             // Delete connections
             db.execSQL("DELETE FROM vocabulary_content WHERE item_id = ?", new Object[] { item.getId() });
+
+            // Remove id from item
+            item.setId(0);
         } finally {
             if (db != null) {
                 db.close();
@@ -313,6 +316,9 @@ public class KasslrDatabase extends SQLiteOpenHelper {
 
             // Delete connections
             db.execSQL("DELETE FROM vocabulary_content WHERE vocabulary_id = ?", new Object[] { vocabulary.getId() });
+
+            // Remove id from vocabulary
+            vocabulary.setId(0);
         } finally {
             if (db != null) {
                 db.close();
