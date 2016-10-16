@@ -46,24 +46,6 @@ public class EditItemActivity extends AppCompatActivity {
 
     private InputMethodManager imm;
 
-    private RelativeLayout layout;
-    // Ugly solution since there is no "keyboard closed" listener
-    private ViewTreeObserver.OnGlobalLayoutListener layoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        int previousHeight = Integer.MAX_VALUE;
-
-        @Override
-        public void onGlobalLayout() {
-            int height = layout.getHeight();
-
-            if (height > previousHeight) {
-                // Keyboard was probably closed; close activity
-                close();
-            }
-
-            previousHeight = height;
-        }
-    };
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +60,6 @@ public class EditItemActivity extends AppCompatActivity {
         Uri image = (Uri) getIntent().getExtras().get(EXTRA_IMAGE_URI);
         int itemIndex = getIntent().getExtras().getInt(EXTRA_ITEM_INDEX, -1);
         exitTransition = getIntent().getExtras().getBoolean(EXTRA_EXIT_TRANSITION, true);
-
-        layout = (RelativeLayout) findViewById(R.id.edit_item_layout);
-        layout.getViewTreeObserver().addOnGlobalLayoutListener(layoutListener);
 
         if (image != null) {
             // Create item from image
@@ -104,6 +83,8 @@ public class EditItemActivity extends AppCompatActivity {
 
                     // Hide keyboard
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+                    close();
                     return true;
                 }
                 return false;
@@ -119,14 +100,6 @@ public class EditItemActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
         }
         imgWord.setImageBitmap(Bitmap.createScaledBitmap(bitmap, getImageWidth(), getImageHeight(), false));
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            layout.getViewTreeObserver().removeOnGlobalLayoutListener(layoutListener);
-        }
-        super.onDestroy();
     }
 
     @Override
