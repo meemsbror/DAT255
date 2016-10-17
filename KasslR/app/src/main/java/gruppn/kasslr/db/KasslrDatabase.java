@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import gruppn.kasslr.model.User;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
@@ -22,7 +23,7 @@ import gruppn.kasslr.model.VocabularyItem;
 */
 public class KasslrDatabase extends SQLiteOpenHelper {
     private static final String DEBUG_TAG = "KasslrDatabase";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "kasslr";
 
     private Context mContext;
@@ -56,6 +57,13 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 + "item_id INTEGER,"
                 + "PRIMARY KEY(vocabulary_id, item_id)"
                 + ")");
+
+        // Create users table
+        db.execSQL("CREATE TABLE users ("
+                + "id TEXT PRIMARY KEY,"
+                + "name TEXT,"
+                + "picture TEXT"
+                + ")");
     }
 
     @Override
@@ -70,6 +78,12 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             case 2:
                 // Upgrade from version 2 to 3
                 db.execSQL("ALTER TABLE items ADD COLUMN mine INTEGER DEFAULT 1");
+            case 3:
+                // Upgrade from version 3 to 4
+                db.execSQL("DROP TABLE items");
+                db.execSQL("DROP TABLE vocabularies");
+                db.execSQL("DROP TABLE vocabulary_content");
+                onCreate(db);
             default:
                 break;
         }
@@ -106,6 +120,13 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 Log.d(DEBUG_TAG, "vocabulary_id: " + c.getInt(0) + ", item_id: " + c.getInt(1));
             }
             c.close();
+
+            Log.d(DEBUG_TAG, "Dumping users");
+            c = db.rawQuery("SELECT id, name, picture FROM users", null);
+            while (c.moveToNext()) {
+                Log.d(DEBUG_TAG, "id: " + c.getString(0) + ", name: " + c.getString(1) + ", picture: " + c.getString(2));
+            }
+            c.close();
         } finally {
             if (db != null) {
                 db.close();
@@ -123,7 +144,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
 
             cVoc = db.rawQuery("SELECT id, name, owner, universal_id FROM vocabularies ORDER BY id DESC", null);
             while (cVoc.moveToNext()) {
-                Vocabulary vocabulary = new Vocabulary(cVoc.getString(2), cVoc.getString(1), cVoc.getInt(0), cVoc.getInt(3));
+                Vocabulary vocabulary = new Vocabulary(getUser(cVoc.getString(2), db), cVoc.getString(1), cVoc.getInt(0), cVoc.getInt(3));
 
                 List<VocabularyItem> items = new ArrayList<>();
                 Cursor cItems = null;
@@ -160,6 +181,21 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         }
 
         return vocabularies;
+    }
+
+    public User getUser(String id, SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT id, name, picture FROM users WHERE id = ?", new String[] { id });
+            if (cursor.moveToNext()) {
+                return new User(cursor.getString(1), cursor.getString(0), cursor.getString(2));
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return new User("Anonym");
     }
 
     public List<VocabularyItem> getItems() throws SQLiteException {
@@ -245,10 +281,13 @@ public class KasslrDatabase extends SQLiteOpenHelper {
         try {
             db = getWritableDatabase();
 
+            // Save user
+            save(vocabulary.getOwner(), db);
+
             if (vocabulary.getId() != 0) {
                 // Vocabulary exists in database; update values
                 db.execSQL("UPDATE vocabularies SET name = ?, owner = ?, universal_id = ? WHERE id = ?",
-                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner(), vocabulary.getUniversalId(),
+                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner().getId(), vocabulary.getUniversalId(),
                                 vocabulary.getId() });
 
                 // Delete previous connections
@@ -257,7 +296,7 @@ public class KasslrDatabase extends SQLiteOpenHelper {
             } else {
                 // Vocabulary does not exist; insert new
                 db.execSQL("INSERT INTO vocabularies (name, owner, universal_id) VALUES (?, ?, ?)",
-                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner(), vocabulary.getUniversalId() });
+                        new Object[] { vocabulary.getTitle(), vocabulary.getOwner().getId(), vocabulary.getUniversalId() });
 
                 cursor = db.rawQuery("SELECT last_insert_rowid()", null);
                 cursor.moveToNext();
@@ -282,6 +321,11 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 cursor.close();
             }
         }
+    }
+
+    public void save(User user, SQLiteDatabase db) {
+        db.execSQL("REPLACE INTO users (id, name, picture) VALUES (?, ?, ?)",
+                new Object[] { user.getId(), user.getName(), user.getProfilePic() });
     }
 
     public void remove(VocabularyItem item) throws SQLiteException {

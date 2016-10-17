@@ -40,6 +40,7 @@ public class User {
         return this.profilePicURL;
     }
 
+    @Override
     public boolean equals(Object that){
         if(that instanceof User){
             User user = (User)that;
@@ -49,10 +50,19 @@ public class User {
             }
 
             //Returns true if user id is the same, since it is different for every user
-            return(this.id == user.id);
+            return this.id.equals(user.id);
 
         }else{
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name=" + name +
+                ",id=" + id +
+                ",profilePicUrl=" + profilePicURL +
+                "}";
     }
 }

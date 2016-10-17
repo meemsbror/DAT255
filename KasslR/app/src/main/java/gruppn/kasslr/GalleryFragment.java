@@ -41,7 +41,6 @@ public class GalleryFragment extends Fragment {
 
     private Kasslr app;
 
-    //private GridView gridGallery;
     private RecyclerView recyclerView;
     private ItemAdapter adapter;
 

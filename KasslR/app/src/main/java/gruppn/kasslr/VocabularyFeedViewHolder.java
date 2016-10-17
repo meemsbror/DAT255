@@ -1,19 +1,11 @@
 package gruppn.kasslr;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.util.List;
 
 import gruppn.kasslr.model.Vocabulary;
 
@@ -25,7 +17,6 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     protected Vocabulary vocabulary;
     private LinearLayout detailed;
     protected CardView cardView;
-    protected ImageView fakePlayButton;
     protected ImageView informationButton;
     protected ImageView thumbsDownButton;
     protected ImageView closeButton;
@@ -45,13 +36,11 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
 
         detailed = (LinearLayout) v.findViewById(R.id.expand_area);
         cardView = (CardView) v.findViewById(R.id.card_view_feed);
-        fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
         informationButton = (ImageView) v.findViewById(R.id.information_button);
+        playContainer = (LinearLayout) v.findViewById(R.id.play_container);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
         closeButton = (ImageView) v.findViewById(R.id.close_button);
         favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
-
-
     }
 
     public ImageView getImageView(int i){

@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import gruppn.kasslr.model.Vocabulary;
 
@@ -31,8 +33,15 @@ public class FavoriteFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_favorite);
         recyclerView.setItemAnimator(null);
 
-        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
+        List<Vocabulary> favorites = new ArrayList<>();
+        for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {
+            // TODO this is incredibly confusing and wrong but there isn't enough time to do this shit properly. hail spaghetti
+            if (vocabulary.getUniversalId() != 0) {
+                favorites.add(vocabulary);
+            }
+        }
 
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter((MainActivity) getActivity(), favorites);
         recyclerView.setAdapter(va);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
