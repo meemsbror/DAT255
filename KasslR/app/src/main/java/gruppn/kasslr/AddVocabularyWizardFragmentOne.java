@@ -42,7 +42,7 @@ public class AddVocabularyWizardFragmentOne extends Fragment {
 
         galleryFragment = new GalleryFragment();
         Bundle args = new Bundle();
-        args.putBoolean(GalleryFragment.EXTRA_SELECT_MODE, true);
+        args.putSerializable(GalleryFragment.EXTRA_MODE, GalleryFragment.Mode.SELECT);
         galleryFragment.setArguments(args);
 
         getActivity().getSupportFragmentManager().beginTransaction().add(R.id.frame_vocabulary_items, galleryFragment).commit();
