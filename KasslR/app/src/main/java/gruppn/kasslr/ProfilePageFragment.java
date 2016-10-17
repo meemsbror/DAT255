@@ -72,20 +72,20 @@ public class ProfilePageFragment extends Fragment{
         final TextView points = (TextView) getView().findViewById(R.id.score);
         points.setText("" + app.getScore());
 
-        /*
 
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view);
 
-        recyclerView.setHasFixedSize(true);
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_profile);
+
 
         LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
         VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
+        va.setAdapterSwitch(R.id.recyclerViewFeed_profile);
         recyclerView.setAdapter(va);
 
-        */
+
 
         //Change profile background
         final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
@@ -159,6 +159,8 @@ public class ProfilePageFragment extends Fragment{
                 app.setUserName(name.getText().toString());
             }
         });
+
+
     }
 
     public void changeProfilePicture(Uri uri){
