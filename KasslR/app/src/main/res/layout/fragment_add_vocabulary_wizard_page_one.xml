@@ -13,13 +13,23 @@
         android:layout_height="wrap_content"
         android:id="@+id/descriptionText" />
 
+
+    <FrameLayout
+        android:id="@+id/frame_vocabulary_items"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/descriptionText"
+        android:layout_above="@id/bottomBar"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="48dp"
         android:id="@+id/bottomBar"
         android:elevation="4dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/descriptionText"
+        android:layout_alignStart="@+id/descriptionText">
         <Button
             android:text="@string/add_vocabulary_next_step"
             android:layout_width="wrap_content"
@@ -29,15 +39,6 @@
             android:id="@+id/nextButton"
             android:background="@null"/>
     </RelativeLayout>
-
-
-    <FrameLayout
-        android:id="@+id/frame_vocabulary_items"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@id/descriptionText"
-        android:layout_above="@id/bottomBar"/>
-
 
 
 </RelativeLayout>
