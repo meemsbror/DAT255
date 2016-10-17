@@ -36,7 +36,6 @@ public class Shelf {
 
     public Vocabulary getVocabularyByUid(int universalId) {
         for (Vocabulary vocabulary : vocabularies) {
-            Log.d("Shelf", "universalId: " + universalId + ", compare to: " + vocabulary.getUniversalId());
             if (vocabulary.getUniversalId() == universalId) {
                 return vocabulary;
             }

@@ -214,6 +214,7 @@ public class GalleryFragment extends Fragment {
                 });
             }
 
+            card.setVisibility(View.INVISIBLE);
             image.post(new Runnable() {
                 @Override
                 public void run() {
@@ -309,7 +310,13 @@ public class GalleryFragment extends Fragment {
             if (items != null) {
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(0);
+
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.scrollToPosition(0);
+                    }
+                });
             }
         }
     }
