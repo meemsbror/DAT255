@@ -19,6 +19,7 @@
     <string name="add_vocabulary_title">Skapa en glosbok</string>
     <string name="add_vocabulary_choose_pictures">Välj glosor</string>
     <string name="add_vocabulary_next_step">Nästa ></string>
+    <string name="add_vocabulary_name_instruction">Titel</string>
     <string name="add_vocabulary_name_description">Exempel: Matbutiken, skolan...</string>
     <string name="add_vocabulary_previous_step">&lt; Tillbaka</string>
     <string name="add_vocabulary_public">Ladda upp till feed</string>

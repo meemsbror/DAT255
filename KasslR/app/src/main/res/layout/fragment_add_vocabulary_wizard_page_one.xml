@@ -26,7 +26,7 @@
         android:layout_height="48dp"
         android:id="@+id/bottomBar"
         android:elevation="4dp"
-        android:background="@color/white"
+        android:background="@color/colorPrimaryDark"
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/descriptionText"
         android:layout_alignStart="@+id/descriptionText">
@@ -37,7 +37,8 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:id="@+id/nextButton"
-            android:background="@null"/>
+            android:background="@null"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
 
