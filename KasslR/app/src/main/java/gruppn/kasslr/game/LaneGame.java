@@ -119,6 +119,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private Vocabulary vocabulary;
     private List<VocabularyItem> completedWords = new ArrayList<VocabularyItem>();
+    private HashMap<VocabularyItem, Integer> failedAttempts = new HashMap<>();
     private TargetImage targetImage = null;
 
     private Set<Particle> particles = new HashSet<Particle>();
@@ -581,7 +582,6 @@ class GameView extends SurfaceView implements Runnable {
         Random rand = new Random();
 
         while(true) {
-            System.out.println("getting unused vocabulary item hehe");
             VocabularyItem item = vocabulary.getItems().get(rand.nextInt(vocabulary.getItems().size()));
             if(!completedWords.contains(item))
                 return item;
@@ -593,8 +593,6 @@ class GameView extends SurfaceView implements Runnable {
         int attempts = 0; //this thing is stupid but yeh mvp
         while(true) {
             VocabularyItem item = vocabulary.getItems().get(rand.nextInt(vocabulary.getItems().size()));
-            System.out.println("getRandomVocabularyItem hehe got " + item.getName());
-            System.out.println("getRandomVocabularyItem hehe has " + notThisItemThough.getName());
             if(item != notThisItemThough && !notTheseEither.contains(item) || attempts > 20)
                 return item;
             attempts++;
@@ -609,11 +607,11 @@ class GameView extends SurfaceView implements Runnable {
 
             if(target.getY() > playerY-50 && target.getY() < playerY+50 && Math.abs(target.getX() - playerX) < 70 ){
                 if(target.isBenign()) {
-                    score++;
+                    makePlayerFeelGoodForPickingTheCorrectTarget(target.getVocabularyItem());
                     completedWords.add(target.getVocabularyItem());
                     feedback = new FeedbackOverlay(tickCount, Color.GREEN, 4);
                 }else {
-                    score -= 5;
+                    updateFailedAttempts(target.getVocabularyItem());
                     Vibrator v = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(300);
                     feedback = new FeedbackOverlay(tickCount, Color.RED, 16);
@@ -625,6 +623,36 @@ class GameView extends SurfaceView implements Runnable {
             if(target.getY() > gameHeight)
                 iterator.remove();
         }
+
+    }
+
+    private void makePlayerFeelGoodForPickingTheCorrectTarget(VocabularyItem item) {
+        if(failedAttempts.containsKey(item)){
+            int amountOfFailedAttempts = failedAttempts.get(item);
+            if(amountOfFailedAttempts > 3){
+                addPlayerScore(1);
+                return;
+            }
+
+            addPlayerScore(4-amountOfFailedAttempts);
+            return;
+        }
+
+        addPlayerScore(5);
+    }
+
+    private void addPlayerScore(int i) {
+        score += i;
+    }
+
+    private void updateFailedAttempts(VocabularyItem item) {
+        if(!failedAttempts.containsKey(item)) {
+            failedAttempts.put(item, 1);
+            return;
+        }
+        int amountOfFailedAttempts = failedAttempts.get(item);
+
+        failedAttempts.put(item, amountOfFailedAttempts+1);
 
     }
 
@@ -664,7 +692,6 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     public void sendTouchEvent(MotionEvent event) {
-        System.out.println("motion event : " + event.getAction());
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             if(tutorialIsOpen())
                 tutorialSkipped = true;
