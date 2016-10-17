@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KasslR</string>
+    <string name="app_name">Kasslr</string>
     <string name="title_activity_navigateable">Navigateable</string>
     <string name="save">Spara</string>
     <string name="camera_permission_confirmation">This function lets you take photos of subjects. In order to do that, it needs permission to access camera.</string>
@@ -17,9 +17,10 @@
     <string name="transition_edit_item_image">Edit Word Image Transition</string>
     <string name="transition_edit_item_name">Edit Word Name Transition</string>
     <string name="add_vocabulary_title">Skapa en glosbok</string>
-    <string name="add_vocabulary_choose_pictures">Välj bilder</string>
+    <string name="add_vocabulary_choose_pictures">Välj glosor</string>
     <string name="add_vocabulary_next_step">Nästa ></string>
-    <string name="add_vocabulary_name_description">Exempel: Matbutiken, militär...</string>
+    <string name="add_vocabulary_name_instruction">Titel</string>
+    <string name="add_vocabulary_name_description">Exempel: Matbutiken, skolan...</string>
     <string name="add_vocabulary_previous_step">&lt; Tillbaka</string>
     <string name="add_vocabulary_public">Ladda upp till feed</string>
     <string name="add_vocabulary_create">Skapa</string>

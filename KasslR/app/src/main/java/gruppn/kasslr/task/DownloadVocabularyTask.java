@@ -50,7 +50,8 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, List<Voc
     }
 
     private Vocabulary downloadVocabulary(Vocabulary fromVocabulary) {
-        Vocabulary vocabulary = new Vocabulary(fromVocabulary.getOwner(), fromVocabulary.getTitle());
+        Vocabulary vocabulary = new Vocabulary(fromVocabulary.getOwner(), fromVocabulary.getTitle(),
+                fromVocabulary.getId(), fromVocabulary.getUniversalId());
 
         // Download images
         List<VocabularyItem> items = new ArrayList<>();

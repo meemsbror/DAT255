@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gruppn.kasslr.db.KasslrDatabase;
+import gruppn.kasslr.model.User;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 
@@ -84,7 +85,7 @@ public class AddVocabularyWizardFragmentTwo extends Fragment {
             items.add(app.getShelf().getItems().get(i));
         }
 
-        Vocabulary vocabulary = new Vocabulary(app.getUserId(), title);
+        Vocabulary vocabulary = new Vocabulary(new User(app.getUserName(), app.getUserId()), title);
         vocabulary.setItems(items);
 
         app.getShelf().addVocabulary(vocabulary);

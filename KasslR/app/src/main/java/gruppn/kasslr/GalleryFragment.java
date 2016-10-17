@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,18 +36,21 @@ import gruppn.kasslr.model.VocabularyItem;
 
 public class GalleryFragment extends Fragment {
     public static final int REQUEST_EDIT_ITEM = 1;
-    public static final String EXTRA_SELECT_MODE = "selectMode";
+    public static final String EXTRA_MODE = "mode";
 
     private static final String DEBUG_TAG = "GalleryFragment";
 
     private Kasslr app;
 
-    //private GridView gridGallery;
     private RecyclerView recyclerView;
     private ItemAdapter adapter;
 
-    private boolean selectMode = false;
+    private Mode mode = Mode.EDIT;
     private List<VocabularyItem> selectedItems = new ArrayList<>();
+
+    public enum Mode {
+        VIEW, EDIT, SELECT
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +64,10 @@ public class GalleryFragment extends Fragment {
         app = (Kasslr) getActivity().getApplication();
 
         if (getArguments() != null) {
-            selectMode = getArguments().getBoolean(EXTRA_SELECT_MODE, false);
+            Mode mode = (Mode) getArguments().getSerializable(EXTRA_MODE);
+            if (mode != null) {
+                this.mode = mode;
+            }
         }
 
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view_gallery);
@@ -74,10 +81,15 @@ public class GalleryFragment extends Fragment {
         });
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), selectMode);
+        adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), mode);
         recyclerView.setAdapter(adapter);
 
-        new LoadItemsTask().execute(app.getShelf().getItems());
+        if (mode == Mode.VIEW) {
+            adapter.setItems(app.getActiveVocabulary().getItems());
+            adapter.notifyDataSetChanged();
+        } else {
+            new LoadItemsTask().execute(app.getShelf().getItems());
+        }
     }
 
     public List<VocabularyItem> getSelectedItems() {
@@ -108,16 +120,16 @@ public class GalleryFragment extends Fragment {
 
     private class ItemAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         private List<VocabularyItem> mItems;
-        private boolean mSelectMode;
+        private Mode mMode;
 
-        public ItemAdapter(List<VocabularyItem> items, boolean selectMode) {
+        public ItemAdapter(List<VocabularyItem> items, Mode mode) {
             setItems(items);
-            mSelectMode = selectMode;
+            mMode = mode;
         }
 
         public void setItems(List<VocabularyItem> items) {
             mItems = items;
-            if (mSelectMode) {
+            if (mode != Mode.EDIT) {
                 removeUnnamedItems();
             }
         }
@@ -135,7 +147,7 @@ public class GalleryFragment extends Fragment {
         public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view =  LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.vocabulary_item, parent, false);
-            return new ItemViewHolder(view, mSelectMode);
+            return new ItemViewHolder(view, mMode);
         }
 
         @Override
@@ -160,17 +172,17 @@ public class GalleryFragment extends Fragment {
         private ImageView gradient;
         private ImageView checkbox;
 
-        private boolean mSelectMode;
+        private Mode mMode;
 
-        public ItemViewHolder(final View view, boolean selectMode) {
+        public ItemViewHolder(final View view, Mode mode) {
             super(view);
             card = (CardView) view;
             name = (TextView) view.findViewById(R.id.txtItem);
             image = (ImageView) view.findViewById(R.id.imgItem);
             gradient = (ImageView) view.findViewById(R.id.vocabulary_item_gradient);
             checkbox = (ImageView) view.findViewById(R.id.imgCheckbox);
-            mSelectMode = selectMode;
-            if (!selectMode) {
+            mMode = mode;
+            if (mMode != Mode.SELECT) {
                 card.removeView(gradient);
                 card.removeView(checkbox);
             } else {
@@ -179,7 +191,7 @@ public class GalleryFragment extends Fragment {
         }
 
         public void setItem(final VocabularyItem item) {
-            if (mSelectMode) {
+            if (mMode == Mode.SELECT) {
                 card.setOnClickListener(new CardView.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -188,7 +200,7 @@ public class GalleryFragment extends Fragment {
                         }
                     }
                 });
-            } else {
+            } else if (mMode == Mode.EDIT) {
                 card.setOnClickListener(new CardView.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -215,19 +227,25 @@ public class GalleryFragment extends Fragment {
                 });
             }
 
+            card.setVisibility(View.INVISIBLE);
             image.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(getContext())
-                            .load(app.getImageFile(item))
-                            .resize(image.getMeasuredWidth(), image.getMeasuredWidth() * 4 / 3)
+                    RequestCreator request;
+                    if (item.getImageName().startsWith("http")) {
+                        request = Picasso.with(getContext()).load(item.getImageName());
+                    } else {
+                        request = Picasso.with(getContext()).load(app.getImageFile(item));
+                    }
+
+                    request.resize(image.getMeasuredWidth(), image.getMeasuredWidth() * 4 / 3)
                             .into(image, new Callback() {
                                 @Override
                                 public void onSuccess() {
                                     name.setText(item.getName());
                                     name.setVisibility(item.getName().isEmpty() ? View.GONE : View.VISIBLE);
 
-                                    if (mSelectMode) {
+                                    if (mMode == Mode.SELECT) {
                                         setSelected(item, getSelectedItems().contains(item) && !item.getName().isEmpty());
                                     }
 
@@ -310,7 +328,13 @@ public class GalleryFragment extends Fragment {
             if (items != null) {
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
-                recyclerView.scrollToPosition(0);
+
+                recyclerView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.scrollToPosition(0);
+                    }
+                });
             }
         }
     }

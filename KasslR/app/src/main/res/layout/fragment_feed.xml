@@ -23,6 +23,6 @@
         android:clickable="true"
         android:onClick="openAddVocabulary"
         app:fabSize="normal"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@drawable/ic_playlist_add_white_24dp" />
 
 </RelativeLayout>

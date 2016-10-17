@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         app = (Kasslr) getApplication();
-        app.loadShelf();
         app.initUserData(this);
         setContentView(R.layout.activity_main);
         requestCameraPermission();
@@ -105,14 +104,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showFavorite() {
-        showFragment(new FavouriteFragment());
+        showFragment(new FavoriteFragment());
     }
 
     public void showProfile() {
         showFragment(new ProfilePageFragment());
     }
-
-    public void showFavourite() { showFragment(new FavouriteFragment()); }
 
     public void showCamera() {
         startActivity(new Intent(this, CameraActivity.class));
@@ -217,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     // Show the camera
                     showCamera();
                 } else if (tabId == R.id.tab_favorite) {
-                    slideToFragment(new FavouriteFragment(), directions, false);
+                    slideToFragment(new FavoriteFragment(), directions, false);
                 } else if (tabId == R.id.tab_profile) {
                     slideToFragment(new ProfilePageFragment(), directions, false);
                 } else {
@@ -274,23 +271,6 @@ public class MainActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request
         }
-    }
-
-
-    public void createVocabulary(View view) {
-        System.out.println("creating vocabulary");
-        app.increaseScore(ProfileInformation.CompletedAction.CREATE_VOCABULARY);
-        EditText vocName = (EditText)findViewById(R.id.newVocName);
-        Vocabulary voc = new Vocabulary(app.getUserId(), vocName.getText().toString().trim());
-
-        // temporary
-        voc.setItems(app.getShelf().getItems());
-
-        app.getShelf().addVocabulary(voc);
-
-        System.out.println(app.getShelf().toString());
-        Toast.makeText(this, "Added vocabulary", Toast.LENGTH_SHORT).show();
-        slideToFragment(new FeedFragment(), Direction.UP, false);
     }
 
     @Override

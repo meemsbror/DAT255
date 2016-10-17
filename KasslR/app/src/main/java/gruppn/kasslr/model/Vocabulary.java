@@ -18,22 +18,9 @@ public class Vocabulary {
     private int universalId = 0;
     private boolean favourite = false;
 
-
     public Vocabulary(User user, String title){
         this.user = user;
         this.title = title;
-    }
-
-    public Vocabulary(String owner, String title) {
-        user = new User(owner);
-        this.title = title;
-        items = new ArrayList<>();
-    }
-
-    public Vocabulary(String owner, String title, int id, int universalId) {
-        this(owner, title);
-        this.id = id;
-        this.universalId = universalId;
     }
 
     public Vocabulary(User user, String title, int id, int universalId) {
@@ -95,20 +82,13 @@ public class Vocabulary {
         return vocabulary;
     }
 
-    public boolean isFavourite(){
-        return favourite;
-    }
-
-    public void setFavourite(boolean favourite) {
-
-        this.favourite = favourite;
-    }
-
     @Override
     public String toString() {
         return "Vocabulary{" +
-                "owner='" + user.getName() + '\'' +
-                ", title='" + title + '\'' +
+                "title='" + title + '\'' +
+                ", id=" + id + '\'' +
+                ", univeralId=" + universalId + '\'' +
+                ", owner='" + user + '\'' +
                 ", items=" + items +
                 '}';
     }

@@ -5,16 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import gruppn.kasslr.model.Shelf;
 import gruppn.kasslr.model.Vocabulary;
@@ -51,7 +47,7 @@ public class SearchFragment extends Fragment {
         searchView_search.onActionViewExpanded();
 
 
-        va = new VocabularyFeedAdapter(getActivity(), searchShelf.getVocabularies());
+        va = new VocabularyFeedAdapter((MainActivity) getActivity(), searchShelf.getVocabularies());
         va.setAdapterSwitch(R.id.recyclerViewFeed_search);
         recyclerViewFeed_search.setAdapter(va);
 
@@ -95,7 +91,6 @@ public class SearchFragment extends Fragment {
 
     }
 
-
     public void updateSearch(){
         searchShelf.clear();
         recyclerViewFeed_search.removeAllViews();
@@ -103,7 +98,7 @@ public class SearchFragment extends Fragment {
 
         if (!string.isEmpty()) {
 
-            for (Vocabulary vocabulary : app.getBigShelf().getVocabularies()) {
+            for (Vocabulary vocabulary : app.getFeedVocabularies()) {
 
                 if (!searchShelf.getVocabularies().contains(vocabulary)) {
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorPrimaryTransparent">#CC3F51B5</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorPrimary">#ef96a3</color>
+    <color name="colorPrimaryDark">#e13c55</color>
+    <color name="colorPrimaryTransparent">#CCf3acb6</color>
+    <color name="colorAccent">#BE77A9</color>
     <color name="colorCameraBackround">#33312c</color>
     <color name="colorMainBackround">#e6e6e6</color>
     <color name="white">#ffffff</color>

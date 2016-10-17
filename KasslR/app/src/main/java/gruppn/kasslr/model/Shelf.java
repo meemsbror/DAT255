@@ -1,5 +1,7 @@
 package gruppn.kasslr.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,12 +34,25 @@ public class Shelf {
         return vocabularies;
     }
 
+    public Vocabulary getVocabularyByUid(int universalId) {
+        for (Vocabulary vocabulary : vocabularies) {
+            if (vocabulary.getUniversalId() == universalId) {
+                return vocabulary;
+            }
+        }
+        return null;
+    }
+
     public void addVocabulary(Vocabulary voc){
         vocabularies.add(0, voc);
     }
 
     public void addVocabularies(List<Vocabulary> vocabularies) {
         this.vocabularies.addAll(0, vocabularies);
+    }
+
+    public void removeVocabulary(Vocabulary vocabulary) {
+        vocabularies.remove(vocabulary);
     }
 
     @Override
