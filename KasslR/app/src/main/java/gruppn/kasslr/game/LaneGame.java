@@ -123,6 +123,7 @@ class GameView extends SurfaceView implements Runnable {
     private HashMap<VocabularyItem, Integer> failedAttempts = new HashMap<>();
     private TargetImage targetImage = null;
 
+    private Random particleSpawner;
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
     private int score = 0;
@@ -152,6 +153,7 @@ class GameView extends SurfaceView implements Runnable {
         this.gameActivity = gameActivity;
         app = (Kasslr) gameActivity.getApplication();
         this.vocabulary = vocabulary;
+        particleSpawner = new Random(vocabulary.getUniversalId() * 29411);
 
         swipeInstruction = BitmapFactory.decodeResource(getResources(), R.drawable.swipe);
         homeButton = BitmapFactory.decodeResource(getResources(), R.drawable.ic_home_white_36dp);
@@ -233,7 +235,7 @@ class GameView extends SurfaceView implements Runnable {
         playerY = gameHeight - 260;
         playerX = gameWidth / 2;
 
-        background = new Background(gameWidth, gameHeight);
+        background = new Background(gameWidth, gameHeight, vocabulary.getUniversalId()*8491499);
 
         for(int i = 0; i < gameHeight; i+=2){
             spawnStars(i);
@@ -509,7 +511,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private void spawnParticles(){
 
-        Random rand = new Random();
+        Random rand = particleSpawner;
 
         //spawn exhaust
         for (int i=0; i < rand.nextInt(9); i++){
@@ -531,7 +533,7 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnStars(int y){
-        Random rand = new Random();
+        Random rand = particleSpawner;
         double limit = 0.14;
         if(isHyperspeedActive())
             limit = 0.4;
