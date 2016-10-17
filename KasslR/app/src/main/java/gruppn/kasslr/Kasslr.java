@@ -136,6 +136,42 @@ public class Kasslr extends Application {
 
     }
 
+    public void sendUsernameUpdate(Context context, String newName) {
+        String url = Web.baseUrl+"?action=update_user";
+
+        final Map<String, String> params = new HashMap();
+        params.put("user", profileInformation.getUserId());
+        params.put("name", newName);
+
+        StringRequest strRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        System.out.println(response);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        System.out.println(error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                return params;
+            }
+        };
+
+        Web.getInstance(context).addToRequestQueue(strRequest);
+
+    }
+
     public void uploadVocabulary(Context context, final Vocabulary vocabulary) {
         String url = Web.baseUrl+"?action=new_vocabulary";
 
@@ -308,9 +344,7 @@ public class Kasslr extends Application {
     public String getUserName() {
         return profileInformation.getName();
     }
-    public void setUserName(String newName){
-        profileInformation.setName(newName);
-    }
+    public void setUserName(String newName){ profileInformation.setName(newName);}
     public int getScore(){
         return profileInformation.getScore();
     }
