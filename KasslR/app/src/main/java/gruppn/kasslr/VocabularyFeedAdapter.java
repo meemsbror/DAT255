@@ -2,6 +2,7 @@ package gruppn.kasslr;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,8 +77,10 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         holder.informationButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 holder.informationButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
-                Toast wip = Toast.makeText(app,"Under utveckling", Toast.LENGTH_SHORT);
-                wip.show();
+                app.setActiveVocabulary(holder.vocabulary);
+
+                Intent intent = new Intent(activity, VocabularyInformationActivity.class);
+                activity.startActivity(intent);
             }
         });
 

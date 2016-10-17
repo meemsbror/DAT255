@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +84,12 @@ public class GalleryFragment extends Fragment {
         adapter = new ItemAdapter(new ArrayList<VocabularyItem>(), mode);
         recyclerView.setAdapter(adapter);
 
-        new LoadItemsTask().execute(app.getShelf().getItems());
+        if (mode == Mode.VIEW) {
+            adapter.setItems(app.getActiveVocabulary().getItems());
+            adapter.notifyDataSetChanged();
+        } else {
+            new LoadItemsTask().execute(app.getShelf().getItems());
+        }
     }
 
     public List<VocabularyItem> getSelectedItems() {
@@ -225,9 +231,14 @@ public class GalleryFragment extends Fragment {
             image.post(new Runnable() {
                 @Override
                 public void run() {
-                    Picasso.with(getContext())
-                            .load(app.getImageFile(item))
-                            .resize(image.getMeasuredWidth(), image.getMeasuredWidth() * 4 / 3)
+                    RequestCreator request;
+                    if (item.getImageName().startsWith("http")) {
+                        request = Picasso.with(getContext()).load(item.getImageName());
+                    } else {
+                        request = Picasso.with(getContext()).load(app.getImageFile(item));
+                    }
+
+                    request.resize(image.getMeasuredWidth(), image.getMeasuredWidth() * 4 / 3)
                             .into(image, new Callback() {
                                 @Override
                                 public void onSuccess() {
