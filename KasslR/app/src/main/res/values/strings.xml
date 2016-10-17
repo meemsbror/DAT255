@@ -30,5 +30,6 @@
     <string name="key_user_id">kasslr.userid</string>
 
     <string name="play">Spela</string>
+    <string name="game_ended">Spelet över</string>
 
 </resources>
