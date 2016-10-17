@@ -25,7 +25,7 @@ public class VocabularyViewHolder extends RecyclerView.ViewHolder{
     protected CardView cardView;
     protected RecyclerView recyclerView;
     protected ImageView fakePlayButton;
-    protected ImageView realPlayButton;
+    protected ImageView informationButton;
     protected ImageView favouriteButton;
     protected ImageView thumbsDownButton;
 
@@ -44,18 +44,8 @@ public class VocabularyViewHolder extends RecyclerView.ViewHolder{
         cardView = (CardView) v.findViewById(R.id.card_view_feed);
         favouriteButton = (ImageView)  v.findViewById(R.id.favourite_button);
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
-        realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
+        informationButton = (ImageView) v.findViewById(R.id.information_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
-
-        realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
-                if(baseContext instanceof MainActivity) {
-                    MainActivity mainActivity = (MainActivity) baseContext;
-                    mainActivity.changeToGame(v, vocabulary);
-                }
-            }
-        });
 
         for (Vocabulary vocabulary : vocabularyList) {
             if (vocabulary.isFavourite()) {

@@ -26,7 +26,7 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
     private LinearLayout detailed;
     protected CardView cardView;
     protected ImageView fakePlayButton;
-    protected ImageView realPlayButton;
+    protected ImageView informationButton;
     protected ImageView thumbsDownButton;
     protected ImageView closeButton;
     protected LinearLayout playContainer;
@@ -46,22 +46,11 @@ public class VocabularyFeedViewHolder extends RecyclerView.ViewHolder{
         detailed = (LinearLayout) v.findViewById(R.id.expand_area);
         cardView = (CardView) v.findViewById(R.id.card_view_feed);
         fakePlayButton = (ImageView) v.findViewById(R.id.fake_play_button);
-        realPlayButton = (ImageView) v.findViewById(R.id.real_play_button);
+        informationButton = (ImageView) v.findViewById(R.id.information_button);
         thumbsDownButton = (ImageView) v.findViewById(R.id.thumbs_down_button);
         closeButton = (ImageView) v.findViewById(R.id.close_button);
         favouriteButton = (ImageView) v.findViewById(R.id.favourite_button);
 
-
-
-        realPlayButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                Context baseContext = ((ContextWrapper)v.getContext()).getBaseContext();
-                if(baseContext instanceof MainActivity) {
-                    MainActivity mainActivity = (MainActivity) baseContext;
-                    mainActivity.changeToGame(v, vocabulary);
-                }
-            }
-        });
 
     }
 
