@@ -65,7 +65,6 @@ public class ProfilePageFragment extends Fragment{
 
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_profile);
-        recyclerView.setItemAnimator(null);
 
         LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getActivity());
 

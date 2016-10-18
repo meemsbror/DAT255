@@ -31,7 +31,6 @@ public class FavoriteFragment extends Fragment {
         this.app = (Kasslr) getActivity().getApplication();
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_favorite);
-        recyclerView.setItemAnimator(null);
 
         List<Vocabulary> favorites = new ArrayList<>();
         for (Vocabulary vocabulary : app.getShelf().getVocabularies()) {

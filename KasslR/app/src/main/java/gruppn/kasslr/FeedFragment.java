@@ -29,7 +29,6 @@ public class FeedFragment extends Fragment {
         super.onActivityCreated(savedInstanceState); //add point
         this.app = (Kasslr) getActivity().getApplication();
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_feed);
-        recyclerView.setItemAnimator(null);
 
         va = new VocabularyFeedAdapter((MainActivity) getActivity(), new ArrayList<Vocabulary>());
         va.setAdapterSwitch(R.id.recycler_view_feed);
