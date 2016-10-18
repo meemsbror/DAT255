@@ -118,7 +118,14 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             @Override
             public void onClick(View v) {
                 holder.thumbsDownButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
-                //Todo downvote stuff
+                if (holder.getAdapterPosition() + 1 != getItemCount()) {
+                    // Move to bottom of the list
+                    Vocabulary vocabulary = getVocabularies().remove(holder.getAdapterPosition());
+                    getVocabularies().add(vocabulary);
+
+                    notifyItemRemoved(holder.getAdapterPosition());
+                    notifyItemInserted(getItemCount() - 1);
+                }
             }
         });
 
