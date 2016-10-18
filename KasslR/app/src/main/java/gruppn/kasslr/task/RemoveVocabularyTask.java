@@ -30,14 +30,13 @@ public class RemoveVocabularyTask extends AsyncTask<Vocabulary, Void, List<Vocab
             db = new KasslrDatabase(app);
 
             for (Vocabulary vocabulary : vocabularies) {
-                if (vocabulary.getOwner().getId().equals(app.getUserId())) {
+                if (vocabulary.getId() != 0) {
                     db.remove(vocabulary);
-
                 }
 
                 // Remove items that aren't mine
                 for (VocabularyItem item : vocabulary.getItems()) {
-                    if (item.isMine()) {
+                    if (!item.isMine()) {
                         itemsToRemove.add(item);
                         db.remove(item);
                         app.getImageFile(item).delete();
