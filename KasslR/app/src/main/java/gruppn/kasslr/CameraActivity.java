@@ -29,6 +29,9 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,6 +52,8 @@ public class CameraActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
+
+    private final int NAME_IMAGE = 420;
 
     private static final String FRAGMENT_DIALOG = "dialog";
 
@@ -80,6 +85,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageView galleryImage;
 
+    private ImageView tempAnim;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +100,7 @@ public class CameraActivity extends AppCompatActivity {
 
         ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
         this.galleryImage = (ImageView) findViewById(R.id.shelf_button);
-        setGalleryImage();
+        this.tempAnim = (ImageView) findViewById(R.id.temp_animation);
 
 
         takePicture.setOnClickListener(new View.OnClickListener() {
@@ -112,9 +119,7 @@ public class CameraActivity extends AppCompatActivity {
         }
         */
     }
-
-    //TODO fix so the imate scales
-    private void setGalleryImage(){
+    private Bitmap getLastImage(){
         Bitmap bitmap = app.getSharedBitmap();
 
         List<VocabularyItem> items = app.getShelf().getItems();
@@ -123,13 +128,29 @@ public class CameraActivity extends AppCompatActivity {
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
         }
+        return bitmap;
+    }
+    //TODO fix so the imate scales
+    private void setGalleryImage(Bitmap bitmap){
         this.galleryImage.setImageBitmap(bitmap);
     }
 
+    private void startAnimation(Bitmap bitmap) {
+        this.tempAnim.setImageBitmap(bitmap);
+        Animation anim= new TranslateAnimation(0, 500, 0, 1000);
+        anim.setStartOffset(250);
+        anim.setDuration(500);
+        anim.setFillAfter(true);
+        anim.setFillEnabled(true);
+
+        tempAnim.startAnimation(anim);
+
+        setGalleryImage(bitmap);
+    }
     @Override
     public void onResume() {
         super.onResume();
-        setGalleryImage();
+        setGalleryImage(getLastImage());
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
@@ -183,9 +204,10 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
     public void onShelfClick(View view){
-        Intent activity = new Intent(CameraActivity.this, MainActivity.class);
-        activity.setAction("gallery");
-        startActivity(activity);
+        Intent intent = new Intent(CameraActivity.this, MainActivity.class);
+        intent.setAction("gallery");
+        intent.putExtra("EXTRA_MODE", "mode");
+        startActivity(intent);
     }
 
     @Override
@@ -270,7 +292,7 @@ public class CameraActivity extends AppCompatActivity {
                             ActivityOptionsCompat options = ActivityOptionsCompat
                                     .makeSceneTransitionAnimation(CameraActivity.this, cameraView, transition);
 
-                            ActivityCompat.startActivity(CameraActivity.this, intent, options.toBundle());
+                            ActivityCompat.startActivityForResult(CameraActivity.this, intent, NAME_IMAGE, options.toBundle());
                         }
                     });
                 }
@@ -334,5 +356,11 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NAME_IMAGE){
+            startAnimation(getLastImage());
+        }
+    }
 }
