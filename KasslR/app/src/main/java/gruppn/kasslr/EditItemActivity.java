@@ -7,18 +7,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,10 +119,12 @@ public class EditItemActivity extends AppCompatActivity {
             return;
         }
 
+        // Hide keyboard
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
         new RemoveItemTask(app).execute(item);
 
         int index = app.getShelf().getItems().indexOf(item);
-        app.getShelf().removeItem(item);
 
         Intent result = new Intent();
         result.putExtra(RESULT_ITEM_INDEX, index);

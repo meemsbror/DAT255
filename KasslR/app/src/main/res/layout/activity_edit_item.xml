@@ -35,4 +35,15 @@
         android:inputType="textAutoCorrect|textCapSentences"
         android:imeOptions="actionDone"/>
 
+    <ImageButton
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_delete_black_24dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:onClick="removeItem"
+        android:padding="4dp" />
+
 </RelativeLayout>

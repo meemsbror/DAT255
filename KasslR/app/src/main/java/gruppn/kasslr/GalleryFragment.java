@@ -110,6 +110,8 @@ public class GalleryFragment extends Fragment {
             int action = data.getIntExtra(EditItemActivity.RESULT_ACTION, EditItemActivity.ACTION_EDIT);
 
             if (action == EditItemActivity.ACTION_REMOVE) {
+                app.getShelf().removeItem(item);
+                adapter.removeItem(position);
                 adapter.notifyItemRemoved(position);
             } else {
                 adapter.notifyItemChanged(position);
@@ -163,6 +165,14 @@ public class GalleryFragment extends Fragment {
         public int getPosition(VocabularyItem item) {
             return mItems.indexOf(item);
         }
+
+        public VocabularyItem getItem(int position) {
+            return mItems.get(position);
+        }
+
+        public void removeItem(int position) {
+            mItems.remove(position);
+        }
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -190,11 +200,17 @@ public class GalleryFragment extends Fragment {
             }
         }
 
+        private VocabularyItem getItem() {
+            return adapter.getItem(getAdapterPosition());
+        }
+
         public void setItem(final VocabularyItem item) {
             if (mMode == Mode.SELECT) {
                 card.setOnClickListener(new CardView.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        VocabularyItem item = getItem();
+
                         if (!item.getName().isEmpty()) {
                             setSelected(item, !getSelectedItems().contains(item));
                         }
@@ -204,6 +220,8 @@ public class GalleryFragment extends Fragment {
                 card.setOnClickListener(new CardView.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        VocabularyItem item = getItem();
+
                         app.setSharedBitmap(((BitmapDrawable) image.getDrawable()).getBitmap());
 
                         Intent intent = new Intent(getActivity(), EditItemActivity.class);
