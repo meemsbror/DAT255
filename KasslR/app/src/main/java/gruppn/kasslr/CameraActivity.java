@@ -159,7 +159,6 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        setGalleryImage();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
@@ -175,6 +174,7 @@ public class CameraActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
                     REQUEST_CAMERA_PERMISSION);
         }
+       setGalleryImage();
     }
 
     @Override
