@@ -138,9 +138,9 @@ public class CameraActivity extends AppCompatActivity {
 
     private void startAnimation(Bitmap bitmap) {
         this.tempAnim.setImageBitmap(bitmap);
-        Animation anim= new TranslateAnimation(0, 500, 0, 1000);
+        Animation anim= new TranslateAnimation(0, 1080, 0, 1800);
         anim.setStartOffset(250);
-        anim.setDuration(500);
+        anim.setDuration(1000);
         anim.setFillAfter(true);
         anim.setFillEnabled(true);
 
