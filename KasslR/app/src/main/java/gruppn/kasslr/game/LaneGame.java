@@ -287,6 +287,7 @@ class GameView extends SurfaceView implements Runnable {
 
         paint.setColor(Color.WHITE);
 
+        /*
         paint.setTextSize(30);
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText("FPS: " + fps, 20, 40, paint);
@@ -297,13 +298,15 @@ class GameView extends SurfaceView implements Runnable {
         canvas.drawText(background.getStats(), 20, 240, paint);
         canvas.drawText("words: " + completedWords.size() + "/" + vocabulary.getItems().size(), 20, 280, paint);
         canvas.drawText("touched: " + isBeingTouched + " for " + touchingTime, 20, 320, paint);
-
+*/
         drawOverlay();
 
         ourHolder.unlockCanvasAndPost(canvas);
     }
 
     private void drawOverlay() {
+
+        drawProgressIndicator();
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
@@ -329,6 +332,24 @@ class GameView extends SurfaceView implements Runnable {
         }
 
         drawFeedback();
+    }
+
+    private void drawProgressIndicator() {
+        int i = 1;
+        paint.setColor(Color.WHITE);
+        for(VocabularyItem item : vocabulary.getItems()){
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(3);
+            canvas.drawCircle(gameWidth/20, gameHeight - (i*gameHeight/18), gameWidth/40, paint);
+
+            if(completedWords.contains(item)) {
+                paint.setStyle(Paint.Style.FILL);
+                canvas.drawCircle(gameWidth/20, gameHeight - (i*gameHeight/18), gameWidth/55, paint);
+            }
+
+            i++;
+        }
+        paint.setStyle(Paint.Style.FILL);
     }
 
     private void drawFeedback(){
@@ -647,7 +668,7 @@ class GameView extends SurfaceView implements Runnable {
             Target target = iterator.next();
             target.tick(getTargetSpeed());
 
-            if(target.getY() > playerY-50 && target.getY() < playerY+50 && Math.abs(target.getX() - playerX) < 70 ){
+            if(target.getY() > playerY-50 && target.getY() < playerY+150 && Math.abs(target.getX() - playerX) < 70 ){
                 if(target.isBenign()) {
                     makePlayerFeelGoodForPickingTheCorrectTarget(target.getVocabularyItem());
                     completedWords.add(target.getVocabularyItem());
