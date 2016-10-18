@@ -142,7 +142,6 @@ public class CameraActivity extends AppCompatActivity {
             int target;
             if(items.size()-1 == removedItemIndex){
                 target = items.size()-2;
-                removedItemIndex = -1;
             }else{
                 target = items.size()-1;
             }
@@ -292,6 +291,7 @@ public class CameraActivity extends AppCompatActivity {
         public void onPictureTaken(final CameraView cameraView, final byte[] data) {
             takePicture.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
             Log.d(TAG, "onPictureTaken " + data.length);
+            removedItemIndex = -1;
 
             getBackgroundHandler().post(new Runnable() {
                 @Override
