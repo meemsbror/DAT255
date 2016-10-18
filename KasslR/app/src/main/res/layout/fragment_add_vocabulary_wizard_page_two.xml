@@ -28,7 +28,7 @@
         android:layout_below="@id/textView3"
         android:ems="10"
         android:id="@+id/newVocName"
-        android:inputType="textAutoCorrect"
+        android:inputType="textCapWords|textAutoCorrect"
         android:contentDescription="Name"
         android:hint="@string/add_vocabulary_name_description" />
 
