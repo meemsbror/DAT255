@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -84,8 +85,8 @@ public class CameraActivity extends AppCompatActivity {
     private Handler mBackgroundHandler;
 
     private ImageView galleryImage;
-
     private ImageView tempAnim;
+    ImageButton takePicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView.setFlash(CameraView.FLASH_OFF); // please
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
-        ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
+        this.takePicture = (ImageButton) findViewById(R.id.snap);
         this.galleryImage = (ImageView) findViewById(R.id.shelf_button);
         this.tempAnim = (ImageView) findViewById(R.id.temp_animation);
 
@@ -257,6 +258,7 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         public void onPictureTaken(final CameraView cameraView, final byte[] data) {
+            takePicture.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
             Log.d(TAG, "onPictureTaken " + data.length);
 
             getBackgroundHandler().post(new Runnable() {
