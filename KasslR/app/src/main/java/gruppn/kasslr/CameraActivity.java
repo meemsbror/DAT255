@@ -157,7 +157,9 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
     public void onShelfClick(View view){
-        startActivity(new Intent(this, GalleryFragment.class));
+        Intent activity = new Intent(CameraActivity.this, MainActivity.class);
+        activity.setAction("gallery");
+        startActivity(activity);
     }
 
     @Override

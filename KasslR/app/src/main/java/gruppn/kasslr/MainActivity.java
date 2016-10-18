@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             return enter;
         }
 
+
         public int getExit() {
             return exit;
         }
@@ -79,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        if(this.getIntent().getAction().equals("gallery")){
+            showFragment(new GalleryFragment());
+        }
     }
 
     @Override
