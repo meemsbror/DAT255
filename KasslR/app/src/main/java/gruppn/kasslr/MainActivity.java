@@ -3,6 +3,7 @@ package gruppn.kasslr;
 import android.content.Intent;
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             return enter;
         }
 
+
         public int getExit() {
             return exit;
         }
@@ -79,6 +81,10 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        if(this.getIntent().getAction().equals("gallery")){
+            showFeed();
+            this.slideToFragment(new GalleryFragment(), MainActivity.Direction.DOWN, true);
+        }
     }
 
     @Override

@@ -211,7 +211,7 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
             }
         });
 
-        holder.owner.setText(v.getOwner().getName());
+        holder.owner.setText("Av "+v.getOwner().getName());
     }
 
     public void setVocabularyList(List<Vocabulary> vocabularies) {

@@ -2,6 +2,8 @@ package gruppn.kasslr.game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,6 +14,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -69,6 +72,20 @@ public class LaneGame extends Activity {
         view.resume();
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.want_to_exit_game)
+                .setCancelable(false)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        LaneGame.this.finish();
+                    }
+                })
+                .setNegativeButton("Nej", null)
+                .show();
+    }
+
 
     class GameGestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final String DEBUG_TAG = "Gestures";
@@ -122,6 +139,7 @@ class GameView extends SurfaceView implements Runnable {
     private HashMap<VocabularyItem, Integer> failedAttempts = new HashMap<>();
     private TargetImage targetImage = null;
 
+    private Random particleSpawner;
     private Set<Particle> particles = new HashSet<Particle>();
     private Set<Target> liveTargets = new HashSet<Target>();
     private int score = 0;
@@ -136,7 +154,7 @@ class GameView extends SurfaceView implements Runnable {
     private Kasslr app;
     private LaneGame gameActivity;
 
-    Bitmap swipeInstruction;
+    Bitmap swipeInstruction, homeButton, retryButton;
     private boolean tutorialSkipped = false;
     private boolean isBeingTouched = false;
     private int touchingTime = 0;
@@ -151,9 +169,13 @@ class GameView extends SurfaceView implements Runnable {
         this.gameActivity = gameActivity;
         app = (Kasslr) gameActivity.getApplication();
         this.vocabulary = vocabulary;
+        particleSpawner = new Random(vocabulary.getUniversalId() * 29411);
 
         swipeInstruction = BitmapFactory.decodeResource(getResources(), R.drawable.swipe);
+        homeButton = BitmapFactory.decodeResource(getResources(), R.drawable.ic_home_white_36dp);
+        retryButton = BitmapFactory.decodeResource(getResources(), R.drawable.ic_replay_white_36dp);
         loadImages(vocabulary);
+
     }
 
     @Override
@@ -229,7 +251,7 @@ class GameView extends SurfaceView implements Runnable {
         playerY = gameHeight - 260;
         playerX = gameWidth / 2;
 
-        background = new Background(gameWidth, gameHeight);
+        background = new Background(gameWidth, gameHeight, vocabulary.getUniversalId()*8491499);
 
         for(int i = 0; i < gameHeight; i+=2){
             spawnStars(i);
@@ -285,7 +307,7 @@ class GameView extends SurfaceView implements Runnable {
 
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setTextSize(80);
-        canvas.drawText(score+"", gameWidth-100, 100, paint);
+        canvas.drawText(score+"p", gameWidth-100, 100, paint);
 
         if(gameFinished > 0){
             drawFinishScreen();
@@ -330,13 +352,28 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawFinishScreen() {
+
         if(gameFinished == 0)
             return;
 
+        paint.setColor(0x88000000);
+        canvas.drawRect(gameWidth/10, 4*gameWidth/10, gameWidth - gameWidth/10, gameHeight - 4*gameWidth/10, paint);
+
         paint.setColor(Color.WHITE);
         paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(70f + ((System.currentTimeMillis()-gameFinished)/3000.0f)*40.0f );
-        canvas.drawText("YOU WIN!", gameWidth/2, gameHeight/2, paint);
+
+        paint.setTextSize(gameWidth/15);
+        canvas.drawText("SPELET ÖVER", gameWidth/2, gameHeight/2 - 2*gameWidth/10, paint);
+
+        paint.setTextSize(2*gameWidth/10);
+        canvas.drawText(score+"", gameWidth/2, gameHeight/2, paint);
+
+        paint.setTextSize(gameWidth/15);
+        canvas.drawText("poäng", gameWidth/2, gameHeight/2 + gameWidth/10, paint);
+
+        canvas.drawBitmap(homeButton,  null,  new RectF(gameWidth/2 - 2*gameWidth/10, gameHeight/2+2*gameWidth/10, gameWidth/2 - 1*gameWidth/10, gameHeight/2+3*gameWidth/10), null);
+        canvas.drawBitmap(retryButton, null,  new RectF(gameWidth/2 + 1*gameWidth/10, gameHeight/2+2*gameWidth/10, gameWidth/2 + 2*gameWidth/10, gameHeight/2+3*gameWidth/10), null);
+
     }
 
     private void drawBackground(){
@@ -475,8 +512,13 @@ class GameView extends SurfaceView implements Runnable {
             return;
 
         if(gameFinished + 3*1000 < System.currentTimeMillis()){
-            ((Activity)getContext()).finish();
+
         }
+    }
+
+
+    private void closeGame(){
+        ((Activity)getContext()).finish();
     }
 
     private int laneToX(int lane){
@@ -485,7 +527,7 @@ class GameView extends SurfaceView implements Runnable {
 
     private void spawnParticles(){
 
-        Random rand = new Random();
+        Random rand = particleSpawner;
 
         //spawn exhaust
         for (int i=0; i < rand.nextInt(9); i++){
@@ -507,7 +549,7 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void spawnStars(int y){
-        Random rand = new Random();
+        Random rand = particleSpawner;
         double limit = 0.14;
         if(isHyperspeedActive())
             limit = 0.4;
@@ -695,9 +737,29 @@ class GameView extends SurfaceView implements Runnable {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
             if(tutorialIsOpen())
                 tutorialSkipped = true;
+            if(gameFinished > 0){
+                registerButtonPress(event);
+            }
+
             isBeingTouched = true;
         }else if(event.getAction() == MotionEvent.ACTION_UP){
             isBeingTouched = false;
+        }
+    }
+
+    private void registerButtonPress(MotionEvent event) {
+
+        //primitive check of height bounds for end screen buttons
+        if(event.getY() < gameHeight/2 + gameWidth/10 || event.getY() > gameHeight/2 + 4*gameWidth/10)
+            return;
+
+        if(event.getX() < gameWidth/2){
+            closeGame();
+        }else{
+            Activity myActivity = ((Activity)getContext());
+            Intent intent = myActivity.getIntent();
+            myActivity.finish();
+            myActivity.startActivity(intent);
         }
     }
 }

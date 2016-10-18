@@ -151,6 +151,8 @@ public class ProfilePageFragment extends Fragment{
             @Override
             public void afterTextChanged(Editable s) {
                 app.setUserName(name.getText().toString());
+
+                app.sendUsernameUpdate(getContext(), name.getText().toString());
             }
         });
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Adam on 2016-10-03.
@@ -29,18 +30,22 @@ public class Background {
 
     private int[] colors;
     private int lastY = 0;
+    private double[] levelBounds;
 
     OpenSimplexNoise noise;
     private final HashMap<Coordinate, Integer> noiseArray = new HashMap<Coordinate, Integer>();
     private final ArrayList<ArrayList<BackgroundTile>> mapChunks = new ArrayList<ArrayList<BackgroundTile>>();
 
-    public Background(int width, int height){
+    public Background(int width, int height, long seed){
         this.gameWidth = width;
         this.gameHeight = height;
         polySize = gameWidth / MAP_CHUNK_WIDTH;
-        noise = new OpenSimplexNoise();
+        noise = new OpenSimplexNoise(seed);
 
         colors = new int[]{Color.parseColor("#150024"), Color.parseColor("#2F004F"), Color.parseColor("#780096")};
+
+        Random rand = new Random(seed);
+        levelBounds = new double[]{-0.8+rand.nextDouble()*0.2, -0.6+rand.nextDouble()*0.2, -0.1+rand.nextDouble()*0.1};
 
         for(int i=90;i>=-80;i--){
             generateChunk(i);
@@ -113,11 +118,11 @@ public class Background {
         double value = noise.eval(x / MAP_SCALE, y / MAP_SCALE);
 
         int depth = 0;
-        if(value < -0.7)
+        if(value < levelBounds[0])
             depth = 3;
-        else if(value < -0.5)
+        else if(value < levelBounds[1])
             depth = 2;
-        else if(value < 0)
+        else if(value < levelBounds[2])
             depth = 1;
 
         noiseArray.put(new Coordinate(x,y), depth);

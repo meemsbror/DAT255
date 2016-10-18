@@ -156,6 +156,11 @@ public class CameraActivity extends AppCompatActivity {
                 break;
         }
     }
+    public void onShelfClick(View view){
+        Intent activity = new Intent(CameraActivity.this, MainActivity.class);
+        activity.setAction("gallery");
+        startActivity(activity);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

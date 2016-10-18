@@ -2,15 +2,8 @@
     <string name="app_name">Kasslr</string>
     <string name="title_activity_navigateable">Navigateable</string>
     <string name="save">Spara</string>
-    <string name="camera_permission_confirmation">This function lets you take photos of subjects. In order to do that, it needs permission to access camera.</string>
-    <string name="camera_permission_not_granted">You cannot add new words without camera access.</string>
-    <string name="picture_taken">Picture taken</string>
-    <string name="switch_flash">Switch flash</string>
-    <string name="switch_camera">Switch camera</string>
-    <string name="flash_auto">Flash auto</string>
-    <string name="flash_off">Flash off</string>
-    <string name="flash_on">Flash on</string>
-    <string name="what_is_this">Vad är detta för något?</string>
+    <string name="camera_permission_confirmation">Den här funktionen låter dig ta foton på föremål. För att kunna göra det behöver den tillgång till kameran.</string>
+    <string name="camera_permission_not_granted">Du kan inte lägga till nya ord utan tillgång till kameran.</string>
     <string name="error_remove_item_in_vocabulary">Kan inte ta bort en glosa som finns i en glosbok.</string>
     <string name="error_empty_item_name">Kan inte ta bort namnet på en glosa som finns i en glosbok.</string>
     <string name="transition_vocabulary">Vocabulary Transition</string>
@@ -26,9 +19,13 @@
     <string name="add_vocabulary_create">Skapa</string>
     <string name="vocabulary_missing_title">Du måste välja ett namn på glosboken</string>
     <string name="vocabulary_missing_items">Du måste välja minst 3 glosor</string>
+    <string name="want_to_exit_game">Är du säker att du vill avsluta spelet?</string>
 
     <string name="key_user_id">kasslr.userid</string>
 
+    <string name="what_is_this">Vad är det här</string>
+
     <string name="play">Spela</string>
+    <string name="game_ended">Spelet över</string>
 
 </resources>
