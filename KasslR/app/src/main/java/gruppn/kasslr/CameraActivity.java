@@ -133,12 +133,24 @@ public class CameraActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    private VocabularyItem getLastItem() {
+        List<VocabularyItem> items = app.getShelf().getItems();
+
+        if (!items.isEmpty()) {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                if (items.get(i).isMine()) {
+                    return items.get(i);
+                }
+            }
+        }
+
+        return null;
+    }
 
     private void setGalleryImage(){
-        if(app.getShelf().getItems() != null && app.getShelf().getItems().size()>0) {
+        VocabularyItem item = getLastItem();
+        if(item != null) {
             Bitmap bitmap = app.getSharedBitmap();
-            List<VocabularyItem> items = app.getShelf().getItems();
-            VocabularyItem item = items.get(items.size() - 1);
 
             if (bitmap == null) {
                 bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
