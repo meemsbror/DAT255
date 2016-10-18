@@ -19,8 +19,11 @@
     <string name="add_vocabulary_create">Skapa</string>
     <string name="vocabulary_missing_title">Du måste välja ett namn på glosboken</string>
     <string name="vocabulary_missing_items">Du måste välja minst 3 glosor</string>
+    <string name="want_to_exit_game">Är du säker att du vill avsluta spelet?</string>
 
     <string name="key_user_id">kasslr.userid</string>
+
+    <string name="what_is_this">Vad är det här</string>
 
     <string name="play">Spela</string>
     <string name="game_ended">Spelet över</string>

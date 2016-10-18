@@ -2,6 +2,7 @@ package gruppn.kasslr.game;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,6 +14,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -68,6 +70,20 @@ public class LaneGame extends Activity {
 
         // Tell the gameView resume method to execute
         view.resume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.want_to_exit_game)
+                .setCancelable(false)
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        LaneGame.this.finish();
+                    }
+                })
+                .setNegativeButton("Nej", null)
+                .show();
     }
 
 
