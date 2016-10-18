@@ -64,6 +64,31 @@ public class VocabularyItem {
         this.mine = mine;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof VocabularyItem)) return false;
+
+        VocabularyItem that = (VocabularyItem) o;
+
+        if (getId() != that.getId()) return false;
+        if (isMine() != that.isMine()) return false;
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null)
+            return false;
+        return image != null ? image.equals(that.image) : that.image == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (image != null ? image.hashCode() : 0);
+        result = 31 * result + (int) (getLastModified() ^ (getLastModified() >>> 32));
+        result = 31 * result + (isMine() ? 1 : 0);
+        return result;
+    }
+
     public JSONObject toJSON() throws JSONException {
         JSONObject item = new JSONObject();
         item.put("Word", name);
@@ -80,4 +105,6 @@ public class VocabularyItem {
                 + ",mine=" + mine
                 + "}";
     }
+
+
 }
