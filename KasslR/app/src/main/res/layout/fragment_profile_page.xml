@@ -39,13 +39,13 @@
                 android:layout_margin="16dp"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
-                android:maxHeight="44dp"
-                android:maxWidth="44dp"
+                android:maxHeight="32dp"
+                android:maxWidth="32dp"
                 android:onClick="openSettings"
-                android:background="@null"
                 android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax"
-                app:srcCompat="@drawable/three_dots" />
+                app:srcCompat="@drawable/three_dots"
+                style="@android:style/Widget.DeviceDefault.ImageButton" />
 
             <EditText
                 android:id="@+id/user_profile_name"
@@ -62,7 +62,6 @@
                 android:background="@null"
                 android:text="Namn"
                 android:textSize="30sp"
-                android:textStyle="bold"
                 app:layout_collapseMode="parallax" />
 
             <TextView
@@ -77,19 +76,6 @@
                 android:textSize="30sp"
                 android:textStyle="bold"
                 app:layout_collapseMode="parallax" />
-
-            <ImageView
-                android:id="@+id/profile_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/user_profile_name"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:maxHeight="128dp"
-                android:maxWidth="128dp"
-                android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_action_profile" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

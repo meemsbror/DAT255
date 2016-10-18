@@ -103,7 +103,7 @@ public class ProfilePageFragment extends Fragment{
         });
 
         //Change profile picture
-        changeProfilePicture(app.getProfilePicture());
+        //changeProfilePicture(app.getProfilePicture());
 
         //SettingsButton
         settings = (ImageButton) getView().findViewById(R.id.settings);
