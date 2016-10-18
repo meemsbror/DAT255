@@ -2,14 +2,15 @@ package gruppn.kasslr;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,7 +18,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.Vocabulary;
 import gruppn.kasslr.model.VocabularyItem;
 import gruppn.kasslr.task.DownloadVocabularyTask;
@@ -123,15 +123,41 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         });
 
 
-        holder.closeButton.setVisibility(holder.vocabulary.getId() == 0 ? View.GONE : View.VISIBLE);
+        //holder.closeButton.setVisibility(holder.vocabulary.getId() == 0 ? View.GONE : View.VISIBLE);
+        holder.closeButton.setVisibility(holder.vocabulary.getOwner().getId().equals(app.getUserId()) ? View.VISIBLE : View.GONE);
         holder.closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.closeButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
-                app.getShelf().getVocabularies().remove(holder.vocabulary);
-                vocabularies.remove(holder.getAdapterPosition());
-                new RemoveVocabularyTask(app).execute(holder.vocabulary);
-                notifyItemRemoved(holder.getAdapterPosition());
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                builder.setMessage("Är du säker på att du vill ta bort denna glosbok?")
+                        .setPositiveButton("JA", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                holder.closeButton.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
+                                app.getShelf().getVocabularies().remove(holder.vocabulary);
+                                app.getFeedVocabularies().remove(holder.vocabulary);
+                                vocabularies.remove(holder.getAdapterPosition());
+                                new RemoveVocabularyTask(app).execute(holder.vocabulary);
+                                notifyItemRemoved(holder.getAdapterPosition());
+
+                                dialog.dismiss();
+
+                                // FIRE ZE MISSILES!
+                            }
+                        })
+                        .setNegativeButton("NEJ", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.dismiss();
+
+                                // User cancelled the dialog
+                            }
+                        });
+                builder.show();
+
             }
         });
 

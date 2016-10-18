@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -24,6 +25,11 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import gruppn.kasslr.model.Vocabulary;
+
 /**
  * The activity for viewing the profile.
  */
@@ -36,6 +42,7 @@ public class ProfilePageFragment extends Fragment{
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
     public final int PICK_IMAGE = 5;
+
 
 
     @Override
@@ -58,17 +65,22 @@ public class ProfilePageFragment extends Fragment{
 
 
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recyclerViewFeed_profile);
-
+        recyclerView.setItemAnimator(null);
 
         LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getActivity());
 
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
-        VocabularyFeedAdapter va = new VocabularyFeedAdapter(getActivity(), app.getShelf().getVocabularies());
+        List<Vocabulary> userVocabularyList = new ArrayList<>();
+
+        for (Vocabulary vocabulary : app.getFeedVocabularies()) {
+            if (vocabulary.getOwner().getId().equals(app.getUserId()) && !userVocabularyList.contains(vocabulary)) {
+                userVocabularyList.add(vocabulary);
+           }
+        }
+        VocabularyFeedAdapter va = new VocabularyFeedAdapter((MainActivity) getActivity(), userVocabularyList);
         va.setAdapterSwitch(R.id.recyclerViewFeed_profile);
         recyclerView.setAdapter(va);
-
-
 
         //Change profile background
         final ImageView imageView = (ImageView) getView().findViewById(R.id.profile_layout_background);
