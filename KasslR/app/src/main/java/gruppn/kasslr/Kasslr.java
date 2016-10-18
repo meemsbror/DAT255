@@ -231,7 +231,6 @@ public class Kasslr extends Application {
                     .addParameter("word", word)
                     .addParameter("user", user)
                     .addParameter("vocabularyId", String.valueOf(vocabularyId))
-                    .setNotificationConfig(new UploadNotificationConfig())
                     .setMaxRetries(3)
                     .startUpload(); //Starting the upload
 
