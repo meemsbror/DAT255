@@ -128,12 +128,20 @@ public class CameraActivity extends AppCompatActivity {
 
         if (bitmap == null) {
             bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
+
         }
         return bitmap;
     }
     //TODO fix so the imate scales
-    private void setGalleryImage(Bitmap bitmap){
-        this.galleryImage.setImageBitmap(bitmap);
+    private void setGalleryImage(){
+        Bitmap bitmap = app.getSharedBitmap();
+        List<VocabularyItem> items = app.getShelf().getItems();
+        VocabularyItem item = items.get(items.size()-1);
+
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
+        }
+        this.galleryImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,58,58,false));
     }
 
     private void startAnimation(Bitmap bitmap) {
@@ -146,12 +154,12 @@ public class CameraActivity extends AppCompatActivity {
 
         tempAnim.startAnimation(anim);
 
-        setGalleryImage(bitmap);
+        setGalleryImage();
     }
     @Override
     public void onResume() {
         super.onResume();
-        setGalleryImage(getLastImage());
+        setGalleryImage();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
