@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.camera2.CameraManager;
 import android.net.Uri;
@@ -29,13 +31,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.UUID;
+
+import gruppn.kasslr.model.VocabularyItem;
 
 
 public class CameraActivity extends AppCompatActivity {
@@ -72,6 +78,8 @@ public class CameraActivity extends AppCompatActivity {
 
     private Handler mBackgroundHandler;
 
+    private ImageView galleryImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +92,10 @@ public class CameraActivity extends AppCompatActivity {
         CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         ImageButton takePicture = (ImageButton) findViewById(R.id.snap);
+        this.galleryImage = (ImageView) findViewById(R.id.shelf_button);
+        setGalleryImage();
+
+
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,9 +113,23 @@ public class CameraActivity extends AppCompatActivity {
         */
     }
 
+    //TODO fix so the imate scales
+    private void setGalleryImage(){
+        Bitmap bitmap = app.getSharedBitmap();
+
+        List<VocabularyItem> items = app.getShelf().getItems();
+        VocabularyItem item = items.get(items.size()-1);
+
+        if (bitmap == null) {
+            bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
+        }
+        this.galleryImage.setImageBitmap(bitmap);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
+        setGalleryImage();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             mCameraView.start();
