@@ -132,16 +132,19 @@ public class CameraActivity extends AppCompatActivity {
         }
         return bitmap;
     }
-    //TODO fix so the imate scales
-    private void setGalleryImage(){
-        Bitmap bitmap = app.getSharedBitmap();
-        List<VocabularyItem> items = app.getShelf().getItems();
-        VocabularyItem item = items.get(items.size()-1);
 
-        if (bitmap == null) {
-            bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
+
+    private void setGalleryImage(){
+        if(app.getShelf().getItems() != null && app.getShelf().getItems().size()>0) {
+            Bitmap bitmap = app.getSharedBitmap();
+            List<VocabularyItem> items = app.getShelf().getItems();
+            VocabularyItem item = items.get(items.size() - 1);
+
+            if (bitmap == null) {
+                bitmap = BitmapFactory.decodeFile(app.getImageFile(item).getAbsolutePath());
+            }
+            this.galleryImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 58, 58, false));
         }
-        this.galleryImage.setImageBitmap(Bitmap.createScaledBitmap(bitmap,58,58,false));
     }
 
     private void startAnimation(Bitmap bitmap) {
