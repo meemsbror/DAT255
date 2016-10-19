@@ -9,6 +9,7 @@ public class VocabularyItem {
     private String image;
     private long lastModified;
     private boolean mine = true;
+    private boolean isRemoved = false;
 
     public VocabularyItem(String name, String imageName) {
         this.name = name;
@@ -106,5 +107,12 @@ public class VocabularyItem {
                 + "}";
     }
 
+    public void setRemoved(){
+        isRemoved = true;
+    }
+
+    public boolean isRemoved(){
+        return isRemoved;
+    }
 
 }

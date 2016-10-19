@@ -122,6 +122,8 @@ public class EditItemActivity extends AppCompatActivity {
         // Hide keyboard
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
+        item.setRemoved();
+
         new RemoveItemTask(app).execute(item);
 
         int index = app.getShelf().getItems().indexOf(item);

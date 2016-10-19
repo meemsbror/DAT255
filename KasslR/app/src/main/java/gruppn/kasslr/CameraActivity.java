@@ -50,8 +50,6 @@ import gruppn.kasslr.model.VocabularyItem;
 
 public class CameraActivity extends AppCompatActivity {
 
-    private int removedItemIndex = -1;
-
     private static final String TAG = "MainActivity";
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
@@ -139,14 +137,9 @@ public class CameraActivity extends AppCompatActivity {
         List<VocabularyItem> items = app.getShelf().getItems();
 
         if (!items.isEmpty()) {
-            int target;
-            if(items.size()-1 == removedItemIndex){
-                target = items.size()-2;
-            }else{
-                target = items.size()-1;
-            }
-            for (int i = target; i >= 0; i--) {
-                if (items.get(i).isMine()) {
+
+            for (int i = items.size() -1; i >= 0; i--) {
+                if (items.get(i).isMine() && !items.get(i).isRemoved()) {
                     return items.get(i);
                 }
             }
@@ -291,7 +284,6 @@ public class CameraActivity extends AppCompatActivity {
         public void onPictureTaken(final CameraView cameraView, final byte[] data) {
             takePicture.startAnimation(AnimationUtils.loadAnimation(app, R.anim.button_feedback));
             Log.d(TAG, "onPictureTaken " + data.length);
-            removedItemIndex = -1;
 
             getBackgroundHandler().post(new Runnable() {
                 @Override
@@ -393,9 +385,7 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(data.getIntExtra(EditItemActivity.RESULT_ACTION,EditItemActivity.ACTION_EDIT) == EditItemActivity.ACTION_REMOVE){
-            removedItemIndex = data.getIntExtra(EditItemActivity.RESULT_ITEM_INDEX,-1);
-        }
+
         if(requestCode == NAME_IMAGE){
             startAnimation(getLastImage());
         }
