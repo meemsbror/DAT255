@@ -16,7 +16,6 @@ public class Vocabulary {
     private String title;
     private List<VocabularyItem> items;
     private int universalId = 0;
-    private boolean favourite = false;
 
     public Vocabulary(User user, String title){
         this.user = user;
@@ -33,9 +32,17 @@ public class Vocabulary {
     public boolean equals(Object obj){
         if (obj == null){
             return false;
+        } else if (!(obj instanceof Vocabulary)) {
+            return false;
         } else {
             return  this.getUniversalId() == ((Vocabulary) obj).getUniversalId();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 31 * universalId;
+        return result;
     }
 
     public int getId() {
