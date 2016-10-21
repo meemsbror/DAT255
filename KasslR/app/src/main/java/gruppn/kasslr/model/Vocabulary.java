@@ -3,12 +3,7 @@ package gruppn.kasslr.model;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import gruppn.kasslr.R;
-import gruppn.kasslr.VocabularyFeedViewHolder;
 
 public class Vocabulary {
     private User user;

@@ -7,11 +7,11 @@ public class ProfileInformation {
 
     private int score = 0;
     private User user;
-    public String name = "Namn";
+    private String name = "Namn";
     private String userId = "dassid";
 
 
-    public Uri profilePicture;
+    private Uri profilePicture;
 
     private final int COMPLETE_VOCABULARY_SCORE = 2;
     private final int COMPLETE_ACHIEVEMENT_SCORE = 20;
