@@ -41,6 +41,11 @@ public class User {
     }
 
     @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
+
+    @Override
     public boolean equals(Object that){
         if(that instanceof User){
             User user = (User)that;
