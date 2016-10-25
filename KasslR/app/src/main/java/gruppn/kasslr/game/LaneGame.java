@@ -120,13 +120,12 @@ class GameView extends SurfaceView implements Runnable {
     Canvas canvas;
     Paint paint;
 
-    final String DEBUG_TAG = "GAMELOGIC";
-    final int NUM_LANES = 3;
-    final int BACKGROUND_COLOR = Color.parseColor("#000000");
+    static final String DEBUG_TAG = "GAMELOGIC";
+    static final int NUM_LANES = 3;
+    static final int BACKGROUND_COLOR = Color.parseColor("#000000");
 
     private float frameRate = 60;
     private float frameTime = 1000 / frameRate;
-    private double fps = 0;
 
     private float playerY = 150;
     private float playerX = 150;
@@ -152,7 +151,6 @@ class GameView extends SurfaceView implements Runnable {
     private float tickLength = 0;
 
     private Kasslr app;
-    private LaneGame gameActivity;
 
     Bitmap swipeInstruction, homeButton, retryButton;
     private boolean tutorialSkipped = false;
@@ -166,10 +164,9 @@ class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
         paint = new Paint();
         playing = true;
-        this.gameActivity = gameActivity;
         app = (Kasslr) gameActivity.getApplication();
         this.vocabulary = vocabulary;
-        particleSpawner = new Random(vocabulary.getUniversalId() * 29411);
+        particleSpawner = new Random(vocabulary.getUniversalId() * 29411L);
 
         swipeInstruction = BitmapFactory.decodeResource(getResources(), R.drawable.swipe);
         homeButton = BitmapFactory.decodeResource(getResources(), R.drawable.ic_home_white_36dp);
@@ -193,7 +190,7 @@ class GameView extends SurfaceView implements Runnable {
             long endTime = System.currentTimeMillis();
             long deltaTime = (long) (frameTime - (endTime - startTime));
             tickLength = (endTime - startTime)*1.0f / frameTime;
-            fps = 1000.0 / (endTime - startTime)*1.0;
+            //fps = 1000.0 / (endTime - startTime)*1.0;
             try {
                 if(deltaTime < 0)
                     deltaTime = 0;
@@ -204,7 +201,7 @@ class GameView extends SurfaceView implements Runnable {
     }
 
     private void loadImages(Vocabulary vocabulary){
-        itemImageMap = new HashMap<VocabularyItem, Bitmap>();
+        itemImageMap = new HashMap<>();
         for(VocabularyItem item : vocabulary.getItems()){
             itemImageMap.put(item, loadImage(item));
         }
@@ -251,7 +248,7 @@ class GameView extends SurfaceView implements Runnable {
         playerY = gameHeight - 260;
         playerX = gameWidth / 2;
 
-        background = new Background(gameWidth, gameHeight, vocabulary.getUniversalId()*8491499);
+        background = new Background(gameWidth, vocabulary.getUniversalId()*8491499L);
 
         for(int i = 0; i < gameHeight; i+=2){
             spawnStars(i);
@@ -326,7 +323,7 @@ class GameView extends SurfaceView implements Runnable {
                 alphaPaint.setAlpha(alpha);
             }
             canvas.drawRect(0, 0, gameWidth, gameHeight, paint);
-            float scaleFactor = gameWidth/swipeInstruction.getWidth();
+            float scaleFactor = (float) gameWidth/swipeInstruction.getWidth();
             canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2, gameWidth, gameHeight / 2 + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
             paint.setAlpha(255);
         }

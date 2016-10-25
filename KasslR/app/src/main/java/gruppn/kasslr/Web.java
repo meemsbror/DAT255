@@ -26,7 +26,7 @@ public class Web {
     private static Web mInstance;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
-    private static Context mCtx;
+    private Context mCtx;
 
     private Web(Context context) {
         mCtx = context;

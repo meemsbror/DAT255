@@ -44,11 +44,11 @@ public class SearchFragment extends Fragment {
         searchView_search = (SearchView) getView().findViewById(R.id.searchView_search);
         searchView_search.setIconifiedByDefault(false);
         searchView_search.requestFocus();
-        searchView_search.onActionViewExpanded();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            searchView_search.onActionViewExpanded();
+        }
 
         va = new VocabularyFeedAdapter((MainActivity) getActivity(), searchShelf.getVocabularies());
-        va.setAdapterSwitch(R.id.recyclerViewFeed_search);
         recyclerViewFeed_search.setAdapter(va);
 
 

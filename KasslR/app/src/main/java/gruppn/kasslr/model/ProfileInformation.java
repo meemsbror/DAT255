@@ -1,21 +1,20 @@
 package gruppn.kasslr.model;
 
 import android.net.Uri;
-import android.widget.Switch;
 
 public class ProfileInformation {
 
     private int score = 0;
-    private User user;
+    //private User user;
     private String name = "Namn";
     private String userId = "dassid";
 
 
     private Uri profilePicture;
 
-    private final int COMPLETE_VOCABULARY_SCORE = 2;
-    private final int COMPLETE_ACHIEVEMENT_SCORE = 20;
-    private final int CREATE_VOCABULARY_SCORE = 25;
+    private static final int COMPLETE_VOCABULARY_SCORE = 2;
+    private static final int COMPLETE_ACHIEVEMENT_SCORE = 20;
+    private static final int CREATE_VOCABULARY_SCORE = 25;
 
     public String getUserId() {
         return userId;

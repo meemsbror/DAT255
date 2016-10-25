@@ -4,6 +4,8 @@ import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.File;
+
 import gruppn.kasslr.Kasslr;
 import gruppn.kasslr.db.KasslrDatabase;
 import gruppn.kasslr.model.VocabularyItem;
@@ -31,7 +33,10 @@ public class RemoveItemTask extends AsyncTask<VocabularyItem, Void, Void> {
                 }
 
                 // Remove image file
-                app.getImageFile(item).delete();
+                File file = app.getImageFile(item);
+                if (!file.delete()) {
+                    Log.e(DEBUG_TAG, "Failed to delete image file " + file.getAbsolutePath());
+                }
             }
             Log.d(DEBUG_TAG, "Successfully removed " + items.length + " item(s)");
         } catch (SQLiteException e) {

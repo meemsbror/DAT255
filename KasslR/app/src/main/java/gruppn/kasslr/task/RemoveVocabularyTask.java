@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,11 @@ public class RemoveVocabularyTask extends AsyncTask<Vocabulary, Void, List<Vocab
                     if (!item.isMine()) {
                         itemsToRemove.add(item);
                         db.remove(item);
-                        app.getImageFile(item).delete();
+
+                        File file = app.getImageFile(item);
+                        if (!file.delete()) {
+                            Log.e(DEBUG_TAG, "Failed to delete image file " + file.getAbsolutePath());
+                        }
                     }
                 }
             }

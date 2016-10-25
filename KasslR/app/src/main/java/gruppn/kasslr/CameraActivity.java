@@ -97,7 +97,6 @@ public class CameraActivity extends AppCompatActivity {
         mCameraView = (CameraView) findViewById(R.id.camera);
         mCameraView.addCallback(mCallback);
         mCameraView.setFlash(CameraView.FLASH_OFF); // please
-        CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         this.takePicture = (ImageButton) findViewById(R.id.snap);
         this.galleryImage = (ImageView) findViewById(R.id.shelf_button);
@@ -292,6 +291,9 @@ public class CameraActivity extends AppCompatActivity {
 
                     OutputStream os = null;
                     try {
+                        if (!file.getParentFile().isDirectory() && !file.getParentFile().mkdir()) {
+                            throw new IOException("Failed to create picture directory");
+                        }
                         os = new FileOutputStream(file);
                         os.write(data);
                     } catch (IOException e) {
@@ -328,10 +330,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private File getNewPictureFile() {
         File dir = app.getImageDirectory();
-        if (!dir.exists()) {
-            dir.mkdir();
-        }
-
         return new File(dir, UUID.randomUUID().toString() + ".jpg");
     }
 

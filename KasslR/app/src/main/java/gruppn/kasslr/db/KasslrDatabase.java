@@ -84,7 +84,11 @@ public class KasslrDatabase extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE vocabularies");
                 db.execSQL("DROP TABLE vocabulary_content");
                 onCreate(db);
+
+                // The switch "falls" all the way through to the last version
+                break;
             default:
+                Log.e(DEBUG_TAG, "Tried to upgrade database from unknown version " + oldVersion + " to " + newVersion);
                 break;
         }
     }

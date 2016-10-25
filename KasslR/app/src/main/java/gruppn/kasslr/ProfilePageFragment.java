@@ -38,10 +38,7 @@ public class ProfilePageFragment extends Fragment{
 
     private ImageButton settings;
 
-    private RecyclerView.Adapter recyclerAdapter;
-    private RecyclerView.LayoutManager recyclerLayoutManager;
-
-    public final int PICK_IMAGE = 5;
+    public static final int PICK_IMAGE = 5;
 
 
 
@@ -78,7 +75,6 @@ public class ProfilePageFragment extends Fragment{
            }
         }
         VocabularyFeedAdapter va = new VocabularyFeedAdapter((MainActivity) getActivity(), userVocabularyList);
-        va.setAdapterSwitch(R.id.recyclerViewFeed_profile);
         recyclerView.setAdapter(va);
 
         //Change profile background

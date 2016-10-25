@@ -91,7 +91,7 @@ public class LoadShelfTask extends AsyncTask<Shelf, Void, LoadShelfTask.Result> 
         }
     }
 
-    class Result {
+    static class Result {
         private Shelf shelf;
         private List<VocabularyItem> items;
         private List<Vocabulary> vocabularies;

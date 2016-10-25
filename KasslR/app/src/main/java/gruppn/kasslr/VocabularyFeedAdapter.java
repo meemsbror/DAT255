@@ -29,7 +29,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
     private MainActivity activity;
     private Kasslr app;
     private Context mContext;
-    private int adapterSwitch = R.id.recycler_view_feed;
 
     public VocabularyFeedAdapter(MainActivity activity, List<Vocabulary> vocabularies) {
         this.vocabularies = vocabularies;
@@ -59,10 +58,6 @@ public class VocabularyFeedAdapter extends RecyclerView.Adapter<VocabularyFeedVi
         VocabularyFeedViewHolder vfvh = new VocabularyFeedViewHolder(itemView);
 
         return vfvh;
-    }
-
-    public void setAdapterSwitch(int adapterSwitch){
-        this.adapterSwitch = adapterSwitch;
     }
 
     @Override

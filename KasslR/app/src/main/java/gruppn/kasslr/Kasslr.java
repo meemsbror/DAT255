@@ -392,12 +392,6 @@ public class Kasslr extends Application {
         sharedBitmap = bitmap;
     }
 
-    private class ShelfResult {
-        private Shelf shelf;
-        private List<VocabularyItem> items;
-        private List<Vocabulary> vocabularies;
-    }
-
     public List<Vocabulary> getFeedVocabularies(){
         return feedVocabularies;
     }

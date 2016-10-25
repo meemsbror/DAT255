@@ -91,7 +91,9 @@ public class DownloadVocabularyTask extends AsyncTask<Vocabulary, Void, List<Voc
     }
 
     private void downloadImageToFile(String url, File file) throws IOException {
-        file.getParentFile().mkdirs();
+        if (!file.getParentFile().isDirectory() && !file.getParentFile().mkdir()) {
+            throw new IOException("Failed to create picture directory");
+        }
 
         InputStream is = null;
         OutputStream os = null;

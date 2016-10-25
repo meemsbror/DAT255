@@ -16,6 +16,8 @@ package gruppn.kasslr.game;
  *   will be the same when ported to other languages.
  */
 
+import java.util.Arrays;
+
 public class OpenSimplexNoise {
 
     private static final double STRETCH_CONSTANT_2D = -0.211324865405187;    //(1/Math.sqrt(2+1)-1)/2;
@@ -39,7 +41,7 @@ public class OpenSimplexNoise {
     }
 
     public OpenSimplexNoise(short[] perm) {
-        this.perm = perm;
+        this.perm = Arrays.copyOf(perm, perm.length);
         permGradIndex3D = new short[256];
 
         for (int i = 0; i < 256; i++) {

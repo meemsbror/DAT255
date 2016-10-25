@@ -31,7 +31,6 @@ public class FeedFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.recycler_view_feed);
 
         va = new VocabularyFeedAdapter((MainActivity) getActivity(), new ArrayList<Vocabulary>());
-        va.setAdapterSwitch(R.id.recycler_view_feed);
         recyclerView.setAdapter(va);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());

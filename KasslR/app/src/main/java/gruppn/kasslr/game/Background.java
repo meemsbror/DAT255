@@ -1,18 +1,12 @@
 package gruppn.kasslr.game;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -20,12 +14,10 @@ import java.util.Random;
  */
 
 public class Background {
-    final int MAP_CHUNK_WIDTH = 16;
-    final double MAP_SCALE = 7.0;
-    final int MAP_LEVELS = 4;
+    static final int MAP_CHUNK_WIDTH = 16;
+    static final double MAP_SCALE = 7.0;
+    static final int MAP_LEVELS = 4;
 
-    private int gameWidth = 0;
-    private int gameHeight = 0;
     private int polySize = 0;
 
     private int[] colors;
@@ -36,10 +28,8 @@ public class Background {
     private final HashMap<Coordinate, Integer> noiseArray = new HashMap<Coordinate, Integer>();
     private final ArrayList<ArrayList<BackgroundTile>> mapChunks = new ArrayList<ArrayList<BackgroundTile>>();
 
-    public Background(int width, int height, long seed){
-        this.gameWidth = width;
-        this.gameHeight = height;
-        polySize = gameWidth / MAP_CHUNK_WIDTH;
+    public Background(int width, long seed){
+        polySize = width / MAP_CHUNK_WIDTH;
         noise = new OpenSimplexNoise(seed);
 
         colors = new int[]{Color.parseColor("#150024"), Color.parseColor("#2F004F"), Color.parseColor("#780096")};
