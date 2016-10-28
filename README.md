@@ -15,3 +15,10 @@ Frej Karlsson frejk
 Arvid Björklund abj
 
 Andreas Erlandsson anderlan
+
+
+
+# Final Reflection
+In the folder EndReport you will find all relevant documents for evaluation.
+
+For our scrumboard and user stories please follow this link to trello and read them for yourself:https://trello.com/b/tHdYpXX8
