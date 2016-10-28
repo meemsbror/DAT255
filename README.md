@@ -16,6 +16,11 @@ Arvid Björklund abj
 
 Andreas Erlandsson anderlan
 
+# Contents
+The folder Kasslr contains the android project.
+Kasslr-Web contains the webserver which is currently running.
+EndReport contains all other content requierd
+
 
 
 # Final Reflection
