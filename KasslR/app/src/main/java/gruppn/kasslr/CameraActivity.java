@@ -214,19 +214,20 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CAMERA_PERMISSION:
-                if (permissions.length != 1 || grantResults.length != 1) {
+        if(requestCode == REQUEST_CAMERA_PERMISSION ) {
+
+            if (permissions.length != 1 || grantResults.length != 1) {
                     throw new RuntimeException("Error on requesting camera permission.");
-                }
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "Please give camera permission",
-                            Toast.LENGTH_SHORT).show();
-                }
-                // No need to start camera here; it is handled by onResume
-                break;
+            }
+
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Please give camera permission",
+                        Toast.LENGTH_SHORT).show();
+            }
+            // No need to start camera here; it is handled by onResume
         }
     }
+
     public void onShelfClick(View view){
         Intent intent = new Intent(CameraActivity.this, MainActivity.class);
         intent.setAction("gallery");

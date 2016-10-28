@@ -246,7 +246,7 @@ class GameView extends SurfaceView implements Runnable {
         gameWidth = canvas.getWidth();
         gameHeight = canvas.getHeight();
         playerY = gameHeight - 260;
-        playerX = gameWidth / 2;
+        playerX = gameWidth / 2f;
 
         background = new Background(gameWidth, vocabulary.getUniversalId()*8491499L);
 
@@ -324,7 +324,7 @@ class GameView extends SurfaceView implements Runnable {
             }
             canvas.drawRect(0, 0, gameWidth, gameHeight, paint);
             float scaleFactor = (float) gameWidth/swipeInstruction.getWidth();
-            canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2, gameWidth, gameHeight / 2 + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
+            canvas.drawBitmap(swipeInstruction, null, new RectF(0, gameHeight / 2f, gameWidth, gameHeight / 2f + swipeInstruction.getHeight()*scaleFactor), alphaPaint);
             paint.setAlpha(255);
         }
 
@@ -337,11 +337,11 @@ class GameView extends SurfaceView implements Runnable {
         for(VocabularyItem item : vocabulary.getItems()){
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(3);
-            canvas.drawCircle(gameWidth/20, gameHeight - (i*gameHeight/18), gameWidth/40, paint);
+            canvas.drawCircle(gameWidth/20f, gameHeight - (i*gameHeight/18f), gameWidth/40f, paint);
 
             if(completedWords.contains(item)) {
                 paint.setStyle(Paint.Style.FILL);
-                canvas.drawCircle(gameWidth/20, gameHeight - (i*gameHeight/18), gameWidth/55, paint);
+                canvas.drawCircle(gameWidth/20f, gameHeight - (i*gameHeight/18f), gameWidth/55f, paint);
             }
 
             i++;
@@ -375,22 +375,22 @@ class GameView extends SurfaceView implements Runnable {
             return;
 
         paint.setColor(0x88000000);
-        canvas.drawRect(gameWidth/10, 4*gameWidth/10, gameWidth - gameWidth/10, gameHeight - 4*gameWidth/10, paint);
+        canvas.drawRect(gameWidth/10f, 4*gameWidth/10f, gameWidth - gameWidth/10f, gameHeight - 4*gameWidth/10f, paint);
 
         paint.setColor(Color.WHITE);
         paint.setTextAlign(Paint.Align.CENTER);
 
-        paint.setTextSize(gameWidth/15);
-        canvas.drawText("SPELET ÖVER", gameWidth/2, gameHeight/2 - 2*gameWidth/10, paint);
+        paint.setTextSize(gameWidth/15f);
+        canvas.drawText("SPELET ÖVER", gameWidth/2f, gameHeight/2f - 2*gameWidth/10f, paint);
 
-        paint.setTextSize(2*gameWidth/10);
-        canvas.drawText(score+"", gameWidth/2, gameHeight/2, paint);
+        paint.setTextSize(2*gameWidth/10f);
+        canvas.drawText(score+"", gameWidth/2f, gameHeight/2f, paint);
 
-        paint.setTextSize(gameWidth/15);
-        canvas.drawText("poäng", gameWidth/2, gameHeight/2 + gameWidth/10, paint);
+        paint.setTextSize(gameWidth/15f);
+        canvas.drawText("poäng", gameWidth/2f, gameHeight/2f + gameWidth/10f, paint);
 
-        canvas.drawBitmap(homeButton,  null,  new RectF(gameWidth/2 - 2*gameWidth/10, gameHeight/2+2*gameWidth/10, gameWidth/2 - 1*gameWidth/10, gameHeight/2+3*gameWidth/10), null);
-        canvas.drawBitmap(retryButton, null,  new RectF(gameWidth/2 + 1*gameWidth/10, gameHeight/2+2*gameWidth/10, gameWidth/2 + 2*gameWidth/10, gameHeight/2+3*gameWidth/10), null);
+        canvas.drawBitmap(homeButton,  null,  new RectF(gameWidth/2f - 2*gameWidth/10f, gameHeight/2f+2*gameWidth/10f, gameWidth/2f - 1*gameWidth/10f, gameHeight/2f+3*gameWidth/10f), null);
+        canvas.drawBitmap(retryButton, null,  new RectF(gameWidth/2f + 1*gameWidth/10f, gameHeight/2f+2*gameWidth/10f, gameWidth/2f + 2*gameWidth/10f, gameHeight/2f+3*gameWidth/10f), null);
 
     }
 
@@ -494,8 +494,8 @@ class GameView extends SurfaceView implements Runnable {
             playerY = gameHeight-260;
         }
 
-        if(playerY < 2*gameHeight/3){
-            playerY = 2*gameHeight/3;
+        if(playerY < 2*gameHeight/3f){
+            playerY = 2*gameHeight/3f;
         }
 
         if(gameWidth > 0) {
@@ -771,7 +771,7 @@ class GameView extends SurfaceView implements Runnable {
         if(event.getY() < gameHeight/2 + gameWidth/10 || event.getY() > gameHeight/2 + 4*gameWidth/10)
             return;
 
-        if(event.getX() < gameWidth/2){
+        if(event.getX() < gameWidth/2f){
             closeGame();
         }else{
             Activity myActivity = ((Activity)getContext());

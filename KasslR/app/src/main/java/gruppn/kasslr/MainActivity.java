@@ -252,9 +252,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // functionality that depends on this permission.fd
                 }
-                return;
+                break;
             }
             case MY_PERMISSIONS_REQUEST_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
@@ -268,8 +268,10 @@ public class MainActivity extends AppCompatActivity {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
-                return;
+                break;
             }
+            default:
+                break;
 
             // other 'case' lines to check for other
             // permissions this app might request
