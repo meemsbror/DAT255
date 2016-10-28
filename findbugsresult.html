@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FindBugs Report</title>
+<style type="text/css">
+		.tablerow0 {
+			background: #EEEEEE;
+		}
+
+		.tablerow1 {
+			background: white;
+		}
+
+		.detailrow0 {
+			background: #EEEEEE;
+		}
+
+		.detailrow1 {
+			background: white;
+		}
+
+		.tableheader {
+			background: #b9b9fe;
+			font-size: larger;
+		}
+		</style>
+</head>
+<body>
+<h1>FindBugs Report</h1>
+<p>Produced using <a href="http://findbugs.sourceforge.net">FindBugs</a>3.0.1.</p>
+<p>Project: 
+			KasslR[app]</p>
+<h2>Metrics</h2>
+<p>13450 lines of code analyzed,
+	in 201 classes, 
+	in 15 packages.</p>
+<table width="500" cellpadding="5" cellspacing="2">
+<tr class="tableheader">
+<th align="left">Metric</th>
+<th align="right">Total</th>
+<th align="right">Density*</th>
+</tr>
+<tr class="tablerow0">
+<td>High Priority Warnings</td>
+<td align="right">1</td>
+<td align="right">0.07</td>
+</tr>
+<tr class="tablerow1">
+<td>Medium Priority Warnings</td>
+<td align="right">1</td>
+<td align="right">0.07</td>
+</tr>
+<tr class="$totalClass">
+<td>
+<b>Total Warnings</b>
+</td>
+<td align="right">
+<b>2</b>
+</td>
+<td align="right">
+<b>0.15</b>
+</td>
+</tr>
+</table>
+<p>
+<i>(* Defects per Thousand lines of non-commenting source statements)</i>
+</p>
+<p>
+<br/>
+<br/>
+</p>
+<h2>Summary</h2>
+<table width="500" cellpadding="5" cellspacing="2">
+<tr class="tableheader">
+<th align="left">Warning Type</th>
+<th align="right">Number</th>
+</tr>
+<tr class="tablerow0">
+<td>
+<a href="#Warnings_STYLE">Dodgy code Warnings</a>
+</td>
+<td align="right">2</td>
+</tr>
+<tr class="tablerow1">
+<td>
+<b>Total</b>
+</td>
+<td align="right">
+<b>2</b>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<h1>Warnings</h1>
+<p>Click on each warning link to see a full description of the issue, and
+	    details of how to resolve it.</p>
+<h2>
+<a name="Warnings_STYLE">Dodgy code Warnings</a>
+</h2>
+<table class="warningtable" width="100%" cellspacing="2" cellpadding="5">
+<tr class="tableheader">
+<th align="left">Warning</th>
+<th align="left">Priority</th>
+<th align="left">Details</th>
+</tr>
+<tr class="tablerow1">
+<td width="20%" valign="top">
+<a href="#UC_USELESS_VOID_METHOD">Useless non-empty void method</a>
+</td>
+<td width="10%" valign="top">High</td>
+<td width="70%">
+<p>Method gruppn.kasslr.MainActivity.onRequestPermissionsResult(int, String[], int[]) seems to be useless<br/>
+<br/>
+<br/>In file MainActivity.java,
+					
+						line 279<br/>In class gruppn.kasslr.MainActivity<br/>In method gruppn.kasslr.MainActivity.onRequestPermissionsResult(int, String[], int[])<br/>At MainActivity.java:[line 279]<br/>At MainActivity.java:[line 279]</p>
+</td>
+</tr>
+<tr class="tablerow0">
+<td width="20%" valign="top">
+<a href="#SF_SWITCH_FALLTHROUGH">Switch statement found where one case falls through to the next case</a>
+</td>
+<td width="10%" valign="top">Medium</td>
+<td width="70%">
+<p>Switch statement found in gruppn.kasslr.db.KasslrDatabase.onUpgrade(SQLiteDatabase, int, int) where one case falls through to the next case<br/>
+<br/>
+<br/>In file KasslrDatabase.java,
+					
+						lines 77
+						    to 80<br/>In class gruppn.kasslr.db.KasslrDatabase<br/>In method gruppn.kasslr.db.KasslrDatabase.onUpgrade(SQLiteDatabase, int, int)<br/>At KasslrDatabase.java:[lines 77-80]<br/>At KasslrDatabase.java:[lines 77-80]</p>
+</td>
+</tr>
+</table>
+<p>
+<br/>
+<br/>
+</p>
+<p>
+<br/>
+<br/>
+</p>
+<h1>
+<a name="Details">Warning Types</a>
+</h1>
+<h2>
+<a name="SF_SWITCH_FALLTHROUGH">Switch statement found where one case falls through to the next case</a>
+</h2>
+
+  <p> This method contains a switch statement where one case branch will fall through to the next case.
+  Usually you need to end this case with a break or return.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+<h2>
+<a name="UC_USELESS_VOID_METHOD">Useless non-empty void method</a>
+</h2>
+
+<p>Our analysis shows that this non-empty void method does not actually perform any useful work.
+Please check it: probably there's a mistake in its code or its body can be fully removed.
+</p>
+<p>We are trying to reduce the false positives as much as possible, but in some cases this warning might be wrong.
+Common false-positive cases include:</p>
+<p>- The method is intended to trigger loading of some class which may have a side effect.</p>
+<p>- The method is intended to implicitly throw some obscure exception.</p>
+
+    
+<p>
+<br/>
+<br/>
+</p>
+</body>
+</html>
