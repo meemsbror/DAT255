@@ -18,7 +18,9 @@ Andreas Erlandsson anderlan
 
 # Contents
 The folder Kasslr contains the android project.
+
 Kasslr-Web contains the webserver which is currently running.
+
 EndReport contains all other content requierd
 
 If you just want to run the app use Kasslr.apk
